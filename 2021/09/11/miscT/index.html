@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【CTFSHOW】misc入门（9-38） | 西风の小屋</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="misc9使用notepad打开即可查找到flag。 这里使用strings命令  misc10binwalk 可以一把梭  misc11删除第一个IDAT块保存即可 工具：Tweakpng  misc12删除前8个IDAT块  关于png格式分析文章传送门：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lidabo&#x2F;p&#x2F;3701197.html misc13根据提示寻找flag  将选中部分取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CTFSHOW】misc入门（9-38）">
+<meta property="og:url" content="http://example.com/2021/09/11/miscT/index.html">
+<meta property="og:site_name" content="西风の小屋">
+<meta property="og:description" content="misc9使用notepad打开即可查找到flag。 这里使用strings命令  misc10binwalk 可以一把梭  misc11删除第一个IDAT块保存即可 工具：Tweakpng  misc12删除前8个IDAT块  关于png格式分析文章传送门：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lidabo&#x2F;p&#x2F;3701197.html misc13根据提示寻找flag  将选中部分取">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/222.jpg">
+<meta property="article:published_time" content="2021-09-11T01:18:09.000Z">
+<meta property="article:modified_time" content="2021-12-14T13:13:13.767Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/222.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/2021/09/11/miscT/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CTFSHOW】misc入门（9-38）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-14 13:13:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/bckg.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">西风の小屋</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【CTFSHOW】misc入门（9-38）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-11T01:18:09.000Z" title="发表于 2021-09-11 01:18:09">2021-09-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-14T13:13:13.767Z" title="更新于 2021-12-14 13:13:13">2021-12-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【CTFSHOW】misc入门（9-38）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="misc9"><a href="#misc9" class="headerlink" title="misc9"></a>misc9</h1><p>使用notepad打开即可查找到flag。</p>
+<p>这里使用strings命令</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210911094618.png"></p>
+<h1 id="misc10"><a href="#misc10" class="headerlink" title="misc10"></a>misc10</h1><p>binwalk 可以一把梭</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210911104939.png"></p>
+<h1 id="misc11"><a href="#misc11" class="headerlink" title="misc11"></a>misc11</h1><p>删除第一个IDAT块保存即可 工具：<a target="_blank" rel="noopener" href="http://entropymine.com/jason/tweakpng/">Tweakpng</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210912164338.png"></p>
+<h1 id="misc12"><a href="#misc12" class="headerlink" title="misc12"></a>misc12</h1><p>删除前8个IDAT块</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210913100220.png"></p>
+<p>关于png格式分析文章传送门：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lidabo/p/3701197.html">https://www.cnblogs.com/lidabo/p/3701197.html</a></p>
+<h1 id="misc13"><a href="#misc13" class="headerlink" title="misc13"></a>misc13</h1><p>根据提示寻找flag</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210913104048.png"></p>
+<p>将选中部分取下，隔一个字节单独取出，再转为字符串即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">s=<span class="string">&#x27;63 1A 74 B9 66 85 73 86 68 AA 6F 4B 77 B0 7B 21 61 14 65 53 36 A5 65 54 33 34 65 78 61 25 34 DD 38 EF 66 AB 35 10 31 95 38 1F 62 82 37 BA 65 45 34 7C 32 54 64 7E 37 3A 64 E4 65 F1 36 FA 66 F5 34 1E 31 07 32 1D 66 54 38 F1 33 32 39 E9 61 6C 7D&#x27;</span>.replace(<span class="string">&#x27; &#x27;</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">flag=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(s),<span class="number">4</span>):</span><br><span class="line">    flag+=s[i]</span><br><span class="line">    flag+=s[i+<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line">    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="misc14"><a href="#misc14" class="headerlink" title="misc14"></a>misc14</h1><p>从图片所示位置选中至结尾另存为一张图片即为flag</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210913155330.png"></p>
+<h1 id="misc15"><a href="#misc15" class="headerlink" title="misc15"></a>misc15</h1><p>记事本打开即可发现flag</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210918104538.png"></p>
+<h1 id="misc16"><a href="#misc16" class="headerlink" title="misc16"></a>misc16</h1><p>使用binwalk，再cat分离出的文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/2019292.PNG"></p>
+<h1 id="misc17"><a href="#misc17" class="headerlink" title="misc17"></a>misc17</h1><p>zsteg图片，发现信息再extradata:0处。提取后用binwalk可以分理出一张图片，即为flag</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/ieir.PNG"></p>
+<h1 id="misc18"><a href="#misc18" class="headerlink" title="misc18"></a>misc18</h1><p>按照提示打开照片属性即可</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210927110729.png"></p>
+<h1 id="misc19"><a href="#misc19" class="headerlink" title="misc19"></a>misc19</h1><p>这一题需要使用exif查看图片信息，<a target="_blank" rel="noopener" href="https://exif.tuchong.com/">在线网址</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210927111741.png"></p>
+<p>也可以直接用hexeditor或者notepad打开搜索两个字符串，拼接后即为flag</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210927112052.png"></p>
+<h1 id="misc20"><a href="#misc20" class="headerlink" title="misc20"></a>misc20</h1><p>这题原理同上</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720210927112531.png"></p>
+<h1 id="misc21"><a href="#misc21" class="headerlink" title="misc21"></a>misc21</h1><p>根据提示，使用前两题使用的在线工具查看序列号</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211010103212.png"></p>
+<p>将序列号转字符，得到提示</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%87201010103322.png"></p>
+<p>寻找可能成为x，y的值，并且将其拼接后转16进制</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211010103257.png"></p>
+<p>结果错了，尝试将四个数据分别转换后再拼接才行。</p>
+<h1 id="misc22"><a href="#misc22" class="headerlink" title="misc22"></a>misc22</h1><p>本题为thumbnail隐写，使用工具：<a target="_blank" rel="noopener" href="https://exiftool.org/">exiftool</a>将flag隐藏于文件缩略图中。</p>
+<p>隐写后使用Stegsolve，<a target="_blank" rel="noopener" href="http://www.xue51.com/soft/23612.html">MagicEXIF</a>或XnView等工具即可查看缩略图获取隐藏信息</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211010112545.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211010112756.png"></p>
+<h1 id="misc23"><a href="#misc23" class="headerlink" title="misc23"></a>misc23</h1><p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211010152454.png"></p>
+<p>首先使用上题提到的exiftool查看图片信息，在history action一栏找到提示，时间戳与16进制</p>
+<p>使用<a target="_blank" rel="noopener" href="https://tool.lu/timestamp/">在线网址</a>转换四个时间得到四段时间戳：874865822 2699237688 2156662245 460377706</p>
+<p>按照21的经验，将以上四段时间戳分别换为16进制再拼接即可。</p>
+<h1 id="misc24"><a href="#misc24" class="headerlink" title="misc24"></a>misc24</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qingchuwudi/article/details/25785307">位图格式分析</a></p>
+<p>文件共占用675056字节，根据题目提示，这题的flag被隐藏于图片上面，猜测应该是修改了图片高度</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211013224621.png"></p>
+<p>去除文件头以及windows“补零”后占用的空间，真实的文件大小应该为675056-56=675000字节。其中，每个像素点由三个字节控制（R、G、B），因此，图像的像素总大小为675000/3=225000</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211013230251.png"></p>
+<p>再用图片的宽度（上图红框部分）去除225000得到正确的高度（上图蓝框部分）即可得到flag</p>
+<p>即22500/900=250=0xFA</p>
+<h1 id="misc25"><a href="#misc25" class="headerlink" title="misc25"></a>misc25</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/bisword/article/details/2777121">png文件格式详解</a></p>
+<p>用tweakpng打开文件，提示crc错误，这是因为修改了高宽，却没有修改CRC，导致读取报错。在linux系统中这样的图片将无法打开。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211014214452.png"></p>
+<p>对于这题具体分析如下，其中CRC校验码由IDCH和IHDR共17位字节计算得到。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211014220203.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">89 50 4E 47 0D 0A 1A 0A                 //PNG格式固定开头</span><br><span class="line">00 00 00 0D                             //数据块长度为13</span><br><span class="line">49 48 44 52                             //文件头数据块表示IDCH</span><br><span class="line">00 00 03 84                             //宽</span><br><span class="line">00 00 00 96                             //高</span><br><span class="line">08 02 00 00 00                          //五个字节依次为Bit depth，ColorType，Compression method，Filter method，Interlace method</span><br><span class="line">76 EC 1E 40                             //文件的CRC校验码</span><br></pre></td></tr></table></figure>
+
+<p>使用脚本爆破图片的高：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211014223618.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#crc.py</span></span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line">crc32key=<span class="number">0x76EC1E40</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">65535</span>): <span class="comment">#0xffff=65535</span></span><br><span class="line">    height=struct.pack(<span class="string">&#x27;&gt;i&#x27;</span>,i)</span><br><span class="line">    data=<span class="string">&#x27;\x49\x48\x44\x52\x00\x00\x03\x84&#x27;</span>+<span class="built_in">str</span>(height)+<span class="string">&#x27;\x08\x02\x00\x00\x00&#x27;</span></span><br><span class="line">    crc32result=binascii.crc32(data) &amp; <span class="number">0xffffffff</span></span><br><span class="line">    <span class="keyword">if</span> crc32result ==crc32key:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="keyword">lambda</span> c: <span class="string">&quot;%02X&quot;</span> % <span class="built_in">ord</span>(c), height))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将高修改为FA即可看到flag</p>
+<h1 id="misc26"><a href="#misc26" class="headerlink" title="misc26"></a>misc26</h1><p>使用上题的脚本爆破本题原来的高度为0x25E，修改后看到</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211016110744.png"></p>
+<p>填入真正的高度提交即可。</p>
+<h1 id="misc27"><a href="#misc27" class="headerlink" title="misc27"></a>misc27</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yun_hen/article/details/78135122?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163435534016780261985329%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163435534016780261985329&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-78135122.pc_search_result_control_group&utm_term=jpg%E6%A0%BC%E5%BC%8F&spm=1018.2226.3001.4187">jpg格式文件详解</a></p>
+<p>这题暂时没有找到更优的解法，查看属性得知</p>
+<p>图片的宽度为150，对应十六进制的96.使用16进制查看器搜索十六进制96，将它修改为较大的值。</p>
+<h1 id="misc28"><a href="#misc28" class="headerlink" title="misc28"></a>misc28</h1><p>解法同上题，格式为gif，仅有一帧。值得注意的是，这题有多个十六进制字段为96，但只有一个表示图片的高度。这里使用010editor的gif.bt模板可以更清楚地浏览和修改图片的宽高（图片标记处）。后使用22题提到过的查看器在缩略图中即可查看flag。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211030092132.png"></p>
+<h1 id="misc29"><a href="#misc29" class="headerlink" title="misc29"></a>misc29</h1><p>格式同上题，但是本题图片共10帧。修改每一帧的高，发现flag藏于第八帧下。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211030093718.png"></p>
+<h1 id="Misc30"><a href="#Misc30" class="headerlink" title="Misc30"></a>Misc30</h1><p>本题为24题的复刻版，本题修改的是宽度，950即十六进制的3B6，但是bmp格式采用小端储存方式，所以要改成B603</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211030094600.png"></p>
+<h1 id="misc31"><a href="#misc31" class="headerlink" title="misc31"></a>misc31</h1><p>计算方式同24，计算得到宽度为1082(舍去余数），即0x43A</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211030103405.png"></p>
+<h1 id="misc32"><a href="#misc32" class="headerlink" title="misc32"></a>misc32</h1><p>这题和25类似，都可以用之前的脚本根据crc32爆破出正确的宽高（前提是直到其中的一个正确值）</p>
+<p>图中结果为16进制。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211030111603.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">crc32key=<span class="number">0xE14A4C0B</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">65535</span>): <span class="comment">#0xffff=65535</span></span><br><span class="line"></span><br><span class="line">    width=struct.pack(<span class="string">&#x27;&gt;i&#x27;</span>,i)</span><br><span class="line"></span><br><span class="line">    data=<span class="string">&#x27;\x49\x48\x44\x52&#x27;</span>+<span class="built_in">str</span>(width)+<span class="string">&#x27;\x00\x00\x00\x96\x08\x02\x00\x00\x00&#x27;</span></span><br><span class="line"></span><br><span class="line">    crc32result=binascii.crc32(data) &amp; <span class="number">0xffffffff</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> crc32result ==crc32key:</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="keyword">lambda</span> c: <span class="string">&quot;%02X&quot;</span> % <span class="built_in">ord</span>(c), width))</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="misc33"><a href="#misc33" class="headerlink" title="misc33"></a>misc33</h1><p>这里贴上一个别人的同时爆破png图片宽高的脚本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line"><span class="comment"># 同时爆破宽度和高度</span></span><br><span class="line">filename = <span class="string">&quot;misc33.png&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    all_b = f.read()</span><br><span class="line">    data = <span class="built_in">bytearray</span>(all_b[<span class="number">12</span>:<span class="number">29</span>])</span><br><span class="line">    n = <span class="number">4095</span></span><br><span class="line">    <span class="keyword">for</span> w <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        width = <span class="built_in">bytearray</span>(struct.pack(<span class="string">&#x27;&gt;i&#x27;</span>, w))</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            height = <span class="built_in">bytearray</span>(struct.pack(<span class="string">&#x27;&gt;i&#x27;</span>, h))</span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">                data[x+<span class="number">4</span>] = width[x]</span><br><span class="line">                data[x+<span class="number">8</span>] = height[x]</span><br><span class="line">            crc32result = zlib.crc32(data)</span><br><span class="line">            <span class="comment">#替换成图片的crc</span></span><br><span class="line">            <span class="keyword">if</span> crc32result == <span class="number">0x5255A798</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;宽为：&quot;</span>, end = <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                <span class="built_in">print</span>(width, end = <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="built_in">int</span>.from_bytes(width, byteorder=<span class="string">&#x27;big&#x27;</span>))</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;高为：&quot;</span>, end = <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                <span class="built_in">print</span>(height, end = <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="built_in">int</span>.from_bytes(height, byteorder=<span class="string">&#x27;big&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211031223804.png"></p>
+<h1 id="misc34"><a href="#misc34" class="headerlink" title="misc34"></a>misc34</h1><p>脚本来源:<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45696568/article/details/115261347">https://blog.csdn.net/weixin_45696568/article/details/115261347</a></p>
+<p>本题校验码也被修改，根据提示，将所有900-1200范围内的宽度图片都保存下来，再观察哪个是正确的结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line">filename = <span class="string">&quot;misc34.png&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    all_b = f.read()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">901</span>,<span class="number">1200</span>):</span><br><span class="line">        name = <span class="built_in">str</span>(i) + <span class="string">&quot;.png&quot;</span></span><br><span class="line">        f1 = <span class="built_in">open</span>(name,<span class="string">&quot;wb&quot;</span>)</span><br><span class="line">        im = all_b[:<span class="number">16</span>]+struct.pack(<span class="string">&#x27;&gt;i&#x27;</span>,i)+all_b[<span class="number">20</span>:]</span><br><span class="line">        f1.write(im)</span><br><span class="line">        f1.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211101103516.png"></p>
+<h1 id="misc35"><a href="#misc35" class="headerlink" title="misc35"></a>misc35</h1><p>算法同34，但是需要提前修改图片基础高度。这里我修改为0x0258</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211101105001.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line">filename = <span class="string">&quot;misc35.jpg&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    all_b = f.read()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">901</span>,<span class="number">1200</span>):</span><br><span class="line">        name = <span class="built_in">str</span>(i) + <span class="string">&quot;.jpg&quot;</span></span><br><span class="line">        f1 = <span class="built_in">open</span>(name,<span class="string">&quot;wb&quot;</span>)</span><br><span class="line">        im = all_b[:<span class="number">159</span>]+struct.pack(<span class="string">&#x27;&gt;h&#x27;</span>,i)+all_b[<span class="number">161</span>:]</span><br><span class="line">        f1.write(im)</span><br><span class="line">        f1.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>正确宽度为993-1000间的任何一个数字。</p>
+<h1 id="misc36"><a href="#misc36" class="headerlink" title="misc36"></a>misc36</h1><p>这题同样先修改图片高度。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/QQ%E5%9B%BE%E7%89%8720211101110639.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line">filename = <span class="string">&quot;misc36.gif&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    all_b = f.read()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">920</span>,<span class="number">951</span>):</span><br><span class="line">        name = <span class="built_in">str</span>(i) + <span class="string">&quot;.gif&quot;</span></span><br><span class="line">        f1 = <span class="built_in">open</span>(name,<span class="string">&quot;wb&quot;</span>)</span><br><span class="line">        im = all_b[:<span class="number">38</span>]+struct.pack(<span class="string">&#x27;&gt;h&#x27;</span>,i)[::-<span class="number">1</span>]+all_b[<span class="number">40</span>:]</span><br><span class="line">        f1.write(im)</span><br><span class="line">        f1.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>正确宽度：941</p>
+<h1 id="misc37"><a href="#misc37" class="headerlink" title="misc37"></a>misc37</h1><p>stegsolve的framebrowser浏览各帧</p>
+<h1 id="misc38"><a href="#misc38" class="headerlink" title="misc38"></a>misc38</h1><p>同样是动图，用浏览器打开就可以看到效果。关于apng格式介绍：<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/APNG/3582613?fr=aladdin">https://baike.baidu.com/item/APNG/3582613?fr=aladdin</a></p>
+<p>本题工具：<a target="_blank" rel="noopener" href="https://www.fxxz.com/soft/57201.html">apng Disassembler</a></p>
+<p>查看分解得到的每个帧</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/11/miscT/">http://example.com/2021/09/11/miscT/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">西风の小屋</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/222.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/28/xss-strange/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xsscover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">那些看不懂的操作【alert无数字字母有效载荷】</div></div></a></div><div class="next-post pull-right"><a href="/2021/08/19/dns/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【渗透实验】DNS欺骗</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZEPHeyrr</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZEPHeyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">我就是又菜又爱玩怎么啦 =^=  <img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/�����������籬ը�ƶԻ���ԭ���Ի�����4gif.gif"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#misc9"><span class="toc-number">1.</span> <span class="toc-text">misc9</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc10"><span class="toc-number">2.</span> <span class="toc-text">misc10</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc11"><span class="toc-number">3.</span> <span class="toc-text">misc11</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc12"><span class="toc-number">4.</span> <span class="toc-text">misc12</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc13"><span class="toc-number">5.</span> <span class="toc-text">misc13</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc14"><span class="toc-number">6.</span> <span class="toc-text">misc14</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc15"><span class="toc-number">7.</span> <span class="toc-text">misc15</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc16"><span class="toc-number">8.</span> <span class="toc-text">misc16</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc17"><span class="toc-number">9.</span> <span class="toc-text">misc17</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc18"><span class="toc-number">10.</span> <span class="toc-text">misc18</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc19"><span class="toc-number">11.</span> <span class="toc-text">misc19</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc20"><span class="toc-number">12.</span> <span class="toc-text">misc20</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc21"><span class="toc-number">13.</span> <span class="toc-text">misc21</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc22"><span class="toc-number">14.</span> <span class="toc-text">misc22</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc23"><span class="toc-number">15.</span> <span class="toc-text">misc23</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc24"><span class="toc-number">16.</span> <span class="toc-text">misc24</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc25"><span class="toc-number">17.</span> <span class="toc-text">misc25</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc26"><span class="toc-number">18.</span> <span class="toc-text">misc26</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc27"><span class="toc-number">19.</span> <span class="toc-text">misc27</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc28"><span class="toc-number">20.</span> <span class="toc-text">misc28</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc29"><span class="toc-number">21.</span> <span class="toc-text">misc29</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Misc30"><span class="toc-number">22.</span> <span class="toc-text">Misc30</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc31"><span class="toc-number">23.</span> <span class="toc-text">misc31</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc32"><span class="toc-number">24.</span> <span class="toc-text">misc32</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc33"><span class="toc-number">25.</span> <span class="toc-text">misc33</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc34"><span class="toc-number">26.</span> <span class="toc-text">misc34</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc35"><span class="toc-number">27.</span> <span class="toc-text">misc35</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc36"><span class="toc-number">28.</span> <span class="toc-text">misc36</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc37"><span class="toc-number">29.</span> <span class="toc-text">misc37</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc38"><span class="toc-number">30.</span> <span class="toc-text">misc38</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门SSRF"/></a><div class="content"><a class="title" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF">【CTFSHOW】 web入门SSRF</a><time datetime="2022-01-25T06:55:44.000Z" title="发表于 2022-01-25 06:55:44">2022-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门sql注入"/></a><div class="content"><a class="title" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入">【CTFSHOW】 web入门sql注入</a><time datetime="2022-01-14T10:47:34.000Z" title="发表于 2022-01-14 10:47:34">2022-01-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门文件包含"/></a><div class="content"><a class="title" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含">【CTFSHOW】 web入门文件包含</a><time datetime="2022-01-10T07:29:38.000Z" title="发表于 2022-01-10 07:29:38">2022-01-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门nodejs"/></a><div class="content"><a class="title" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs">【CTFSHOW】 web入门nodejs</a><time datetime="2021-12-31T08:14:10.000Z" title="发表于 2021-12-31 08:14:10">2021-12-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】"><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xsscover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="那些看不懂的操作【alert无数字字母有效载荷】"/></a><div class="content"><a class="title" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】">那些看不懂的操作【alert无数字字母有效载荷】</a><time datetime="2021-09-28T15:58:30.000Z" title="发表于 2021-09-28 15:58:30">2021-09-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022  <i id="heartbeat" class="fa fas fa-heartbeat"></i> ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'emcbjtpAX6FKY93aCdO8qk2c-MdYXbMMI',
+      appKey: 'XJI9fJqbm71pDTHE92oWaWPA',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

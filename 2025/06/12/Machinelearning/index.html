@@ -1,0 +1,1045 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【机器学习】 一些入门AI的基础知识整理 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="概念基础监督学习&#x2F;无监督学习监督学习是指从带有标签（Label）的训练数据中学习模型，然后对新的无标签数据进行预测。模型通过学习输入特征（X）与输出标签（Y）之间的映射关系，建立预测函数$y&#x3D;f(x)$。目标是最小化预测值和真实值之间的误差，可以通过准确率、召回率、MSE等指标量化模型性能。    任务类型 输出形式 典型算法 应用场景    分类 离散类别 逻辑回归、SVM、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【机器学习】 一些入门AI的基础知识整理">
+<meta property="og:url" content="http://120.46.180.209/2025/06/12/Machinelearning/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="概念基础监督学习&#x2F;无监督学习监督学习是指从带有标签（Label）的训练数据中学习模型，然后对新的无标签数据进行预测。模型通过学习输入特征（X）与输出标签（Y）之间的映射关系，建立预测函数$y&#x3D;f(x)$。目标是最小化预测值和真实值之间的误差，可以通过准确率、召回率、MSE等指标量化模型性能。    任务类型 输出形式 典型算法 应用场景    分类 离散类别 逻辑回归、SVM、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2025/06/12/Machinelearning/20151106_143936.png">
+<meta property="article:published_time" content="2025-06-12T03:14:10.000Z">
+<meta property="article:modified_time" content="2025-06-13T05:27:16.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2025/06/12/Machinelearning/20151106_143936.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【机器学习】 一些入门AI的基础知识整理",
+  "url": "http://120.46.180.209/2025/06/12/Machinelearning/",
+  "image": "http://120.46.180.209/2025/06/12/Machinelearning/20151106_143936.png",
+  "datePublished": "2025-06-12T03:14:10.000Z",
+  "dateModified": "2025-06-13T05:27:16.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2025/06/12/Machinelearning/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【机器学习】 一些入门AI的基础知识整理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/bckg.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【机器学习】 一些入门AI的基础知识整理</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【机器学习】 一些入门AI的基础知识整理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-12T03:14:10.000Z" title="发表于 2025-06-12 11:14:10">2025-06-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-13T05:27:16.000Z" title="更新于 2025-06-13 13:27:16">2025-06-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="概念基础"><a href="#概念基础" class="headerlink" title="概念基础"></a>概念基础</h1><h2 id="监督学习-无监督学习"><a href="#监督学习-无监督学习" class="headerlink" title="监督学习&#x2F;无监督学习"></a>监督学习&#x2F;无监督学习</h2><h3 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h3><p>是指从带有标签（Label）的训练数据中学习模型，然后对新的无标签数据进行预测。模型通过学习输入特征（X）与输出标签（Y）之间的映射关系，建立预测函数$y&#x3D;f(x)$。目标是最小化预测值和真实值之间的误差，可以通过准确率、召回率、MSE等指标量化模型性能。</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>输出形式</th>
+<th>典型算法</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>分类</strong></td>
+<td>离散类别</td>
+<td>逻辑回归、SVM、决策树、随机森林</td>
+<td>垃圾邮件识别、图像分类、疾病诊断</td>
+</tr>
+<tr>
+<td><strong>回归</strong></td>
+<td>连续数值</td>
+<td>线性回归、岭回归、XGBoost</td>
+<td>房价预测、销量预测、股票分析</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>适用场景：充足标注数据、预测目标明确、可解释性要求高（需要解释决策的任务诸如金融风控）</p>
+</li>
+<li><p>优缺点：预测精度高、可解释性强（尤其线性模型）；依赖标注数据（获取成本高）、对未知分布泛化能力有限。</p>
+</li>
+</ul>
+<h3 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h3><p>无监督学习从<strong>无标签数据</strong>中挖掘隐藏模式或结构，不提供明确的正确答案，模型自主发现数据内在规律。无需标注，目标可能是聚类、降维或者关联分析。</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>目标</th>
+<th>典型算法</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>聚类</td>
+<td>数据分组</td>
+<td>K-means、DBSCAN、层次聚类</td>
+<td>用户分群、异常检测、推荐系统</td>
+</tr>
+<tr>
+<td>降维</td>
+<td>减少特征维度</td>
+<td>PCA、t-SNE、Autoencoder</td>
+<td>数据可视化、特征压缩、去噪</td>
+</tr>
+<tr>
+<td>关联规则</td>
+<td>发现数据项间关系</td>
+<td>Apriori、FP-Groth</td>
+<td>购物篮分析</td>
+</tr>
+<tr>
+<td>生成模型</td>
+<td>学习数据分布生成样本</td>
+<td>GAN、VAE</td>
+<td>图像生成、数据增强</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>适用场景：探索性数据分析、数据预处理（降维后供监督模型）、异常检测（聚类发现离群点）、数据生成（小样本生成）</p>
+</li>
+<li><p>优缺点：无需标注数据，可发现隐藏模式；难以量化评估</p>
+</li>
+</ul>
+<h2 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h2><h3 id="对于分类问题："><a href="#对于分类问题：" class="headerlink" title="对于分类问题："></a>对于分类问题：</h3><h4 id="混淆矩阵"><a href="#混淆矩阵" class="headerlink" title="混淆矩阵"></a>混淆矩阵</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>预测为正</th>
+<th>预测为负</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>真实为正</strong></td>
+<td>True Positive（TP）</td>
+<td>False Negative（FN）</td>
+</tr>
+<tr>
+<td><strong>真实为负</strong></td>
+<td>False Positive（FP）</td>
+<td>True Negative（TN）</td>
+</tr>
+</tbody></table>
+<h4 id="准确率（Accuracy）"><a href="#准确率（Accuracy）" class="headerlink" title="准确率（Accuracy）"></a>准确率（Accuracy）</h4><p>$$<br>Accuracy &#x3D; \frac{TP + TN}{TP + TN + FP + FN}<br>$$</p>
+<p>所有预测正确的样本占比，但在类别不平衡时失效</p>
+<h4 id="精确率（Precision）"><a href="#精确率（Precision）" class="headerlink" title="精确率（Precision）"></a>精确率（Precision）</h4><p>$$<br>\text{Precision} &#x3D; \frac{TP}{TP + FP}<br>$$</p>
+<p>预测为正的样本中实际为正的比例，关注”预测的准不准”，注重减少误报（如垃圾邮件分类中，避免将正常邮件判为垃圾）</p>
+<h4 id="召回率（Recall）"><a href="#召回率（Recall）" class="headerlink" title="召回率（Recall）"></a>召回率（Recall）</h4><p>$$<br>\text{Recall} &#x3D; \frac{TP}{TP + FN}<br>$$</p>
+<p>真实为正的样本中被正确预测的比例，关注”找的全不全”，注重减少漏检（如癌症筛查、缺陷检测）</p>
+<h4 id="F1-Score"><a href="#F1-Score" class="headerlink" title="F1-Score"></a>F1-Score</h4><p>$$<br>F_1 &#x3D; \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}<br>$$</p>
+<p>Precision和Recall的调和平均数，平衡精确率和召回率，适用于类别不平衡场景</p>
+<h4 id="假正率（FPR）"><a href="#假正率（FPR）" class="headerlink" title="假正率（FPR）"></a>假正率（FPR）</h4><p>$$<br>\text{FPR} &#x3D; \frac{FP}{FP + TN}<br>$$</p>
+<h4 id="真正率（TPR-Recall）"><a href="#真正率（TPR-Recall）" class="headerlink" title="真正率（TPR&#x3D;Recall）"></a>真正率（TPR&#x3D;Recall）</h4><p>$$<br>\text{TPR} &#x3D; \frac{TP}{TP + FN}<br>$$</p>
+<h4 id="ROC曲线（Receiver-Operating-Characteristic）"><a href="#ROC曲线（Receiver-Operating-Characteristic）" class="headerlink" title="ROC曲线（Receiver Operating Characteristic）"></a>ROC曲线（Receiver Operating Characteristic）</h4><p>横轴为假正率，纵轴为真正率。调整分类阈值（如逻辑回归的0.5阈值），计算不同阈值下的（FPR, TPR）点连线</p>
+<ul>
+<li><p>左上角(0,1)：完美分类器</p>
+</li>
+<li><p>对角线：随机猜测</p>
+</li>
+<li><p><strong>曲线越靠近左上角，模型越好</strong></p>
+</li>
+</ul>
+<p><img src="/2025/06/12/Machinelearning/v2-2c68309143a72516ac5a5985a966318c_1440w.jpg"></p>
+<h4 id="AUC-Area-Under-Curve"><a href="#AUC-Area-Under-Curve" class="headerlink" title="AUC(Area Under Curve)"></a>AUC(Area Under Curve)</h4><p>ROC曲线下的面积</p>
+<ul>
+<li><p><strong>取值范围</strong>：0.5（随机）~1（完美）</p>
+</li>
+<li><p><strong>物理意义</strong>：模型将正样本排在负样本前面的概率</p>
+</li>
+<li><p><strong>优点</strong>：</p>
+<ul>
+<li><p>不受类别分布影响</p>
+</li>
+<li><p>不受阈值影响（评估整体性能）</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="对于回归问题"><a href="#对于回归问题" class="headerlink" title="对于回归问题"></a>对于回归问题</h3><h4 id="均方误差MSE（Mean-Squared-Error）"><a href="#均方误差MSE（Mean-Squared-Error）" class="headerlink" title="均方误差MSE（Mean Squared Error）"></a>均方误差MSE（Mean Squared Error）</h4><p>$$<br>MSE &#x3D; \frac{1}{n}\sum_{i&#x3D;1}^{n}(y_i - \hat{y_i})^2<br>$$</p>
+<ul>
+<li>$y_i$：第 $i$ 个样本的真实值  </li>
+<li>$\hat{y_i}$：第 $i$ 个样本的预测值  </li>
+<li>$n$：样本数量</li>
+</ul>
+<p><strong>特点</strong></p>
+<ol>
+<li><p><strong>放大大误差</strong>：平方项使较大误差对结果影响更显著</p>
+</li>
+<li><p><strong>单位问题</strong>：与原始数据单位平方一致（如房价预测结果为”万元²”）</p>
+</li>
+<li><p><strong>可导性</strong>：光滑可导，适合梯度下降优化</p>
+</li>
+</ol>
+<p><strong>应用场景</strong></p>
+<ul>
+<li><p>模型训练时的损失函数（如线性回归）</p>
+</li>
+<li><p>需要惩罚显著偏离的预测（如金融风险预测）</p>
+</li>
+</ul>
+<h4 id="均方根误差RMSE-（Root-Mean-Squared-Error）"><a href="#均方根误差RMSE-（Root-Mean-Squared-Error）" class="headerlink" title="均方根误差RMSE  （Root Mean Squared Error）"></a>均方根误差RMSE  （Root Mean Squared Error）</h4><p>$$<br>RMSE &#x3D; \sqrt{\frac{1}{n} \sum_{i&#x3D;1}^{n} (y_i - \hat{y_i})^2}<br>$$</p>
+<p> <strong>特点</strong></p>
+<ol>
+<li><p><strong>恢复单位</strong>：与原始数据单位一致（如”万元”）</p>
+</li>
+<li><p><strong>可比性</strong>：与MAE相比更重视大误差（因平方根弱化了MSE的放大效应）</p>
+</li>
+<li><p><strong>对异常值敏感</strong>：仍受极端值影响</p>
+<p><strong>应用场景</strong></p>
+</li>
+</ol>
+<ul>
+<li><p>业务结果汇报（单位直观）</p>
+</li>
+<li><p>需要平衡普通误差与大误差的评估（如房价预测</p>
+</li>
+</ul>
+<h4 id="平均绝对误差MAE-（Mean-Absolute-Error）"><a href="#平均绝对误差MAE-（Mean-Absolute-Error）" class="headerlink" title="平均绝对误差MAE  （Mean Absolute Error）"></a>平均绝对误差MAE  （Mean Absolute Error）</h4><p>$$<br>MAE &#x3D; \frac{1}{n} \sum_{i&#x3D;1}^{n} |y_i - \hat{y_i}|<br>$$</p>
+<p><strong>特点</strong></p>
+<ol>
+<li><p><strong>线性惩罚</strong>：所有误差等权重处理</p>
+</li>
+<li><p><strong>鲁棒性</strong>：对异常值不敏感</p>
+</li>
+<li><p><strong>不可导</strong>：在零点不可导，不适合直接用于梯度下降</p>
+</li>
+</ol>
+<p><strong>应用场景</strong></p>
+<ul>
+<li><p>异常值较多的数据（如传感器数据清洗）</p>
+</li>
+<li><p>需要直观理解平均误差大小的场景（如库存需求预测）</p>
+</li>
+</ul>
+<h4 id="R²分数（R-Squared，决定系数）"><a href="#R²分数（R-Squared，决定系数）" class="headerlink" title="R²分数（R-Squared，决定系数）"></a>R²分数（R-Squared，决定系数）</h4><p>$$<br>R^2 &#x3D; 1 - \frac{\sum_{i&#x3D;1}^{n} (y_i - \hat{y_i})^2}{\sum_{i&#x3D;1}^{n} (y_i - \bar{y})^2}<br>$$</p>
+<ul>
+<li><p>yˉ​：真实值的均值</p>
+<p><strong>解读</strong></p>
+</li>
+<li><p><strong>分子</strong>：模型预测的误差（MSE）</p>
+</li>
+<li><p><strong>分母</strong>：基准模型（总是预测均值）的误差</p>
+</li>
+<li><p><strong>取值范围</strong>：</p>
+<ul>
+<li><p>R2&#x3D;1：完美预测</p>
+</li>
+<li><p>R2&#x3D;0：等同于均值预测</p>
+</li>
+<li><p>R2&lt;0：模型比均值预测更差</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>特点</strong></p>
+<ol>
+<li><p><strong>无量纲</strong>：不受数据单位影响</p>
+</li>
+<li><p><strong>可比性</strong>：可用于不同数据集间的模型比较</p>
+</li>
+<li><p><strong>易误解</strong>：高R²不一定代表模型好（可能数据本身易预测）</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th><strong>指标</strong></th>
+<th><strong>敏感度</strong></th>
+<th><strong>单位</strong></th>
+<th><strong>优化适用性</strong></th>
+<th><strong>业务解释难度</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MSE</strong></td>
+<td>高（平方放大）</td>
+<td>原单位²</td>
+<td>★★★★★（可导）</td>
+<td>较难（单位平方）</td>
+</tr>
+<tr>
+<td><strong>RMSE</strong></td>
+<td>中</td>
+<td>原单位</td>
+<td>★★★★☆</td>
+<td>较易</td>
+</tr>
+<tr>
+<td><strong>MAE</strong></td>
+<td>低（线性）</td>
+<td>原单位</td>
+<td>★★☆☆☆（不可导）</td>
+<td>最易</td>
+</tr>
+<tr>
+<td><strong>R²</strong></td>
+<td>相对性</td>
+<td>无</td>
+<td>-</td>
+<td>需统计背景</td>
+</tr>
+</tbody></table>
+<h3 id="对于聚类问题"><a href="#对于聚类问题" class="headerlink" title="对于聚类问题"></a>对于聚类问题</h3><h4 id="轮廓系数（Silhouette-Coefficient）"><a href="#轮廓系数（Silhouette-Coefficient）" class="headerlink" title="轮廓系数（Silhouette Coefficient）"></a>轮廓系数（Silhouette Coefficient）</h4><p><strong>1. 核心思想</strong></p>
+<p>衡量一个样本在聚类中的<strong>紧密性</strong>和<strong>分离性</strong>，即：</p>
+<ul>
+<li><p><strong>同簇样本是否足够接近</strong></p>
+</li>
+<li><p><strong>不同簇样本是否足够远离</strong></p>
+</li>
+</ul>
+<p><strong>2.计算公式</strong></p>
+<p>对于单个样本i</p>
+<p>$$<br>s(i) &#x3D; \frac{b(i) - a(i)}{\max{a(i), b(i)}}<br>$$</p>
+<ul>
+<li><p><strong>$a(i)$<strong>：样本 $i$ 到</strong>同簇其他样本</strong>的平均距离（紧密性）  </p>
+<p>$$<br>a(i) &#x3D; \frac{1}{|C_i| - 1} \sum_{j \in C_i, j \neq i} \text{dist}(i, j)<br>$$</p>
+</li>
+<li><p><strong>$b(i)$<strong>：样本 $i$ 到</strong>最近其他簇</strong>所有样本的平均距离（分离性）  </p>
+<p>$$<br>b(i) &#x3D; \min_{k \neq C_i} \left( \frac{1}{|C_k|} \sum_{j \in C_k} \text{dist}(i, j) \right)<br>$$</p>
+</li>
+<li><p>**$C_i$**：样本 $i$ 所属的簇  </p>
+</li>
+<li><p>$\text{dist}(i, j)$：样本 $i$ 和 $j$ 之间的距离（如欧氏距离）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>取值范围</strong></th>
+<th><strong>聚类效果</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.7~1</td>
+<td>聚类结果清晰，结构强</td>
+</tr>
+<tr>
+<td>0.5~0.7</td>
+<td>结构存在但可能有重叠</td>
+</tr>
+<tr>
+<td>&lt;0.5</td>
+<td>聚类效果差，样本归属不明确</td>
+</tr>
+<tr>
+<td>接近-1</td>
+<td>样本可能被分配到错误簇</td>
+</tr>
+</tbody></table>
+<h4 id="肘部法则（Elbow-Method）"><a href="#肘部法则（Elbow-Method）" class="headerlink" title="肘部法则（Elbow Method）"></a>肘部法则（Elbow Method）</h4><p><strong>1. 核心思想</strong></p>
+<p>通过观察簇内误差和（SSE）随聚类数K变化的拐点（”肘部”）确定最佳K值</p>
+<p><strong>2.计算</strong></p>
+<p>$$<br>SSE &#x3D; \sum_{i&#x3D;1}^{K} \sum_{x \in C_i} |x - \mu_i|^2<br>$$</p>
+<ul>
+<li>**$C_i$**：第 $i$ 个簇中的所有样本  </li>
+<li>**$\mu_i$**：第 $i$ 个簇的质心（均值向量）</li>
+</ul>
+<p><strong>3. 结果解读</strong></p>
+<ul>
+<li><p><strong>拐点对应的K值</strong>：通常为最佳聚类数</p>
+</li>
+<li><p><strong>无明显拐点</strong>：数据可能无明确聚类结构</p>
+</li>
+</ul>
+<h2 id="算法例子"><a href="#算法例子" class="headerlink" title="算法例子"></a>算法例子</h2><h3 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h3><h4 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h4><p><strong>1.最小二乘法基础原理</strong></p>
+<p>通过最小化残差平方和来估计参数，</p>
+<ul>
+<li><p><strong>残差</strong>：$e^{(i)} &#x3D; h_\theta(x^{(i)}) - y^{(i)}$（预测值减真实值）</p>
+</li>
+<li><p><strong>目标</strong>：找到参数 $\theta$ 使得 $\sum_{i&#x3D;1}^m (e^{(i)})^2$ 最小。</p>
+<p>目标函数（均方误差）：</p>
+</li>
+</ul>
+<p>$J(\theta) &#x3D; \frac{1}{2m}\sum_{i&#x3D;1}^m(h_\theta(x^{(i)})-y^{(i)})^2$</p>
+<p>其中：</p>
+<ul>
+<li><p>$h_\theta(x) &#x3D; \theta^T x$（假设函数，线性预测）</p>
+</li>
+<li><p>$m$：样本数量</p>
+</li>
+<li><p>$\frac{1}{2}$ 是为了后续求导方便。</p>
+</li>
+</ul>
+<p><strong>2.几何解释</strong></p>
+<p>寻找使所有数据点垂直距离平方和最小的超平面，</p>
+<ul>
+<li><p><strong>二维情况</strong>：拟合一条直线，使点到直线的竖直距离平方和最小。</p>
+</li>
+<li><p><strong>高维情况</strong>：拟合一个超平面，最小化残差平方和</p>
+</li>
+</ul>
+<p><strong>3.解析解推导</strong></p>
+<p>通过矩阵运算直接求解最优参数 $\theta$。</p>
+<ol>
+<li><p>矩阵表示：</p>
+<ul>
+<li><p>设计矩阵 $X \in \mathbb{R}^{m \times n}$（$m$ 个样本，$n$ 个特征）</p>
+</li>
+<li><p>标签向量 $y \in \mathbb{R}^m$</p>
+</li>
+<li><p>参数 $\theta \in \mathbb{R}^n$</p>
+</li>
+</ul>
+</li>
+<li><p>目标函数向量化：</p>
+<p>$$<br>J(\theta) &#x3D; \frac{1}{2m} | X\theta - y |^2<br>$$</p>
+</li>
+<li><p>对 θ 求导</p>
+<p>$$<br>\nabla_\theta J(\theta) &#x3D; \frac{1}{m} X^T (X\theta - y) &#x3D; 0<br>$$</p>
+</li>
+</ol>
+<p><strong>4.正则化</strong></p>
+<p>为了解决过拟合或不可逆问题，引入正则化项。</p>
+<ul>
+<li><p>L1正则(Lasso)：$J(\theta) +&#x3D; \lambda||\theta||_1$</p>
+<ul>
+<li>产生稀疏解，可用于特征选择</li>
+</ul>
+</li>
+<li><p>L2正则(Ridge)：$J(\theta) +&#x3D; \lambda||\theta||_2^2$</p>
+<ul>
+<li>防止过拟合，稳定数值解</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>L1 (Lasso)</th>
+<th>L2 (Ridge)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正则化项</td>
+<td>$|\theta|_1$</td>
+<td>$|\theta|_2^2$</td>
+</tr>
+<tr>
+<td>解是否稀疏</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>特征选择</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>处理共线性</td>
+<td>部分有效</td>
+<td>有效</td>
+</tr>
+<tr>
+<td>计算复杂度</td>
+<td>较高（需迭代优化）</td>
+<td>较低（有解析解）</td>
+</tr>
+</tbody></table>
+<h4 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h4><h5 id="Sigmoid"><a href="#Sigmoid" class="headerlink" title="Sigmoid"></a>Sigmoid</h5><p>$$<br>g(z) &#x3D; \frac{1}{1+e^{-z}}<br>$$</p>
+<ul>
+<li><p>将线性输出映射到(0,1)区间</p>
+</li>
+<li><p>导数特性：$g’(z) &#x3D; g(z)(1-g(z))$</p>
+</li>
+</ul>
+<h5 id="交叉熵损失"><a href="#交叉熵损失" class="headerlink" title="交叉熵损失"></a>交叉熵损失</h5><p>$$<br>J(\theta) &#x3D; -\frac{1}{m}\sum[y\log(h)+(1-y)\log(1-h)]<br>$$</p>
+<ul>
+<li>对分类任务更敏感，梯度更新幅度与误差成正比</li>
+</ul>
+<h3 id="决策树模型"><a href="#决策树模型" class="headerlink" title="决策树模型"></a>决策树模型</h3><h4 id="基础决策树"><a href="#基础决策树" class="headerlink" title="基础决策树"></a>基础决策树</h4><p><strong>核心思想</strong>：通过递归的if-then规则划分特征空间，构建树形结构。</p>
+<p><strong>关键算法</strong>：</p>
+<ol>
+<li><p><strong>ID3</strong>（Iterative Dichotomiser 3）</p>
+<ul>
+<li><p>使用<strong>信息增益</strong>（Information Gain）选择特征</p>
+</li>
+<li><p>仅支持离散特征，容易过拟合</p>
+</li>
+</ul>
+</li>
+<li><p><strong>C4.5</strong>（改进版）</p>
+<ul>
+<li><p>引入<strong>信息增益比</strong>处理特征取值多的偏差</p>
+</li>
+<li><p>支持连续特征和缺失值处理</p>
+</li>
+<li><p>通过剪枝（如悲观错误剪枝）降低过拟合</p>
+</li>
+</ul>
+</li>
+<li><p><strong>CART</strong>（Classification and Regression Trees）</p>
+<ul>
+<li><p>二叉树结构，支持回归（MSE）和分类（Gini指数）</p>
+</li>
+<li><p>生成后剪枝（代价复杂度剪枝）</p>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><p>可解释性强，可视化直观</p>
+</li>
+<li><p>对异常值不敏感</p>
+</li>
+<li><p>容易过拟合（需通过max_depth&#x2F;min_samples_leaf等参数控制）</p>
+</li>
+</ul>
+<h4 id="随机森林（Random-Forest）"><a href="#随机森林（Random-Forest）" class="headerlink" title="随机森林（Random Forest）"></a>随机森林（Random Forest）</h4><p><strong>核心思想</strong>：通过Bagging（Bootstrap Aggregating）集成多棵决策树，引入双重随机性降低方差。</p>
+<p><strong>关键技术</strong>：</p>
+<ol>
+<li><p><strong>数据随机</strong>：每棵树训练时Bootstrap采样</p>
+</li>
+<li><p><strong>特征随机</strong>：节点分裂时从随机子集中选最优特征（√p或log2p）</p>
+</li>
+<li><p><strong>投票机制</strong>：分类取众数，回归取平均</p>
+</li>
+</ol>
+<p><strong>优势</strong>：</p>
+<ul>
+<li><p>天然抗过拟合（通过树间独立性）</p>
+</li>
+<li><p>可并行训练（scikit-learn默认n_jobs&#x3D;1需手动设置）</p>
+</li>
+<li><p>提供特征重要性（基于Gini不纯度减少量或排列重要性）</p>
+</li>
+</ul>
+<p><strong>变体</strong>：</p>
+<ul>
+<li><strong>Extra-Trees</strong>（Extremely Randomized Trees）：进一步随机化分裂阈值</li>
+</ul>
+<h4 id="梯度提升树（GBDT-XGBoost）"><a href="#梯度提升树（GBDT-XGBoost）" class="headerlink" title="梯度提升树（GBDT&#x2F;XGBoost）"></a>梯度提升树（GBDT&#x2F;XGBoost）</h4><h5 id="1-GBDT（Gradient-Boosting-Decision-Tree）"><a href="#1-GBDT（Gradient-Boosting-Decision-Tree）" class="headerlink" title="1. GBDT（Gradient Boosting Decision Tree）"></a>1. <strong>GBDT</strong>（Gradient Boosting Decision Tree）</h5><p><strong>核心思想</strong>：通过加法模型（Additive Model）串行训练多棵弱树，沿负梯度方向迭代优化。</p>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li><p>损失函数：回归常用MSE，分类用对数损失</p>
+</li>
+<li><p>拟合残差：每棵树预测当前模型的负梯度（伪残差）</p>
+</li>
+<li><p>学习率（shrinkage）：控制每棵树贡献，防止过拟合</p>
+</li>
+</ul>
+<h5 id="2-XGBoost（eXtreme-Gradient-Boosting）"><a href="#2-XGBoost（eXtreme-Gradient-Boosting）" class="headerlink" title="2. XGBoost（eXtreme Gradient Boosting）"></a>2. <strong>XGBoost</strong>（eXtreme Gradient Boosting）</h5><p><strong>核心改进</strong>：</p>
+<ul>
+<li><p><strong>二阶泰勒展开</strong>：损失函数使用一阶+二阶导数（类似牛顿法）</p>
+</li>
+<li><p><strong>正则化项</strong>：在目标函数中加入叶子节点数（γ）和权重L2范数（λ）</p>
+</li>
+<li><p><strong>工程优化</strong>：</p>
+<ul>
+<li><p>特征预排序（列块存储）</p>
+</li>
+<li><p>加权分位数草图（Weighted Quantile Sketch）处理缺失值</p>
+</li>
+<li><p>并行化设计（特征粒度并行）</p>
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>单棵决策树</th>
+<th>随机森林</th>
+<th>GBDT&#x2F;XGBoost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>训练方式</strong></td>
+<td>单次训练</td>
+<td>Bagging并行</td>
+<td>Boosting串行</td>
+</tr>
+<tr>
+<td><strong>过拟合风险</strong></td>
+<td>高</td>
+<td>低</td>
+<td>中等（需调参）</td>
+</tr>
+<tr>
+<td><strong>数据敏感性</strong></td>
+<td>对噪声敏感</td>
+<td>鲁棒性强</td>
+<td>需处理异常值</td>
+</tr>
+<tr>
+<td><strong>解释性</strong></td>
+<td>最好</td>
+<td>特征重要性</td>
+<td>全局重要性</td>
+</tr>
+<tr>
+<td><strong>典型超参数</strong></td>
+<td>max_depth</td>
+<td>n_estimators</td>
+<td>learning_rate</td>
+</tr>
+</tbody></table>
+<h3 id="支持向量机（SVM）"><a href="#支持向量机（SVM）" class="headerlink" title="支持向量机（SVM）"></a>支持向量机（SVM）</h3><h4 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h4><ul>
+<li><p><strong>支持向量</strong>：离分界线最近的那些样本点，它们决定了分界线的位置。</p>
+</li>
+<li><p><strong>间隔（Margin）</strong>：分界线到两侧最近点的距离，SVM的目标是<strong>最大化这个间隔</strong>。</p>
+</li>
+</ul>
+<h4 id="线性可分（硬间隔）"><a href="#线性可分（硬间隔）" class="headerlink" title="线性可分（硬间隔）"></a>线性可分（硬间隔）</h4><p>找到一条直线w*x+b&#x3D;0（超平面），使分类样本落在直线（平面）的一边，数学目标等同于最大化间隔。硬间隔要求严格可分。</p>
+<h4 id="线性不可分（软间隔）"><a href="#线性不可分（软间隔）" class="headerlink" title="线性不可分（软间隔）"></a>线性不可分（软间隔）</h4><p>如果数据存在噪声或重叠，允许一些样本点出错。数学目标引入最小化惩罚量。</p>
+<h4 id="线性不可分（核技巧）"><a href="#线性不可分（核技巧）" class="headerlink" title="线性不可分（核技巧）"></a>线性不可分（核技巧）</h4><p>数据无法用直线分开，SVM通过核函数将数据映射到高维空间使其线性可分。</p>
+<h3 id="聚类算法"><a href="#聚类算法" class="headerlink" title="聚类算法"></a>聚类算法</h3><p>聚类算法旨在将数据分类为若干簇，同一簇内样本相似，不同簇内样本相异。</p>
+<h4 id="K-means"><a href="#K-means" class="headerlink" title="K-means"></a>K-means</h4><h5 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h5><ul>
+<li><p><strong>预先指定簇的数量（K）</strong>，通过迭代优化将数据划分为K个球形簇。</p>
+</li>
+<li><p><strong>中心点驱动</strong>：每个簇用一个中心点（质心）表示，数据点属于离它最近的质心对应的簇。</p>
+</li>
+</ul>
+<h5 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h5><ol>
+<li><p><strong>初始化</strong>：随机选择K个点作为初始质心（如K&#x3D;3）。</p>
+</li>
+<li><p><strong>分配数据点</strong>：计算每个点到所有质心的距离（通常用欧氏距离），将其分配到最近的质心所属的簇。</p>
+</li>
+<li><p><strong>更新质心</strong>：重新计算每个簇中所有点的均值，作为新质心。</p>
+</li>
+<li><p><strong>重复</strong>：直到质心不再显著变化（收敛）或达到最大迭代次数。</p>
+</li>
+</ol>
+<h5 id="关键参数"><a href="#关键参数" class="headerlink" title="关键参数"></a>关键参数</h5><ul>
+<li><p><strong>K值</strong>：通过肘部法（Elbow Method）或轮廓系数选择。</p>
+</li>
+<li><p><strong>初始化方法</strong>：K-Means++（优化初始质心选择）。</p>
+</li>
+<li><p><strong>最大迭代次数</strong>：防止无限循环。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>优点</strong></th>
+<th><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>简单高效，适合大规模数据</td>
+<td>必须预先指定K值（可能不准）</td>
+</tr>
+<tr>
+<td>结果容易解释（球形簇）</td>
+<td>对初始质心敏感（可能局部最优）</td>
+</tr>
+<tr>
+<td>线性复杂度（计算快）</td>
+<td>只能发现球形簇，对非凸簇失效</td>
+</tr>
+<tr>
+<td></td>
+<td>对噪声和离群点敏感</td>
+</tr>
+</tbody></table>
+<h4 id="DBSCAN"><a href="#DBSCAN" class="headerlink" title="DBSCAN"></a>DBSCAN</h4><h5 id="核心算法"><a href="#核心算法" class="headerlink" title="核心算法"></a>核心算法</h5><ul>
+<li><p><strong>基于密度</strong>：将高密度区域划分为簇，低密度区域视为噪声。</p>
+</li>
+<li><p><strong>无需指定簇数量</strong>：通过数据分布自动发现任意形状的簇。</p>
+</li>
+</ul>
+<h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><ul>
+<li><p><strong>核心点</strong>：在半径ε（epsilon）内有至少MinPts个邻居的点。</p>
+</li>
+<li><p><strong>边界点</strong>：在ε内邻居数&lt;MinPts，但属于某个核心点的邻居。</p>
+</li>
+<li><p><strong>噪声点</strong>：既不是核心点也不是边界点。</p>
+</li>
+</ul>
+<h5 id="算法步骤-1"><a href="#算法步骤-1" class="headerlink" title="算法步骤"></a>算法步骤</h5><ol>
+<li><p><strong>随机选点</strong>：选择一个未访问的点，检查其ε邻域内的邻居数。</p>
+</li>
+<li><p><strong>判断核心点</strong>：</p>
+<ul>
+<li><p>如果邻居数≥MinPts → 标记为核心点，新建一个簇，并扩展簇（递归检查邻居）。</p>
+</li>
+<li><p>否则 → 暂时标记为噪声。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>扩展簇</strong>：将所有密度相连的核心点加入同一簇。</p>
+</li>
+<li><p><strong>重复</strong>：直到所有点被访问。</p>
+</li>
+</ol>
+<h5 id="关键参数-1"><a href="#关键参数-1" class="headerlink" title="关键参数"></a>关键参数</h5><ul>
+<li><p><strong>ε（epsilon）</strong>：邻域半径，影响簇的紧密程度。</p>
+</li>
+<li><p><strong>MinPts</strong>：核心点所需的最小邻居数，通常取3~5。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>优点</strong></th>
+<th><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无需指定簇数量</td>
+<td>对参数ε和MinPts敏感</td>
+</tr>
+<tr>
+<td>能发现任意形状的簇</td>
+<td>高维数据效果差（维度灾难）</td>
+</tr>
+<tr>
+<td>自动识别噪声点（抗噪能力强）</td>
+<td>密度不均时效果不佳</td>
+</tr>
+<tr>
+<td>适合不规则数据分布</td>
+<td>计算复杂度较高（接近O(n²)）</td>
+</tr>
+</tbody></table>
+<h3 id="降维方法"><a href="#降维方法" class="headerlink" title="降维方法"></a>降维方法</h3><h4 id="PCA（主成分分析）"><a href="#PCA（主成分分析）" class="headerlink" title="PCA（主成分分析）"></a>PCA（主成分分析）</h4><h5 id="核心思想-1"><a href="#核心思想-1" class="headerlink" title="核心思想"></a>核心思想</h5><ul>
+<li><p><strong>线性降维</strong>：通过正交变换，将原始特征转换为一系列线性无关的“主成分”。</p>
+</li>
+<li><p><strong>保留最大方差</strong>：第一个主成分方向是数据方差最大的方向，第二个主成分与第一个正交且方差次大，依此类推。</p>
+</li>
+</ul>
+<h5 id="关键步骤"><a href="#关键步骤" class="headerlink" title="关键步骤"></a>关键步骤</h5><ol>
+<li><p><strong>中心化数据</strong>：将每个特征减去其均值（使数据以原点为中心）。</p>
+</li>
+<li><p><strong>计算协方差矩阵</strong>：反映特征之间的相关性。</p>
+</li>
+<li><p><strong>特征值分解</strong>：找到协方差矩阵的特征值和特征向量。</p>
+</li>
+<li><p><strong>选择主成分</strong>：按特征值从大到小排序，取前k个特征向量作为新坐标轴。</p>
+</li>
+<li><p><strong>投影数据</strong>：将原始数据映射到选定的主成分上。</p>
+</li>
+</ol>
+<h5 id="数学表示"><a href="#数学表示" class="headerlink" title="数学表示"></a>数学表示</h5><ul>
+<li>第一主成分：</li>
+</ul>
+<p>$$<br>PC1 &#x3D; \mathbf{w}_1 \cdot \mathbf{X}<br>$$</p>
+<p>其中，$\mathbf{w}_1$ 是最大特征值对应的特征向量。</p>
+<ul>
+<li>降维后的数据</li>
+</ul>
+<p>$$<br>\mathbf{X}_{\text{PCA}} &#x3D; \mathbf{X} \cdot \mathbf{W}_k<br>$$</p>
+<p>其中，$\mathbf{W}_k$ 是前 $k$ 个特征向量组成的矩阵。</p>
+<h5 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h5><ul>
+<li><p>数据可视化（降到2D&#x2F;3D）。</p>
+</li>
+<li><p>特征工程（去除冗余特征，加速模型训练）。</p>
+</li>
+<li><p>去噪（丢弃方差小的成分）。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>优点</strong></th>
+<th><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计算高效，适合大规模数据</td>
+<td>只能捕捉线性关系</td>
+</tr>
+<tr>
+<td>去除特征间的相关性</td>
+<td>方差小的方向可能包含重要信息</td>
+</tr>
+<tr>
+<td>可解释性强（主成分是线性组合）</td>
+<td>对非线性结构失效</td>
+</tr>
+</tbody></table>
+<h4 id="t-SNE（t-分布随机领域嵌入）"><a href="#t-SNE（t-分布随机领域嵌入）" class="headerlink" title="t-SNE（t-分布随机领域嵌入）"></a>t-SNE（t-分布随机领域嵌入）</h4><h5 id="核心思想-2"><a href="#核心思想-2" class="headerlink" title="核心思想"></a>核心思想</h5><ul>
+<li><p><strong>非线性降维</strong>：专注于保留局部邻域结构，适合可视化复杂流形。</p>
+</li>
+<li><p><strong>概率建模</strong>：在高维和低维空间中分别用高斯分布和t分布表示数据点的相似性，最小化两者差异。</p>
+</li>
+</ul>
+<h5 id="关键步骤-1"><a href="#关键步骤-1" class="headerlink" title="关键步骤"></a>关键步骤</h5><ol>
+<li><p>计算高维相似度：对每个点 ${x}_i $，计算与邻居 ${x}<em>j $ 的相似度（高斯分布$p</em>{j \mid i}$)</p>
+<p>$p_{j \mid i} &#x3D; \frac{</p>
+<pre><code>\exp\left(-\frac&#123;\|\mathbf&#123;x&#125;_i - \mathbf&#123;x&#125;_j\|^2&#125;&#123;2\sigma_i^2&#125;\right)
+</code></pre>
+<p>}{</p>
+<pre><code>\sum_&#123;k \neq i&#125; \exp\left(-\frac&#123;\|\mathbf&#123;x&#125;_i - \mathbf&#123;x&#125;_k\|^2&#125;&#123;2\sigma_i^2&#125;\right)
+</code></pre>
+<p>}$</p>
+</li>
+<li><p>对称化联合概率：通过对称化条件概率得到联合概率：</p>
+</li>
+</ol>
+<p>$$<br>p_{ij} &#x3D; \frac{p_{j \mid i} + p_{i \mid j}}{2n}<br>$$</p>
+<ol start="3">
+<li>低位映射：低维空间中的随机初始化点$y_i$使用 <strong>t 分布</strong>（自由度为1）计算相似度$q_{ij}$</li>
+</ol>
+<p>$$<br>q_{ij} &#x3D; \frac{<br>    \left(1 + |\mathbf{y}_i - \mathbf{y}<em>j|^2\right)^{-1}<br>}{<br>    \sum</em>{k \neq l} \left(1 + |\mathbf{y}_k - \mathbf{y}_l|^2\right)^{-1}<br>}<br>$$</p>
+<ol start="4">
+<li>优化目标（最小化KL散度）</li>
+</ol>
+<p>$$<br>\text{KL}(P | Q) &#x3D; \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}<br>$$</p>
+<h5 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h5><ul>
+<li><p><strong>强调局部结构</strong>：邻近的点在低维中仍靠近，但全局距离可能失真。</p>
+</li>
+<li><p><strong>t分布的使用</strong>：避免“拥挤问题”（高维远距离点在低维被压缩）。</p>
+</li>
+</ul>
+<h5 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h5><ul>
+<li><p>高维数据可视化（如MNIST手写数字、基因数据）。</p>
+</li>
+<li><p>探索性数据分析（发现隐藏的簇结构）。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>优点</strong></th>
+<th><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>能揭示非线性结构（如簇、流形）</td>
+<td>计算复杂度高（O(n²)）</td>
+</tr>
+<tr>
+<td>可视化效果极佳</td>
+<td>结果受超参数影响大（困惑度Perplexity）</td>
+</tr>
+<tr>
+<td>适合高维数据探索</td>
+<td>不能用于特征工程（每次结果不稳定）</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2025/06/12/Machinelearning/">http://120.46.180.209/2025/06/12/Machinelearning/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a></div><div class="post-share"><div class="social-share" data-image="/2025/06/12/Machinelearning/20151106_143936.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/10/ctfshow-jwt/" title="【CTFSHOW】 web入门jwt"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【CTFSHOW】 web入门jwt</div></div><div class="info-2"><div class="info-item-1">web345第一题，将cookie的sub字段改为admin即可，同时将base64后的结果放进修改后的cookie访问&#x2F;admin&#x2F; 本题未指定加密算法（alg字段）。  web346这一题给定了加密算法，尝试用none绕过，否则就要爆破secretkey 用jwt.io怎么也不能通过，猜测可能是由于三部分拼接的问题。这里用工具GitHub - ticarpi&#x2F;jwt_tool: :snake: A toolkit for testing, tweaking and cracking JSON Web Tokens 修改头部alg为none，payload的sub字段为admin，然后去除jwt最后一个签名字段后上传。  web347提示了弱口令，所以需要爆破。工具还是jwt_tool 明确这里可以弱口令爆破的必要条件：  针对对称加密算法（比如这题的HS256）  使用字典爆破： python jwt_tool.py JWTCODE -C -d dictionary.txt  结果是123456   web348还是对称爆破，密钥是aaab </div></div></div></a><a class="pagination-related" href="/2025/06/15/fathersday/" title="你没教会我的秘籍，我找谁学？"><img class="cover" src="/2025/06/15/fathersday/1309_1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">你没教会我的秘籍，我找谁学？</div></div><div class="info-2"><div class="info-item-1">    小时候，母亲问我：“你觉得爸爸和妈妈谁比较聪明？” ...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">概念基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.1.</span> <span class="toc-text">监督学习&#x2F;无监督学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.1.1.</span> <span class="toc-text">监督学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.1.2.</span> <span class="toc-text">无监督学习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">评估指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">1.2.1.</span> <span class="toc-text">对于分类问题：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">混淆矩阵</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%86%E7%A1%AE%E7%8E%87%EF%BC%88Accuracy%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">准确率（Accuracy）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B2%BE%E7%A1%AE%E7%8E%87%EF%BC%88Precision%EF%BC%89"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">精确率（Precision）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AC%E5%9B%9E%E7%8E%87%EF%BC%88Recall%EF%BC%89"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">召回率（Recall）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#F1-Score"><span class="toc-number">1.2.1.5.</span> <span class="toc-text">F1-Score</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%87%E6%AD%A3%E7%8E%87%EF%BC%88FPR%EF%BC%89"><span class="toc-number">1.2.1.6.</span> <span class="toc-text">假正率（FPR）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9C%9F%E6%AD%A3%E7%8E%87%EF%BC%88TPR-Recall%EF%BC%89"><span class="toc-number">1.2.1.7.</span> <span class="toc-text">真正率（TPR&#x3D;Recall）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ROC%E6%9B%B2%E7%BA%BF%EF%BC%88Receiver-Operating-Characteristic%EF%BC%89"><span class="toc-number">1.2.1.8.</span> <span class="toc-text">ROC曲线（Receiver Operating Characteristic）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AUC-Area-Under-Curve"><span class="toc-number">1.2.1.9.</span> <span class="toc-text">AUC(Area Under Curve)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.2.</span> <span class="toc-text">对于回归问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9D%87%E6%96%B9%E8%AF%AF%E5%B7%AEMSE%EF%BC%88Mean-Squared-Error%EF%BC%89"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">均方误差MSE（Mean Squared Error）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9D%87%E6%96%B9%E6%A0%B9%E8%AF%AF%E5%B7%AERMSE-%EF%BC%88Root-Mean-Squared-Error%EF%BC%89"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">均方根误差RMSE  （Root Mean Squared Error）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E7%BB%9D%E5%AF%B9%E8%AF%AF%E5%B7%AEMAE-%EF%BC%88Mean-Absolute-Error%EF%BC%89"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">平均绝对误差MAE  （Mean Absolute Error）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#R%C2%B2%E5%88%86%E6%95%B0%EF%BC%88R-Squared%EF%BC%8C%E5%86%B3%E5%AE%9A%E7%B3%BB%E6%95%B0%EF%BC%89"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">R²分数（R-Squared，决定系数）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E8%81%9A%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.3.</span> <span class="toc-text">对于聚类问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AE%E5%BB%93%E7%B3%BB%E6%95%B0%EF%BC%88Silhouette-Coefficient%EF%BC%89"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">轮廓系数（Silhouette Coefficient）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%82%98%E9%83%A8%E6%B3%95%E5%88%99%EF%BC%88Elbow-Method%EF%BC%89"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">肘部法则（Elbow Method）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E4%BE%8B%E5%AD%90"><span class="toc-number">1.3.</span> <span class="toc-text">算法例子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">线性模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">线性回归</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Sigmoid"><span class="toc-number">1.3.1.2.1.</span> <span class="toc-text">Sigmoid</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1"><span class="toc-number">1.3.1.2.2.</span> <span class="toc-text">交叉熵损失</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.2.</span> <span class="toc-text">决策树模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E5%86%B3%E7%AD%96%E6%A0%91"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">基础决策树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97%EF%BC%88Random-Forest%EF%BC%89"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">随机森林（Random Forest）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E6%8F%90%E5%8D%87%E6%A0%91%EF%BC%88GBDT-XGBoost%EF%BC%89"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">梯度提升树（GBDT&#x2F;XGBoost）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-GBDT%EF%BC%88Gradient-Boosting-Decision-Tree%EF%BC%89"><span class="toc-number">1.3.2.3.1.</span> <span class="toc-text">1. GBDT（Gradient Boosting Decision Tree）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-XGBoost%EF%BC%88eXtreme-Gradient-Boosting%EF%BC%89"><span class="toc-number">1.3.2.3.2.</span> <span class="toc-text">2. XGBoost（eXtreme Gradient Boosting）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%EF%BC%88SVM%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">支持向量机（SVM）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">名词解释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E5%8F%AF%E5%88%86%EF%BC%88%E7%A1%AC%E9%97%B4%E9%9A%94%EF%BC%89"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">线性可分（硬间隔）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E4%B8%8D%E5%8F%AF%E5%88%86%EF%BC%88%E8%BD%AF%E9%97%B4%E9%9A%94%EF%BC%89"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">线性不可分（软间隔）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E4%B8%8D%E5%8F%AF%E5%88%86%EF%BC%88%E6%A0%B8%E6%8A%80%E5%B7%A7%EF%BC%89"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">线性不可分（核技巧）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.4.</span> <span class="toc-text">聚类算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#K-means"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">K-means</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">1.3.4.1.1.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.4.1.2.</span> <span class="toc-text">算法步骤</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.4.1.3.</span> <span class="toc-text">关键参数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DBSCAN"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">DBSCAN</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">1.3.4.2.1.</span> <span class="toc-text">核心算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.3.4.2.2.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">1.3.4.2.3.</span> <span class="toc-text">算法步骤</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0-1"><span class="toc-number">1.3.4.2.4.</span> <span class="toc-text">关键参数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%8D%E7%BB%B4%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.5.</span> <span class="toc-text">降维方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PCA%EF%BC%88%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">PCA（主成分分析）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.3.5.1.1.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.5.1.2.</span> <span class="toc-text">关键步骤</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E8%A1%A8%E7%A4%BA"><span class="toc-number">1.3.5.1.3.</span> <span class="toc-text">数学表示</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.5.1.4.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#t-SNE%EF%BC%88t-%E5%88%86%E5%B8%83%E9%9A%8F%E6%9C%BA%E9%A2%86%E5%9F%9F%E5%B5%8C%E5%85%A5%EF%BC%89"><span class="toc-number">1.3.5.2.</span> <span class="toc-text">t-SNE（t-分布随机领域嵌入）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.5.2.1.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">1.3.5.2.2.</span> <span class="toc-text">关键步骤</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.3.5.2.3.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-number">1.3.5.2.4.</span> <span class="toc-text">应用场景</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

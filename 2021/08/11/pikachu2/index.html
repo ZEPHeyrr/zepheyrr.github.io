@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【本地靶场pikachu】通关笔记（二）：XSS | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="简述：XSS，跨站脚本攻击（Cross Site Scripting）攻击通常指的是通过利用网页开发时留下的漏洞，通过巧妙的方法注入恶意指令代码到网页，使用户加载并执行攻击者恶意制造的网页程序。这些恶意网页程序通常是JavaScript，但实际上也可以包括Java，VBScript，ActiveX，Flash或者甚至是普通的HTML。攻击成功后，攻击者可能得到更高的权限（如执行一些操作）、私密网页">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【本地靶场pikachu】通关笔记（二）：XSS">
+<meta property="og:url" content="http://120.46.180.209/2021/08/11/pikachu2/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="简述：XSS，跨站脚本攻击（Cross Site Scripting）攻击通常指的是通过利用网页开发时留下的漏洞，通过巧妙的方法注入恶意指令代码到网页，使用户加载并执行攻击者恶意制造的网页程序。这些恶意网页程序通常是JavaScript，但实际上也可以包括Java，VBScript，ActiveX，Flash或者甚至是普通的HTML。攻击成功后，攻击者可能得到更高的权限（如执行一些操作）、私密网页">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/img/ctf.png">
+<meta property="article:published_time" content="2021-08-11T04:38:22.000Z">
+<meta property="article:modified_time" content="2025-05-30T05:14:56.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/img/ctf.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【本地靶场pikachu】通关笔记（二）：XSS",
+  "url": "http://120.46.180.209/2021/08/11/pikachu2/",
+  "image": "http://120.46.180.209/img/ctf.png",
+  "datePublished": "2021-08-11T04:38:22.000Z",
+  "dateModified": "2025-05-30T05:14:56.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2021/08/11/pikachu2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【本地靶场pikachu】通关笔记（二）：XSS',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/bckg.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【本地靶场pikachu】通关笔记（二）：XSS</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【本地靶场pikachu】通关笔记（二）：XSS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-11T04:38:22.000Z" title="发表于 2021-08-11 12:38:22">2021-08-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T05:14:56.000Z" title="更新于 2025-05-30 13:14:56">2025-05-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="简述："><a href="#简述：" class="headerlink" title="简述："></a>简述：</h1><p>XSS，跨站脚本攻击（Cross Site Scripting）攻击通常指的是通过利用网页开发时留下的漏洞，通过巧妙的方法注入恶意指令代码到网页，使用户加载并执行攻击者恶意制造的网页程序。这些恶意网页程序通常是JavaScript，但实际上也可以包括Java，VBScript，ActiveX，Flash或者甚至是普通的HTML。攻击成功后，攻击者可能得到更高的权限（如执行一些操作）、私密网页内容、会话和cookie等各种内容。</p>
+<h2 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h2><ol>
+<li><p>储存型：</p>
+<p>持久型跨站脚本（Persistent Cross-Site Scripting）也等同于存储型跨站脚本（Stored Cross-Site Scripting）。<br>此类 XSS 不需要用户单击特定 URL 就能执行跨站脚本，攻击者事先将恶意代码上传或储存到漏洞服务器中，只要受害者浏览包含此恶意代码的页面就会执行恶意代码。持久型 XSS 一般出现在网站留言、评论、博客日志等交互处，恶意脚本存储到客户端或者服务端的数据库中。</p>
+</li>
+<li><p>反射型：</p>
+<p>反射型跨站脚本（Reflected Cross-Site Scripting）是最常见，也是使用最广的一种，可将恶意脚本附加到 URL 地址的参数中。<br>反射型 XSS 的利用一般是攻击者通过特定手法（如电子邮件），诱使用户去访问一个包含恶意代码的 URL，当受害者点击这些专门设计的链接的时候，恶意代码会直接在受害者主机上的浏览器执行。此类 XSS 通常出现在网站的搜索栏、用户登录口等地方，常用来窃取客户端 Cookies 或进行钓鱼欺骗。</p>
+</li>
+<li><p>DOM：</p>
+<p>传统的 XSS 漏洞一般出现在服务器端代码中，而 DOM-Based XSS 是基于 DOM 文档对象模型的一种漏洞，所以，受客户端浏览器的脚本代码所影响。客户端 JavaScript 可以访问浏览器的 DOM 文本对象模型，因此能够决定用于加载当前页面的 URL。换句话说，客户端的脚本程序可以通过 DOM 动态地检查和修改页面内容，它不依赖于服务器端的数据，而从客户端获得 DOM 中的数据（如从 URL 中提取数据）并在本地执行。另一方面，浏览器用户可以操纵 DOM 中的一些对象，例如 URL、location 等。用户在客户端输入的数据如果包含了恶意 JavaScript 脚本，而这些脚本没有经过适当的过滤和消毒，那么应用程序就可能受到基于 DOM 的 XSS 攻击。</p>
+<ul>
+<li><p>下面简单介绍下<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/htmldom/index.asp">DOM</a></p>
+<p>DOM ，Document Object Model（文档对象模型），是 W3C（万维网联盟）的标准。</p>
+<p>DOM 定义了访问 HTML 和 XML 文档的标准：</p>
+<p>“W3C 文档对象模型 （DOM） 是中立于平台和语言的接口，它允许程序和脚本动态地访问和更新文档的内容、结构和样式。”</p>
+<p>W3C DOM 标准被分为 3 个不同的部分：</p>
+<ul>
+<li>核心 DOM - 针对任何结构化文档的标准模型</li>
+<li>XML DOM - 针对 XML 文档的标准模型</li>
+<li>HTML DOM - 针对 HTML 文档的标准模型</li>
+</ul>
+<p><strong>HTML DOM节点树实例</strong>：</p>
+<p><img src="https://www.w3school.com.cn/i/ct_htmltree.gif"></p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="实验过程："><a href="#实验过程：" class="headerlink" title="实验过程："></a>实验过程：</h1><h2 id="反射型xss（get）"><a href="#反射型xss（get）" class="headerlink" title="反射型xss（get）"></a>反射型xss（get）</h2><p>直接在输入框中输入xss代码，发现返回数据为空，且输入长度被限制。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span>  用以测试的xss代码，功能为弹出警告弹窗</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xss1prob.png"></p>
+<p>在前端修改限制为100，再将代码输入提交，即可触发弹窗。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xss1re.png"></p>
+<h2 id="反射型xss（post）"><a href="#反射型xss（post）" class="headerlink" title="反射型xss（post）"></a>反射型xss（post）</h2><p>根据提示内容，使用admin&#x2F;123456登录。本题不存在前端输入长度限制，直接输入代码即可。</p>
+<h2 id="储存型xss"><a href="#储存型xss" class="headerlink" title="储存型xss"></a>储存型xss</h2><p>直接将代码输入提交即可。不同于反射型，在我们注入的代码存在的情况下，用户只要刷新一次网页，注入代码就会被执行一次。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xss3.png"></p>
+<h2 id="DOM型xss"><a href="#DOM型xss" class="headerlink" title="DOM型xss"></a>DOM型xss</h2><p>在源代码中查看题目关键代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                    <span class="keyword">function</span> <span class="title function_">domxss</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">var</span> str = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;text&quot;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript">                        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dom&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;&lt;a href=&#x27;&quot;</span>+str+<span class="string">&quot;&#x27;&gt;what do you see?&lt;/a&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">                    &#125;</span></span><br><span class="line"><span class="language-javascript">                    <span class="comment">//试试：&#x27;&gt;&lt;img src=&quot;#&quot; onmouseover=&quot;alert(&#x27;xss&#x27;)&quot;&gt;</span></span></span><br><span class="line"><span class="language-javascript">                    <span class="comment">//试试：&#x27; onclick=&quot;alert(&#x27;xss&#x27;)&quot;&gt;,闭合掉就行</span></span></span><br><span class="line"><span class="language-javascript">                </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;text&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">value</span>=<span class="string">&quot;click me!&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;domxss()&quot;</span>&gt;</span></span><br><span class="line">//根据代码提示，闭合<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&quot;+str+&quot;&#x27;</span>&gt;</span>即可</span><br></pre></td></tr></table></figure>
+
+<h2 id="DOM型xss-x"><a href="#DOM型xss-x" class="headerlink" title="DOM型xss-x"></a>DOM型xss-x</h2><p>本题关键代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                    <span class="keyword">function</span> <span class="title function_">domxss</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">var</span> str = <span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>;</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">var</span> txss = <span class="built_in">decodeURIComponent</span>(str.<span class="title function_">split</span>(<span class="string">&quot;text=&quot;</span>)[<span class="number">1</span>]);</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">var</span> xss = txss.<span class="title function_">replace</span>(<span class="regexp">/\+/g</span>,<span class="string">&#x27; &#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"><span class="comment">//                        alert(xss);</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dom&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;&lt;a href=&#x27;&quot;</span>+xss+<span class="string">&quot;&#x27;&gt;就让往事都随风,都随风吧&lt;/a&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">                    &#125;</span></span><br><span class="line"><span class="language-javascript">                    <span class="comment">//试试：&#x27;&gt;&lt;img src=&quot;#&quot; onmouseover=&quot;alert(&#x27;xss&#x27;)&quot;&gt;</span></span></span><br><span class="line"><span class="language-javascript">                    <span class="comment">//试试：&#x27; onclick=&quot;alert(&#x27;xss&#x27;)&quot;&gt;,闭合掉就行</span></span></span><br><span class="line"><span class="language-javascript"> </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;get&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;text&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;请说出你的伤心往事&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">form</span>&gt;</span>             </span><br></pre></td></tr></table></figure>
+
+<p>和上题基本一样，只是增加了一个过滤</p>
+<h2 id="xss之盲打"><a href="#xss之盲打" class="headerlink" title="xss之盲打"></a>xss之盲打</h2><p>根据提示，要求登录后台。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/xss%E7%9B%B2%E6%89%93.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin/123456</span><br></pre></td></tr></table></figure>
+
+<p>登录后台后才可以发现提交的信息。那么xss或许可以在管理员页面被触发。在初始页面提交代码后再次登录，弹窗被触发。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/20210812183331.png"></p>
+<h2 id="xss之过滤"><a href="#xss之过滤" class="headerlink" title="xss之过滤"></a>xss之过滤</h2><p>尝试直接触发弹窗，发现可能过滤了本标签</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/20210819214702.png">****</p>
+<p>使用img标签，成功触发</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZEPHeyrr/images/images/2021081921525221.png"></p>
+<p>payload：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=1 onclick=alert(1);&gt;  这里的onclick代表事件需要鼠标单击才能触发</span><br><span class="line">另，使用大写也可绕过该过滤</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2021/08/11/pikachu2/">http://120.46.180.209/2021/08/11/pikachu2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ctf/">ctf</a></div><div class="post-share"><div class="social-share" data-image="/img/ctf.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/08/10/msf/" title="【渗透实验】永恒之蓝漏洞MS17-010复现实验"><img class="cover" src="/img/dnscover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【渗透实验】永恒之蓝漏洞MS17-010复现实验</div></div><div class="info-2"><div class="info-item-1">概述：什么是“永恒之蓝”？永恒之蓝是指2017年4月14日晚，黑客团体Shadow Brokers（影子经纪人）公布一大批网络攻击工具，其中包含“永恒之蓝”工具，“永恒之蓝”利用Windows系统的SMB漏洞可以获取系统最高权限。 攻击原理：恶意代码会扫描开放445文件共享端口的Windows机器，无需用户任何操作，只要开机上网，不法分子就能在电脑和服务器中植入勒索软件、远程控制木马、虚拟货币挖矿机等恶意程序。 关于SMB协议：SMB(全称是Server Message Block)是一个协议名，它能被用于Web连接和客户端与服务器之间的信息沟通。它的工作原理可以概括为： （1）：首先客户端发送一个SMB negport 请求数据报，，并列出它所支持的所有SMB的协议版本。服务器收到请求消息后响应请求，并列出希望使用的SMB协议版本。如果没有可以使用的协议版本则返回0XFFFFH，结束通信。 ...</div></div></div></a><a class="pagination-related" href="/2021/08/19/dns/" title="【渗透实验】DNS欺骗"><img class="cover" src="/img/dnscover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【渗透实验】DNS欺骗</div></div><div class="info-2"><div class="info-item-1">概述：什么是DNS欺骗攻击？DNS（DomainNameSystem，域名系统），因特网上作为域名和IP地址相互映射的一个分布式数据库，能够使用户更方便的访问互联网，而不用记住IP地址。而DNS欺骗就是攻击者冒充域名服务器的一种欺骗行为。如果可以冒充域名服务器，然后把查询的IP地址设为攻击者的IP地址，这样的话，用户上网就只能看到攻击者的主页，而不是用户想要取得的网站的主页，从而达到“冒名顶替”的效果。DNS协议运行在UDP协议之上，使用端口号53，DNS并不包含任何认证机制，因此第三方可以对DNS数据包进行伪造。 实验环境： 攻击机：kali 2021（192.168.40.130） 靶机：seed ubuntu 12.04（192.168.40.132）  实验过程：部署web主页本实验需要利用apache在kali端设置导向页面 在终端输入开启apache服务：&#x2F;etc&#x2F;init.d&#x2F;apache2...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/07/24/Socnet/" title="【打靶】Socnet"><img class="cover" src="/2023/07/24/Socnet/cover.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-24</div><div class="info-item-2">【打靶】Socnet</div></div><div class="info-2"><div class="info-item-1">靶机下载地址：https://download.vulnhub.com/boredhackerblog/medium_socnet.ova 主机探测arp-scan -l  nmap -sn 192.168.40.0/16  kali：192.168.40.148 靶机：192.168.40.149 开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其接入网络。 进一步信息收集1.端口、服务、操作系统探测nmap -sV -sC -O 192.168.40.149  目标开放了22、5000端口，在5000端口运行了一个由python2编写的http服务“Werkzeug”。在按照提示输入少于4字符长度的信息时会提示输入不够长  2.目录扫描dirsearch -u 192.168.40.149：5000 对5000端口进行目录扫描，发现一个／admin目录，访问，内有一个可执行python代码的入口。 尝试利用1.利用python来反弹shell先在kali监听5555端口： nc -lvnp...</div></div></div></a><a class="pagination-related" href="/2023/08/02/admx-new/" title="【打靶】AdmX_new"><img class="cover" src="/2023/08/02/admx-new/cover1.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">【打靶】AdmX_new</div></div><div class="info-2"><div class="info-item-1">靶机地址：https://download.vulnhub.com/admx/AdmX_new.7z 信息搜集及主机发现主机发现nmap -sn 192.168.40.0/24 netdiscover -r 192.168.40.0/24 这里再记录一工具arping，相较于arp-scan它范围更广，配合简单的bash使用。 for i in $(seq 1 256);do sudo arping -c 1 192.168.40.$i;done  kali:192.168.40.148 靶机：192.168.40.150 信息搜集靶机端口、服务、操作系统探测nmap -sV -p- -O 192.168.40.150 主机只开放了80端口，访问后为apache的默认配置界面。   目录爆破dirsearch -u 192.168.40.150:80 80端口下存在&#x2F;wordpress...</div></div></div></a><a class="pagination-related" href="/2025/06/03/ctf-blackbox/" title="【CTFSHOW】 web入门-黑盒测试"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-03</div><div class="info-item-2">【CTFSHOW】 web入门-黑盒测试</div></div><div class="info-2"><div class="info-item-1">web380 扫描目录后，存在page.php 这里存在一个id.php参数，可能是文件包含。get传入id&#x3D;flag即可 web381 原来的page.php加入了一个包含文件的前缀。  在注释中存在一个不存在于常见目录名称的目录，访问之即可 web382访问上题的目录，发现一个登录界面。  简单注入即可 web383同382...</div></div></div></a><a class="pagination-related" href="/2024/07/22/ctf-file-upload/" title="【CTFSHOW】 web入门文件上传"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="info-item-2">【CTFSHOW】 web入门文件上传</div></div><div class="info-2"><div class="info-item-1">web151前端验证文件格式，抓包改包。  web152说是后端提供了校验，但是抓包改包也可。 web153.user.ini实际上就是一个可以由用户“自定义”的php.ini 在其中添加如下选项可以包含一些文件： 1auto_prepend_file=01.png  若该目录下存在合法的php文档则会自动包含这个gif文件。恰好，本地是黑名单过滤。 首先通过前两题同样的方法将.user.ini文件上传，再直接上传改了后缀名的🐎。 web154黑名单过滤了上传文件中不能有php，但是大小写可以绕过，其他同上。 web155黑名单过滤，不区分大小写，但是可以用短标签   web156在之前的基础上过滤了中括号[] 用大括号代替之。 web157 158过滤了{} []&#x3D; 直接写命令 123&lt;?     system(&quot;nl ../fl*&quot;)?&gt;                  web159过滤了system...</div></div></div></a><a class="pagination-related" href="/2024/11/11/ctfshow-codeaudit/" title="【CTFSHOW】 web入门-代码审计"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-11</div><div class="info-item-2">【CTFSHOW】 web入门-代码审计</div></div><div class="info-2"><div class="info-item-1">web301系统是一个登录界面  源码中登陆界面中，用户名似乎存在注入点。  if(!strcasecmp($userpwd,$row[&#39;sds_password&#39;]))&#123; 这一行是密码与查询到结果相等即可。所以可以联合注入控制密码的值。 username:-1’ union select 1234# password:1234 web302修改了以上检查登录的那句 1if(!strcasecmp(sds_decode($userpwd),$row[&#x27;sds_password&#x27;]))&#123;  在fun.php提供了这个哈希函数  那就调用该方法： 1echo sds_decode(&quot;1234&quot;)#3cd76fc2201d6959a8c1c63dbd906ec7  username:-1’ union select...</div></div></div></a><a class="pagination-related" href="/2024/06/11/ctfshow-gets/" title="【CTFSHOW】 web入门-其他"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-11</div><div class="info-item-2">【CTFSHOW】 web入门-其他</div></div><div class="info-2"><div class="info-item-1">仅作记录，从这里开始是因为这些题传get参数就行 12345678910111213141516&lt;?php$url = &#x27;http://username:password@hostname/path?arg=value#anchor&#x27;;print_r(parse_url($url));echo parse_url($url, PHP_URL_PATH);?&gt;结果----------------------------------------------------------------------------------------------------Array([scheme] =&gt; http[host] =&gt; hostname[user] =&gt; username[pass] =&gt; password[path] =&gt; /path[query] =&gt; arg=value[fragment] =&gt;...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">简述：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%B1%BB%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">分类：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">实验过程：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%EF%BC%88get%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">反射型xss（get）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss%EF%BC%88post%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">反射型xss（post）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%82%A8%E5%AD%98%E5%9E%8Bxss"><span class="toc-number">2.3.</span> <span class="toc-text">储存型xss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOM%E5%9E%8Bxss"><span class="toc-number">2.4.</span> <span class="toc-text">DOM型xss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOM%E5%9E%8Bxss-x"><span class="toc-number">2.5.</span> <span class="toc-text">DOM型xss-x</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss%E4%B9%8B%E7%9B%B2%E6%89%93"><span class="toc-number">2.6.</span> <span class="toc-text">xss之盲打</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss%E4%B9%8B%E8%BF%87%E6%BB%A4"><span class="toc-number">2.7.</span> <span class="toc-text">xss之过滤</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

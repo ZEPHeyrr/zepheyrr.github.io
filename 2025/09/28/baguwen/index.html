@@ -1,0 +1,530 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【计算机面试】面试时的八股问题 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="我的目标是安全&#x2F;开发&#x2F;AI方向，这里整理一些老被问的问题。 计算机网络传输层   层 协议    应用层 HTTP、FTP、SMTP、NFS、Telnet、DNS   传输层 TCP、UDP   网络层 IP、ICMP、ARP、RARP   数据链路层 PPP、Ethernet   TCP、UDP相关TCP的可靠传输 校验和：发送方在构造TCP报文段时，会计算包括TCP头部、数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【计算机面试】面试时的八股问题">
+<meta property="og:url" content="http://120.46.180.209/2025/09/28/baguwen/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="我的目标是安全&#x2F;开发&#x2F;AI方向，这里整理一些老被问的问题。 计算机网络传输层   层 协议    应用层 HTTP、FTP、SMTP、NFS、Telnet、DNS   传输层 TCP、UDP   网络层 IP、ICMP、ARP、RARP   数据链路层 PPP、Ethernet   TCP、UDP相关TCP的可靠传输 校验和：发送方在构造TCP报文段时，会计算包括TCP头部、数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2025/09/28/baguwen/A90FB8F1A4B5D1F4E57EDBD6EF65EA5A.jpg">
+<meta property="article:published_time" content="2025-09-28T14:58:53.000Z">
+<meta property="article:modified_time" content="2025-09-29T06:58:10.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2025/09/28/baguwen/A90FB8F1A4B5D1F4E57EDBD6EF65EA5A.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【计算机面试】面试时的八股问题",
+  "url": "http://120.46.180.209/2025/09/28/baguwen/",
+  "image": "http://120.46.180.209/2025/09/28/baguwen/A90FB8F1A4B5D1F4E57EDBD6EF65EA5A.jpg",
+  "datePublished": "2025-09-28T14:58:53.000Z",
+  "dateModified": "2025-09-29T06:58:10.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2025/09/28/baguwen/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【计算机面试】面试时的八股问题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2025/09/28/baguwen/A90FB8F1A4B5D1F4E57EDBD6EF65EA5A.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【计算机面试】面试时的八股问题</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【计算机面试】面试时的八股问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-28T14:58:53.000Z" title="发表于 2025-09-28 22:58:53">2025-09-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-29T06:58:10.000Z" title="更新于 2025-09-29 14:58:10">2025-09-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>我的目标是安全&#x2F;开发&#x2F;AI方向，这里整理一些老被问的问题。</p>
+<h1 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h1><h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><table>
+<thead>
+<tr>
+<th>层</th>
+<th>协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>应用层</td>
+<td>HTTP、FTP、SMTP、NFS、Telnet、DNS</td>
+</tr>
+<tr>
+<td>传输层</td>
+<td>TCP、UDP</td>
+</tr>
+<tr>
+<td>网络层</td>
+<td>IP、ICMP、ARP、RARP</td>
+</tr>
+<tr>
+<td>数据链路层</td>
+<td>PPP、Ethernet</td>
+</tr>
+</tbody></table>
+<h2 id="TCP、UDP相关"><a href="#TCP、UDP相关" class="headerlink" title="TCP、UDP相关"></a>TCP、UDP相关</h2><h3 id="TCP的可靠传输"><a href="#TCP的可靠传输" class="headerlink" title="TCP的可靠传输"></a>TCP的可靠传输</h3><ul>
+<li>校验和：发送方在构造TCP报文段时，会计算包括TCP头部、数据部分以及一个伪头部（包含源IP地址、目的IP地址、协议号和TCP长度）在内的校验和，并将结果填入TCP头部的校验和字段。接收方收到报文后，使用相同的算法重新计算校验和，若结果不为全零，则说明数据在传输过程中可能发生了损坏，接收方将丢弃该报文段并可能触发重传。</li>
+<li>序列号&#x2F;确认应答（seq、ACK）：TCP通过序列号（Sequence Number，seq）和确认应答号（Acknowledgment Number，ack）实现可靠、有序的数据传输。序列号标识发送方当前报文段中第一个字节在整个数据流中的位置，确保接收方能按正确顺序重组数据；确认应答号则表示接收方期望下一个接收的字节序号，即“已成功接收ack-1之前的所有数据”。例如，若接收方返回ack&#x3D;1001，说明它已正确收到序号1000及之前的所有数据，并期待发送方接下来发送序号为1001的字节。</li>
+<li>超时重传：发送方每发送一个TCP报文段后，会启动一个定时器（重传定时器），等待接收方返回对应的确认应答（ACK）。如果在定时器超时前未收到ACK，发送方就认为该报文段可能在网络中丢失或延迟过久，于是会重新发送该报文段。超时时间（RTO, Retransmission Timeout）通常基于网络往返时间（RTT）动态调整，以适应网络状况的变化。</li>
+<li>流量控制：TCP的流量控制通过滑动窗口机制实现，目的是防止发送方发送数据过快，导致接收方缓冲区溢出而丢弃数据。接收方在每个ACK报文中携带一个“接收窗口”（rwnd）字段，告知发送方其当前还能接收多少字节的数据。发送方据此动态调整自己的发送窗口大小，确保未被确认的数据量不超过接收方的处理能力。滑动窗口允许发送方在未收到确认的情况下连续发送多个报文段，提高了传输效率；同时，随着ACK的返回和接收窗口的变化，窗口不断“滑动”，实现数据的有序、高效且不溢出的传输。</li>
+<li>快速重传：快速重传（Fast Retransmit）是TCP为提高重传效率而引入的一种机制，用于在不等待超时的情况下快速恢复丢失的报文段。当发送方连续收到三个或更多个针对同一数据序号的重复确认（Duplicate ACKs）时，就认为该确认所期望的下一个报文段很可能已经丢失。此时，发送方会立即重传该缺失的报文段，而不必等待重传定时器超时。快速重传显著减少了因丢包导致的延迟，提升了网络吞吐量和响应速度，通常与快速恢复（Fast Recovery）算法配合使用，以避免不必要的拥塞控制降速。</li>
+<li>拥塞控制：网络可能刚开始很拥塞，如果在网络传输过程中开始就发送大量数据的话，会发生丢包和超时重传，所以需要慢启动算法、拥塞避免算法、快速重传和快速恢复。</li>
+</ul>
+<h3 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a>TCP三次握手</h3><ol>
+<li>第一次握手：客户端请求建立连接，将首部的SYN标识位置为1，初始化序列号seq&#x3D;x，发送给服务器，并进入SYN_SENT状态，等待服务器确认。</li>
+<li>服务器接收到SYN后，将首部的SYN和ACK标识位置为1，回复确认ack的值为客户端发送的序列号x+1，同时自己也要初始化一个seq&#x3D;y，ACK和SYN一起发送客户端，进入SYN_RECV状态。</li>
+<li>客户端收到服务器的SYN和ACK包后，向服务器发送确认包ack，值为服务器的序列号y+1，并且自己的seq为x+1，此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态。</li>
+</ol>
+<h3 id="为什么要三次握手？没有会怎么样？"><a href="#为什么要三次握手？没有会怎么样？" class="headerlink" title="为什么要三次握手？没有会怎么样？"></a>为什么要三次握手？没有会怎么样？</h3><p>只有三次握手才能证明服务端和客户端的收发能力都是正常的。</p>
+<p>第一次握手：客户端发数据服务端接收，服务端可以知道客户端发消息的能力是正常的，自己接收消息的能力是正常的。</p>
+<p>第二次握手：服务端发消息客户端收，客户端可以知道自己发送接收消息的能力和服务端发送接收消息的能力是正常的。</p>
+<p>第三次握手：客户端再发送消息服务端接收，服务端可以知道自己发送消息的能力是正常的，客户端接收消息的能力是正常的。</p>
+<p>由此经过三次握手之后双方就可以都知道自己的发送和接收消息的能力是正常的。</p>
+<hr>
+<p>如果没有，会导致：</p>
+<ul>
+<li>无法确认双方的收发能力：仅一次或两次握手无法确保双方都能正常发送和接收数据。例如，若只有两次握手，服务器无法确认客户端是否收到了自己的 SYN-ACK，可能导致服务器以为连接已建立而持续发送数据，但客户端并未准备好</li>
+<li>历史重复连接请求引发错误：假设客户端发送的旧 SYN 报文因网络延迟突然到达服务器，若仅两次握手，服务器会误以为是新连接请求并立即建立连接，浪费资源。而三次握手中，客户端在收到旧 SYN-ACK 后会发现该连接并非自己当前发起的（序列号不匹配），从而发送 RST 或忽略，避免无效连接</li>
+</ul>
+<h3 id="为什么不是两次握手？"><a href="#为什么不是两次握手？" class="headerlink" title="为什么不是两次握手？"></a>为什么不是两次握手？</h3><p>如果使用的是两次握手建立连接，可能客户端发送的第一个请求连接并且没有丢失，只是因为在网络中滞留的时间太长了，由于TCP的客户端迟迟没有收到确认报文，以为服务器没有收到，此时重新向服务器发送这条报文，此后客户端和服务器经过两次握手完成连接，传输数据，然后关闭连接。之前滞留的那一次请求连接，因为网络通畅了，到达了服务器，这个报文本该是失效的，但是，两次握手的机制将会让客户端和服务器再次建立连接，这将导致不必要的错误和资源的浪费。</p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><ol>
+<li>主动关闭方（如客户端）发送 FIN：表示“我已无数据要发送”，进入 FIN-WAIT-1 状态。</li>
+<li>被动关闭方（如服务器）回复 ACK：确认收到 FIN，进入 CLOSE-WAIT 状态。此时客户端到服务器的连接方向已关闭，但服务器仍可继续发送数据给客户端。</li>
+<li>服务器数据发送完毕后，发送自己的 FIN：表示“我也无数据要发了”，进入 LAST-ACK 状态。</li>
+<li>客户端回复 ACK：确认收到服务器的 FIN，进入 TIME-WAIT 状态，并等待一段时间（通常为 2×MSL，Maximum Segment Lifetime）后才彻底关闭连接。服务器收到 ACK 后立即关闭。</li>
+</ol>
+<h3 id="TCP跟UDP的区别"><a href="#TCP跟UDP的区别" class="headerlink" title="TCP跟UDP的区别"></a>TCP跟UDP的区别</h3><ul>
+<li>TCP：面向连接（Connection-Oriented）<br>通信前需通过“三次握手”建立连接，通信结束后通过“四次挥手”断开连接。</li>
+<li>UDP：无连接（Connectionless）<br>发送数据前无需建立连接，直接发送数据包。</li>
+<li>TCP：可靠传输<br>提供确认机制（ACK）、重传机制、错误校验，确保数据完整、有序到达。</li>
+<li>UDP：不可靠传输<br>不保证数据是否到达、是否重复或乱序，可能丢包。</li>
+<li>TCP：开销大、速度相对较慢<br>因需维护连接状态、确认、重传等机制，头部开销大（20字节起）。</li>
+<li>UDP：开销小、传输快<br>头部仅8字节，无连接管理，适合实时性要求高的场景。</li>
+<li>TCP：保证数据按发送顺序到达<br>使用序列号和确认机制对数据包排序。</li>
+<li>UDP：不保证顺序<br>数据包独立传输，可能乱序到达。</li>
+<li>TCP：具备流量控制（滑动窗口）和拥塞控制机制<br>避免网络过载，动态调整发送速率。</li>
+<li>UDP：无流量控制和拥塞控制<br>应用层需自行处理（如视频会议软件）。</li>
+</ul>
+<h3 id="常用应用层协议底层情况"><a href="#常用应用层协议底层情况" class="headerlink" title="常用应用层协议底层情况"></a>常用应用层协议底层情况</h3><table>
+<thead>
+<tr>
+<th>协议</th>
+<th>端口</th>
+<th>传输层协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTTP</td>
+<td>80</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>443</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>FTP</td>
+<td>21控制&#x2F;20数据</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>25&#x2F;587&#x2F;465</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>POP3</td>
+<td>110&#x2F;995(加密)</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>IMAP（互联网消息访问协议）</td>
+<td>143&#x2F;993（加密）</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>TELNET</td>
+<td>23</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>22</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>53</td>
+<td>UDP大响应时用TCP</td>
+</tr>
+<tr>
+<td>DHCP</td>
+<td>67（服务器）&#x2F;68（客户端）</td>
+<td>UDP</td>
+</tr>
+<tr>
+<td>TFTP</td>
+<td>69</td>
+<td>UDP</td>
+</tr>
+<tr>
+<td>SNMP</td>
+<td>161&#x2F;162</td>
+<td>UDP</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>动态</td>
+<td>UDP</td>
+</tr>
+</tbody></table>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><h3 id="DNS查询过程？"><a href="#DNS查询过程？" class="headerlink" title="DNS查询过程？"></a>DNS查询过程？</h3><ul>
+<li>客户机向其本地域名服务器发出DNS请求报文</li>
+<li>本地域名服务器收到请求后，查询本地缓存，假设没有该记录，则以DNS客户的身份向根域名服务器发出解析请求</li>
+<li>根域名服务器收到请求后，判断该域名所属域，将对应的顶级域名服务器的IP地址返回给本地域名服务器</li>
+<li>本地域名服务器向顶级域名服务器发出解析请求报文</li>
+<li>顶级域名服务器收到请求后，将所对应的授权域名服务器的IP地址返回给本地域名服务器</li>
+<li>本地域名服务器向授权域名服务器发起解析请求报文</li>
+<li>授权域名服务器收到请求后，将查询结果返回给本地域名服务器</li>
+<li>本地域名服务器将查询结果保存到本地缓存，同时返回给客户机</li>
+</ul>
+<h3 id="HTTP与HTTPS"><a href="#HTTP与HTTPS" class="headerlink" title="HTTP与HTTPS"></a>HTTP与HTTPS</h3><h4 id="HTTP和HTTPS区别？"><a href="#HTTP和HTTPS区别？" class="headerlink" title="HTTP和HTTPS区别？"></a>HTTP和HTTPS区别？</h4><ul>
+<li>HTTP 明文传输，数据都是未加密的，安全性较差，HTTPS(SSL+HTTP）数据传输过程是加密的，安全性较好。</li>
+<li>使用 HTTPS 协议需要到 CA 申请证书。</li>
+<li>HTTP 页面响应速度比 HTTPS 快，主要是因为 HTTP 使用 TCP 三次握手建立连接，而 HTTPS除了 TCP 的三个包，还要加上SSL握手的消耗。</li>
+<li>用的端口也不一样，前者是 80，后者是 443。</li>
+<li>HTTPS 其实就是建构在 SSL&#x2F;TLS 之上的 HTTP 协议，所以，要比较 HTTPS 比 HTTP 要更耗费服务器资源。</li>
+</ul>
+<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="进程-线程"><a href="#进程-线程" class="headerlink" title="进程&#x2F;线程"></a>进程&#x2F;线程</h2><ul>
+<li>进程：进程是操作系统进行资源分配和调度的基本单位，是一个独立运行的程序实体。每个进程拥有独立的内存空间、文件描述符、寄存器状态等资源。进程之间的资源是相互隔离的，因此进程间通信需要通过操作系统提供的特定机制（如管道、消息队列、共享内存等）进行。由于进程拥有独立的资源，所以进程间的切换和调度开销较大。</li>
+<li>线程：线程是操作系统调度执行的最小单位，是进程内的一个执行流。一个进程可以拥有多个线程，这些线程共享进程的资源（如内存空间、文件描述符等）。由于线程共享相同的资源，线程间通信相对简单，可以直接通过共享变量、锁等方式进行。线程相较于进程，上下文切换和调度开销较小。但多个线程并发执行时，需要处理好同步和互斥问题，以避免数据不一致或竞争条件。</li>
+<li>协程：协程是一种用户态的轻量级线程，它的调度和切换完全由程序控制，不依赖于操作系统的调度。协程之间共享线程的资源，因此协程间通信也可以通过共享变量、锁等方式进行。协程的优势在于能够轻松地实现高并发，因为协程切换和调度的开销非常小。协程适用于I&#x2F;O密集型任务，通过异步I&#x2F;O可以有效地提高程序的性能。</li>
+</ul>
+<h3 id="用户线程和内核线程"><a href="#用户线程和内核线程" class="headerlink" title="用户线程和内核线程"></a>用户线程和内核线程</h3><ul>
+<li><strong>用户线程</strong>：用户线程是完全在用户空间中实现和管理的线程。它们的创建、同步和调度都由用户级别的线程库（如POSIX线程库，即Pthreads）处理，而不需要内核直接参与。由于用户线程的操作不涉及系统调用，它们的创建和切换开销相对较小。用户线程的一个主要限制是，它们不能充分利用多核处理器的并行能力。因为操作系统调度的基本单位是内核线程，当一个用户线程阻塞时（如I&#x2F;O操作），整个进程都会被阻塞，即使其他用户线程仍处于就绪状态。这可能导致多处理器系统中的性能下降。</li>
+<li><strong>内核线程</strong>：内核线程是由操作系统内核直接支持和管理的线程。内核负责创建、调度和销毁内核线程，每个内核线程都拥有独立的内核栈和线程上下文。由于内核线程是操作系统调度的基本单位，它们可以充分利用多处理器系统的并行能力。内核线程的缺点是，它们的创建、切换和同步操作涉及系统调用，导致较大的开销。此外，内核线程需要更多的内核资源（如内核栈），这可能在大量线程的情况下导致资源耗尽。</li>
+</ul>
+<h3 id="父子进程"><a href="#父子进程" class="headerlink" title="父子进程"></a>父子进程</h3><p>在操作系统中，进程可以创建其他进程。创建新进程的进程称为父进程，新创建的进程称为子进程。这种关系形成了一个进程树结构，其中根进程（如 Unix 和类 Unix 系统中的 init 进程，进程ID为1）是所有其他进程的祖先。在 Unix 和类 Unix 系统中，可以通过 fork() 系统调用创建子进程。fork() 调用会复制当前进程的地址空间和环境，并创建一个新的进程。子进程从 fork() 调用处继续执行，并继承父进程的大部分属性（如文件描述符、环境变量等）。父子进程可以通过 getpid()（获取当前进程ID）和 getppid()（获取父进程ID）系统调用来识别彼此。</p>
+<h3 id="进程调度算法"><a href="#进程调度算法" class="headerlink" title="进程调度算法"></a>进程调度算法</h3><ul>
+<li>时间片轮转（RR）：将CPU划分为一个一个时间片，每个任务独占CPU的一个时间片。时间片选的越小，那么任务响应的时间就越快，但是这意味着调度的次数会增加，调度的开销就大。弊端是任务的平均周转时间比较高</li>
+<li>优先级调度：在RR的时间片轮转基础上，满足用户的响应时间指标后考虑系统性能的。首先为了给用户提供更好的体验，交互式任务的优先级一定高于批处理任务。</li>
+<li>先到先得FCFS：任务到达时间早的优先级高。这个策略最大的特点就是简单直观，开发者只用维护一个队列即可。这个策略属于非抢占式调度，在任务执行完前是不会让出CPU的。短任务不友好，IO密集型也不友好</li>
+<li>短任务优先SJF：考虑执行时间最短的任务优先级高</li>
+</ul>
+<h3 id="进程通信方式"><a href="#进程通信方式" class="headerlink" title="进程通信方式"></a>进程通信方式</h3><ul>
+<li>管道：管道是一种半双工的通信机制，主要用于具有亲缘关系的进程（如父子进程）之间传递数据。<code>它在内核中维护一个缓冲区，一端用于写入，另一端用于读取，数据遵循先进先出（FIFO）原则。</code>匿名管道仅限于本地进程间通信，而命名管道（FIFO）可通过文件系统路径被无关进程访问。</li>
+<li>消息队列：<code>消息队列允许进程通过发送和接收格式化的消息进行通信，消息按类型或优先级排队，接收方可选择性地读取特定类型的消息。</code>与管道不同，消息队列支持异步通信、消息持久化（直到被读取），且不要求进程同时运行，适用于复杂或松耦合的进程协作场景。</li>
+<li>信号量：信号量本质上是一个计数器，用于协调多个进程或线程对共享资源的并发访问，实现同步与互斥。它通过原子操作（如 P&#x2F;V 操作）控制资源的可用数量，常用于防止竞态条件，例如确保同一时刻只有一个进程进入临界区。</li>
+<li>共享内存：<code>共享内存允许多个进程直接访问同一块物理内存区域，是最快的 IPC 方式</code>，因为数据无需在内核与用户空间之间复制。但它本身不提供同步机制，通常需配合信号量或互斥锁使用，以避免多个进程同时修改数据导致不一致。</li>
+</ul>
+<h2 id="中断与异常"><a href="#中断与异常" class="headerlink" title="中断与异常"></a>中断与异常</h2><h3 id="外部中断"><a href="#外部中断" class="headerlink" title="外部中断"></a>外部中断</h3><p>外部中断是由计算机系统外部事件触发的，通常与硬件设备相关。外部中断的目的是通知处理器某个外部设备需要处理器的注意，例如设备需要传输数据、设备发生错误等</p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>异常是由计算机系统内部事件触发的，通常与正在执行的程序或指令有关。异常的目的是通知处理器某个指令无法正常执行。</p>
+<h2 id="并发-并行"><a href="#并发-并行" class="headerlink" title="并发&#x2F;并行"></a>并发&#x2F;并行</h2><ul>
+<li>并发：指一个时间段内同时处理多个任务的能力。它强调的是任务之间的独立性，以及它们是如何在一个处理器或单个核心上交替执行的。</li>
+<li>并行：指在同一时刻执行多个任务的能力。<br>并发关注在一个时间段内处理多个任务，而并行关注在同一时刻执行多个任务</li>
+</ul>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h3 id="碎片"><a href="#碎片" class="headerlink" title="碎片"></a>碎片</h3><ul>
+<li>内部碎片：指已分配给进程的内存块中，未被实际使用的那部分空间。这部分内存虽然属于进程，但进程无法使用，造成浪费。</li>
+<li>外部碎片：指内存中存在大量不连续的小块空闲内存，总和足够大，但无法满足一个较大内存请求的现象</li>
+</ul>
+<h3 id="如何避免内部碎片？"><a href="#如何避免内部碎片？" class="headerlink" title="如何避免内部碎片？"></a>如何避免内部碎片？</h3><p>使用更小的页面大小（但会增加页表开销）。<br>在分页系统中，内部碎片不可避免，但通常较小（平均浪费约半页）。<br>对于动态分配，可采用伙伴系统（Buddy System） 或slab 分配器等更精细的内存管理策略。</p>
+<h3 id="如何避免外部碎片？"><a href="#如何避免外部碎片？" class="headerlink" title="如何避免外部碎片？"></a>如何避免外部碎片？</h3><p>内存紧缩（Compaction）：<br>将所有已分配的内存块“移动”到一端，合并空闲块形成大块连续空间。但开销大，且需硬件支持（如重定位寄存器）。<br>采用分页（Paging）机制：<br>分页不要求物理内存连续，逻辑地址通过页表映射到非连续的物理页，从根本上消除外部碎片（但引入内部碎片）。<br>采用分段+分页（段页式）：兼顾逻辑模块化与物理非连续分配。<br>使用更智能的分配算法：<br>如“最坏适应”（Worst Fit）可能减少小碎片，但效果有限。</p>
+<h3 id="内存管理算法："><a href="#内存管理算法：" class="headerlink" title="内存管理算法："></a>内存管理算法：</h3><ul>
+<li>首次适应（First Fit）：从内存低地址开始查找，找到第一个足够大的空闲分区就分配</li>
+<li>最佳适应（Best Fit）：遍历所有空闲分区，选择满足需求且大小最小的那个</li>
+<li>最坏适应（Worst Fit）：总是选择最大的空闲分区进行分配，大块分出去后剩下的部分仍可能较大，便于后续分配</li>
+<li>邻近适应 &#x2F; 循环首次适应：从上次分配结束的位置开始查找，找到第一个足够大的空闲区</li>
+<li>伙伴：伙伴系统将内存划分为大小为 2 的幂次（如 1 页、2 页、4 页、8 页……） 的块。当请求一块内存时，系统会找到最小的、大小 ≥ 请求大小的 2 的幂次块进行分配。<br>如果该大小的块不可用，就将一个更大的“伙伴”块递归拆分，直到得到所需大小；<br>当释放内存时，系统会检查其“伙伴”是否也空闲，若是，则合并成更大的块，以减少碎片。</li>
+</ul>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><h2 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h2><ul>
+<li>插入排序：每一趟将一个待排序记录按其关键字的大小插入到已排好序的一组记录的适当位置上，直到所有待排序记录全部插入为止。排序算法稳定。时间复杂度 O(n²)，空间复杂度 O(1)。</li>
+<li>希尔排序：把记录按下标的一定增量分组，对每组进行直接插入排序，每次排序后减小增量，当增量减至 1 时排序完毕。排序算法不稳定。时间复杂度 O(nlogn)，空间复杂度 O(1)。</li>
+<li>直接选择排序：每次在未排序序列中找到最小元素，和未排序序列的第一个元素交换位置，再在剩余未排序序列中重复该操作直到所有元素排序完毕。排序算法不稳定。时间复杂度 O(n²)，空间复杂度 O(1)。</li>
+<li>堆排序：将待排序数组看作一个树状数组，建立一个二叉树堆。通过对这种数据结构进行每个元素的插入，完成排序工作。排序算法不稳定，时间复杂度 O(nlogn)，空间复杂度 O(1)。</li>
+<li>冒泡排序：比较相邻的元素，如果第一个比第二个大就进行交换，对每一对相邻元素做同样的工作。排序算法稳定，时间复杂度 O(n²)，空间复杂度 O(1)。</li>
+<li>快速排序：随机选择一个基准元素，通过一趟排序将要排序的数据分割成独立的两部分，一部分全部小于等于基准元素，一部分全部大于等于基准元素，再按此方法递归对这两部分数据进行快速排序。排序算法不稳定，时间复杂度 O(nlogn)，空间复杂度 O(logn)。</li>
+<li>归并排序：将待排序序列分成两部分，然后对两部分分别递归排序，最后进行合并。排序算法稳定，时间复杂度都为 O(nlogn)，空间复杂度为 O(n)。</li>
+</ul>
+<h1 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h1><h2 id="赋值-深浅拷贝"><a href="#赋值-深浅拷贝" class="headerlink" title="赋值&#x2F;深浅拷贝"></a>赋值&#x2F;深浅拷贝</h2><ul>
+<li>赋值：就是简单的对象引用，在以下情况中，ab一样，b只是a的别名，它们指向同一片内存。a is b返回True<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="string">&quot;hello&quot;</span>,[<span class="string">&#x27;python&#x27;</span>, <span class="string">&#x27;C++&#x27;</span>]]</span><br><span class="line">b = a</span><br></pre></td></tr></table></figure></li>
+<li>浅拷贝：浅拷贝会创建新对象，其内容非原对象本身的引用，而是原对象内第一层对象的引用。浅拷贝有三种形式:切片操作（b &#x3D; a[:]）、工厂函数（b &#x3D; list(a)）、copy 模块中的 copy 函数（b &#x3D; copy.copy(a)）。在这种情况下，列表 a 和 b 是不同的对象，修改列表 b 理论上不会影响到列表 a。</li>
+</ul>
+<p>但是要注意的是，浅拷贝之所以称之为浅拷贝，是它仅仅只拷贝了一层，在列表 a 中有一个嵌套的 list，如果我们修改了它，情况就不一样了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">变量是到内存空间的一个指针，也就是拥有指向对象连接的空间；</span><br><span class="line"></span><br><span class="line">对象是一块内存，表示它们所代表的值；</span><br><span class="line"></span><br><span class="line">引用就是自动形成的从变量到对象的指针。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>深拷贝：深拷贝和浅拷贝对应，深拷贝拷贝了对象的所有元素，包括多层嵌套的元素。</li>
+</ul>
+<h2 id="init-和-new"><a href="#init-和-new" class="headerlink" title="init__和__new"></a><strong>init__和__new</strong></h2><p>当我们使用「类名()」创建对象的时候，Python 解释器会帮我们做两件事情：第一件是为对象在内存分配空间，第二件是为对象进行初始化。「分配空间」是__new__ 方法，初始化是__init__方法。</p>
+<h2 id="管理内存"><a href="#管理内存" class="headerlink" title="管理内存"></a>管理内存</h2><ul>
+<li>引用计数：Python内部维护了一个引用计数器，用来确保对象被需要时保持在内存中，不再需要时释放。</li>
+<li>垃圾回收：对于循环引用的情况，引用计数器就无能为力了。Python的垃圾回收器会定期运行，检测并清除循环引用的对象。</li>
+</ul>
+<h2 id="列表和元组"><a href="#列表和元组" class="headerlink" title="列表和元组"></a>列表和元组</h2><ul>
+<li>列表（List）：动态数组，可变类型，可以增加、删除或搜索列表中的元素。</li>
+<li>元组（Tuple）：不可变序列，一旦创建就不能修改。因为不可变性，元组可以作为字典的键，而列表则不行。</li>
+</ul>
+<h2 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h2><p>装饰器（Decorator） 是一种用于修改或增强函数（或类）行为的高级语法工具，它允许你在不修改原函数代码的前提下，为其动态地添加额外功能（如日志、权限检查、缓存、计时等）<br>示例：<br>如果有个函数，你想在每次调用 greet() 时自动记录日志，但又不想修改 greet 的内部代码。这时就可以用装饰器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">greet</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hello!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义装饰器函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">log_call</span>(<span class="params">func</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">wrapper</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Calling function: <span class="subst">&#123;func.__name__&#125;</span>&quot;</span>)</span><br><span class="line">        func()  <span class="comment"># 调用原函数</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Function call ended.&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 应用装饰器</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@log_call</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">greet</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hello!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet()</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Calling function: greet</span><br><span class="line">Hello!</span><br><span class="line">Function call ended.</span><br></pre></td></tr></table></figure>
+<h2 id="args和-kwargs是什么"><a href="#args和-kwargs是什么" class="headerlink" title="*args和**kwargs是什么"></a>*args和**kwargs是什么</h2><ul>
+<li>*args：允许函数接受任意数量的位置参数。会将传入的额外位置参数打包成一个元组（tuple）</li>
+<li>**kwargs：允许函数接受任意数量的关键字参数。将传入的额外关键字参数打包成一个字典（dict）</li>
+</ul>
+<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p>生成器是一种特殊类型的迭代器，使用yield语句一次返回一个值。生成器函数在每次生成一个值后，会暂停其状态，等待下一次调用。</p>
+<h2 id="匿名函数（lambda）"><a href="#匿名函数（lambda）" class="headerlink" title="匿名函数（lambda）"></a>匿名函数（lambda）</h2><p>Lambda函数是一种匿名函数，使用lambda关键字定义。它们通常用于需要函数对象的地方，但又不想在全局命名空间中定义一个完整的函数。</p>
+<h1 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h1><h2 id="【2021】OWASP-TOP5"><a href="#【2021】OWASP-TOP5" class="headerlink" title="【2021】OWASP TOP5"></a>【2021】OWASP TOP5</h2><ol>
+<li><strong>失效的访问控制</strong>：<code>应用程序未正确实施权限检查，导致用户可以访问本不应有权访问的数据或功能。</code>（例如普通用户通过修改 URL 中的 ID（如 &#x2F;user&#x2F;123 → &#x2F;user&#x2F;124）查看他人资料）</li>
+<li><strong>加密失效</strong>：<code>敏感数据（密码、身份证、银行卡号）未加密存储或传输</code>；使用弱加密算法（如 MD5、SHA1、DES）；HTTPS 配置错误（如支持 SSLv3、弱密码套件）；</li>
+<li><strong>注入</strong>：<code>将不可信数据作为命令或查询的一部分执行，而未做有效隔离。</code></li>
+</ol>
+<ul>
+<li>SQL注入：当应用程序将用户输入直接拼接到 SQL 查询语句中，而未进行适当过滤或参数化处理时，攻击者可通过构造恶意输入操控数据库查询，从而读取、修改或删除敏感数据。</li>
+<li>XSS注入：应用程序将未经验证或转义的用户输入直接输出到网页中，导致攻击者可注入恶意脚本（如 JavaScript），在其他用户浏览器中执行，窃取 Cookie、会话令牌或进行钓鱼。</li>
+</ul>
+<ol start="4">
+<li>不安全设计：<code>缺乏安全设计流程（如未做威胁建模）</code>；业务逻辑本身存在缺陷（如“忘记密码”流程可被暴力枚举）</li>
+<li>SSRF服务端请求伪造:<code>应用程序未验证用户提供的 URL，直接用服务端发起 HTTP 请求。攻击者可诱使服务器访问内部系统、本地文件和内网服务等</code></li>
+</ol>
+<h2 id="其他WEB相关漏洞"><a href="#其他WEB相关漏洞" class="headerlink" title="其他WEB相关漏洞"></a>其他WEB相关漏洞</h2><ol>
+<li>不安全的反序列化:应用程序反序列化来自不可信源的数据（如 Cookie、请求参数），若未验证数据完整性，<code>攻击者可构造恶意序列化对象</code>，触发远程代码执行、权限提升或拒绝服务。</li>
+<li>CSRF跨站请求伪造：<code>攻击者诱使已登录用户在不知情的情况下向目标网站发送恶意请求（如转账、修改密码）</code>，利用用户当前有效的会话凭证执行非本意操作。</li>
+</ol>
+<h2 id="密码相关"><a href="#密码相关" class="headerlink" title="密码相关"></a>密码相关</h2><h3 id="（非）对称密码"><a href="#（非）对称密码" class="headerlink" title="（非）对称密码"></a>（非）对称密码</h3><p>对称密码和非对称密码是密码学中的两类基本加密机制。<code>对称密码使用同一个密钥进行加密和解密（如 AES、DES）</code>，加解密速度快，适合大量数据加密，但密钥分发和管理困难；<code>非对称密码则使用一对密钥——公钥用于加密，私钥用于解密（如 RSA、ECC）</code>，解决了密钥分发问题，支持数字签名和身份认证，但计算开销大、速度较慢。实际应用中常将两者结合：用非对称密码安全交换对称密钥，再用对称密码高效加密数据（如 TLS 协议）。</p>
+<h3 id="什么是哈希？"><a href="#什么是哈希？" class="headerlink" title="什么是哈希？"></a>什么是哈希？</h3><p>哈希（Hash）是单向函数，将任意长度输入映射为固定长度摘要（如SHA-256），不可逆、无密钥。<br>哈希用于验证完整性（如文件校验）、存储密码；加密用于保护数据机密性。</p>
+<h3 id="什么是加盐？"><a href="#什么是加盐？" class="headerlink" title="什么是加盐？"></a>什么是加盐？</h3><p>Salt 是随机生成的唯一字符串，与密码拼接后再哈希。<br>作用：防止彩虹表攻击、确保相同密码生成不同哈希值。<br>Salt 不需要保密，可与哈希值一起存储，但必须每个用户独立生成。</p>
+<h3 id="什么是HMAC（Hash-based-Message-Authentication-Code）"><a href="#什么是HMAC（Hash-based-Message-Authentication-Code）" class="headerlink" title="什么是HMAC（Hash-based Message Authentication Code）"></a>什么是HMAC（Hash-based Message Authentication Code）</h3><p>是一种带密钥的消息认证码，使用哈希函数（如 SHA-256）和密钥生成摘要。它同时提供数据完整性和身份认证，防止消息被篡改或伪造（如 API 签名、JWT 签名）</p>
+<h3 id="应用方向："><a href="#应用方向：" class="headerlink" title="应用方向："></a>应用方向：</h3><ul>
+<li>HTTPS（TLS）：服务端提供证书（含公钥）；<br>客户端验证证书合法性；<br>双方通过 ECDHE 等密钥交换算法协商临时对称密钥（实现前向保密）；<br>后续通信使用该对称密钥（如 AES-GCM）加密，同时提供完整性保护。</li>
+<li>密钥协商：由于对称密钥无法直接在网络上传输，现代系统通常借助非对称密码（如 RSA、ECDH）或可信第三方（如 KDC、PKI）实现安全分发，典型应用包括 TLS 握手中的密钥协商和 Kerberos 协议。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2025/09/28/baguwen/">http://120.46.180.209/2025/09/28/baguwen/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a></div><div class="post-share"><div class="social-share" data-image="/2025/09/28/baguwen/A90FB8F1A4B5D1F4E57EDBD6EF65EA5A.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/25/interviews/" title="【更新中】求职的那些七七八八"><img class="cover" src="/2025/09/25/interviews/3FC47614AFE66F8C21100F3537D24530.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【更新中】求职的那些七七八八</div></div><div class="info-2"><div class="info-item-1">记录末9本硕菜鸡开发类岗位秋招历程，若你也在求职，就跳转到第二个标题吧~ 面试小记2025年秋招，多数互联网企业网申始于7-8月（美团、字节等），部分公司提前批网申于6月开始（TP-LINK）。从历年秋招开始的时间对比来看，今年的秋招提前了不少，说是互联网“大年”，但其实放出的机会并未增加多少，甚至可以说有所减少——从投出简历后收到反馈的数量就可见一斑。“互联网寒冬”尚未过去，新一轮毕业生已经在校招季展开厮杀。这一年，AI为校招关键词，焦点被分配在软件开发、算法工程师之上。笔试和面试时也会单独对这一领域单独考察，部分企业重点考察对神经网络底层逻辑的理解，例如简单叙述Transformer...</div></div></div></a><a class="pagination-related" href="/2025/10/10/ctfshow-appsafe/" title="【CTFSHOW】 web应用安全与防护"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【CTFSHOW】 web应用安全与防护</div></div><div class="info-2"><div class="info-item-1">第一章Base64编码隐藏前端js代码中有登录逻辑，解码这个base64## HTTP头注入在使用前文获取的口令登录后显示：所以更改User-Agent字段为指定的内容## Base64多层嵌套解码12345678910document.getElementById(&#x27;loginForm&#x27;).addEventListener(&#x27;submit&#x27;, function(e) &#123;            const correctPassword = &quot;SXpVRlF4TTFVelJtdFNSazB3VTJ4U1UwNXFSWGRVVlZrOWNWYzU=&quot;;                        function validatePassword(input) &#123;                let encoded = btoa(input);                encoded = btoa(encoded + &#x27;xH7jK&#x27;).slice(3);         ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/25/interviews/" title="【更新中】求职的那些七七八八"><img class="cover" src="/2025/09/25/interviews/3FC47614AFE66F8C21100F3537D24530.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-25</div><div class="info-item-2">【更新中】求职的那些七七八八</div></div><div class="info-2"><div class="info-item-1">记录末9本硕菜鸡开发类岗位秋招历程，若你也在求职，就跳转到第二个标题吧~ 面试小记2025年秋招，多数互联网企业网申始于7-8月（美团、字节等），部分公司提前批网申于6月开始（TP-LINK）。从历年秋招开始的时间对比来看，今年的秋招提前了不少，说是互联网“大年”，但其实放出的机会并未增加多少，甚至可以说有所减少——从投出简历后收到反馈的数量就可见一斑。“互联网寒冬”尚未过去，新一轮毕业生已经在校招季展开厮杀。这一年，AI为校招关键词，焦点被分配在软件开发、算法工程师之上。笔试和面试时也会单独对这一领域单独考察，部分企业重点考察对神经网络底层逻辑的理解，例如简单叙述Transformer...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">62</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我觉得我是一个人，我希望通往山下的路断成天堑。我所在的地方成了孤峰，我一个人在孤峰上老死。可人总高估自己.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="toc-number">1.</span> <span class="toc-text">计算机网络</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">传输层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E3%80%81UDP%E7%9B%B8%E5%85%B3"><span class="toc-number">1.2.</span> <span class="toc-text">TCP、UDP相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="toc-number">1.2.1.</span> <span class="toc-text">TCP的可靠传输</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">TCP三次握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9F%E6%B2%A1%E6%9C%89%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="toc-number">1.2.3.</span> <span class="toc-text">为什么要三次握手？没有会怎么样？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9F"><span class="toc-number">1.2.4.</span> <span class="toc-text">为什么不是两次握手？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-number">1.2.5.</span> <span class="toc-text">四次挥手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E8%B7%9FUDP%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.6.</span> <span class="toc-text">TCP跟UDP的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%E5%BA%95%E5%B1%82%E6%83%85%E5%86%B5"><span class="toc-number">1.2.7.</span> <span class="toc-text">常用应用层协议底层情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">网络层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-number">1.3.1.</span> <span class="toc-text">DNS查询过程？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E4%B8%8EHTTPS"><span class="toc-number">1.3.2.</span> <span class="toc-text">HTTP与HTTPS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP%E5%92%8CHTTPS%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">HTTP和HTTPS区别？</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.</span> <span class="toc-text">操作系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">进程&#x2F;线程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">用户线程和内核线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B"><span class="toc-number">2.1.2.</span> <span class="toc-text">父子进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">2.1.3.</span> <span class="toc-text">进程调度算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">2.1.4.</span> <span class="toc-text">进程通信方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%B8%8E%E5%BC%82%E5%B8%B8"><span class="toc-number">2.2.</span> <span class="toc-text">中断与异常</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD"><span class="toc-number">2.2.1.</span> <span class="toc-text">外部中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8"><span class="toc-number">2.2.2.</span> <span class="toc-text">异常</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91-%E5%B9%B6%E8%A1%8C"><span class="toc-number">2.3.</span> <span class="toc-text">并发&#x2F;并行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">2.4.</span> <span class="toc-text">内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87"><span class="toc-number">2.4.1.</span> <span class="toc-text">碎片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%86%85%E9%83%A8%E7%A2%8E%E7%89%87%EF%BC%9F"><span class="toc-number">2.4.2.</span> <span class="toc-text">如何避免内部碎片？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%A4%96%E9%83%A8%E7%A2%8E%E7%89%87%EF%BC%9F"><span class="toc-number">2.4.3.</span> <span class="toc-text">如何避免外部碎片？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%AE%97%E6%B3%95%EF%BC%9A"><span class="toc-number">2.4.4.</span> <span class="toc-text">内存管理算法：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">排序算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python"><span class="toc-number">4.</span> <span class="toc-text">Python</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">4.1.</span> <span class="toc-text">赋值&#x2F;深浅拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#init-%E5%92%8C-new"><span class="toc-number">4.2.</span> <span class="toc-text">init__和__new</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%86%85%E5%AD%98"><span class="toc-number">4.3.</span> <span class="toc-text">管理内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E5%92%8C%E5%85%83%E7%BB%84"><span class="toc-number">4.4.</span> <span class="toc-text">列表和元组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">4.5.</span> <span class="toc-text">装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#args%E5%92%8C-kwargs%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">4.6.</span> <span class="toc-text">*args和**kwargs是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-number">4.7.</span> <span class="toc-text">生成器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%EF%BC%88lambda%EF%BC%89"><span class="toc-number">4.8.</span> <span class="toc-text">匿名函数（lambda）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E5%85%A8"><span class="toc-number">5.</span> <span class="toc-text">安全</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%902021%E3%80%91OWASP-TOP5"><span class="toc-number">5.1.</span> <span class="toc-text">【2021】OWASP TOP5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96WEB%E7%9B%B8%E5%85%B3%E6%BC%8F%E6%B4%9E"><span class="toc-number">5.2.</span> <span class="toc-text">其他WEB相关漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E7%9B%B8%E5%85%B3"><span class="toc-number">5.3.</span> <span class="toc-text">密码相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%88%E9%9D%9E%EF%BC%89%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="toc-number">5.3.1.</span> <span class="toc-text">（非）对称密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%88%E5%B8%8C%EF%BC%9F"><span class="toc-number">5.3.2.</span> <span class="toc-text">什么是哈希？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8A%A0%E7%9B%90%EF%BC%9F"><span class="toc-number">5.3.3.</span> <span class="toc-text">什么是加盐？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFHMAC%EF%BC%88Hash-based-Message-Authentication-Code%EF%BC%89"><span class="toc-number">5.3.4.</span> <span class="toc-text">什么是HMAC（Hash-based Message Authentication Code）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%96%B9%E5%90%91%EF%BC%9A"><span class="toc-number">5.3.5.</span> <span class="toc-text">应用方向：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”"><img src="/2026/01/11/kunming/5C0C7185CF2C2CBB2C798DDE79C5245B.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【昆明短记】“我寻找什么？寻找潇洒。”"/></a><div class="content"><a class="title" href="/2026/01/11/kunming/" title="【昆明短记】“我寻找什么？寻找潇洒。”">【昆明短记】“我寻找什么？寻找潇洒。”</a><time datetime="2026-01-11T12:21:56.000Z" title="发表于 2026-01-11 20:21:56">2026-01-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来"><img src="/2025/12/29/pnf/cj5Jjp32O34GO04crNfmOrdScWD56acHT1oHC4X2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【写在年末】过去，现在和未来"/></a><div class="content"><a class="title" href="/2025/12/29/pnf/" title="【写在年末】过去，现在和未来">【写在年末】过去，现在和未来</a><time datetime="2025-12-29T12:21:56.000Z" title="发表于 2025-12-29 20:21:56">2025-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'http://120.46.180.209:8099/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

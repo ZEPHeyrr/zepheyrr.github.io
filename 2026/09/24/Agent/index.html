@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一些我的碎碎念大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。 论文信息 标题：AttriGuard: Defeating I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入">
+<meta property="og:url" content="http://120.46.180.209/2026/09/24/Agent/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="一些我的碎碎念大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。 论文信息 标题：AttriGuard: Defeating I">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2026/09/24/Agent/QQ20260924-161115.png">
+<meta property="article:published_time" content="2026-09-24T06:20:32.000Z">
+<meta property="article:modified_time" content="2026-09-24T08:30:44.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="大模型安全">
+<meta property="article:tag" content="USENIX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2026/09/24/Agent/QQ20260924-161115.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入",
+  "url": "http://120.46.180.209/2026/09/24/Agent/",
+  "image": "http://120.46.180.209/2026/09/24/Agent/QQ20260924-161115.png",
+  "datePublished": "2026-09-24T06:20:32.000Z",
+  "dateModified": "2026-09-24T08:30:44.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/09/24/Agent/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【论文阅读】【USENIX 26\'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/09/24/Agent/QQ20260924-161115.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-24T06:20:32.000Z" title="发表于 2026-09-24 14:20:32">2026-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-24T08:30:44.000Z" title="更新于 2026-09-24 16:30:44">2026-09-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="一些我的碎碎念"><a href="#一些我的碎碎念" class="headerlink" title="一些我的碎碎念"></a>一些我的碎碎念</h1><p>大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。</p>
+<h1 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h1><ul>
+<li><p>标题：AttriGuard: Defeating Indirect Prompt Injection in LLM Agents via Causal Attribution of Tool Invocations</p>
+</li>
+<li><p>链接：</p>
+</li>
+</ul>
+<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p>Agent可以读取文档、调用搜索和工具等，这些外部内容中可能隐藏有隐藏指令，如果这些指令被Agent当作任务要求，攻击者就可以对后续调用环节进行控制，这就是<strong>间接提示词注入（Indirect Prompt Injection, IPI）攻击</strong>，下称IPI。现有的防御IPI的手段局限在以下四个方面：</p>
+<ol>
+<li><p><strong>输入语义判别范式的泛化性瓶颈。</strong> 现有绝大多数防御（检测类、提示工程类、训练对齐类）都将 IPI 视为输入空间的语义识别问题，依赖匹配已知的恶意指令模式。但自然语言语义空间高度非线性，攻击者可将恶意指令伪装成工作流程、政策说明等正常文本，无需使用经典的 “忽略之前指令” 模板，导致基于语义的防御边界在分布偏移下十分脆弱，对未知攻击 Payload 泛化能力差。</p>
+</li>
+<li><p><strong>系统级隔离防御的效用损失。</strong> 系统级防御通过 “规划 - 执行” 完全隔离的方式阻止注入，但这种强制隔离会导致决策僵化、无法根据环境信息动态调整，在复杂真实任务中会造成约 20% 的良性效用下降，且计算成本极高。</p>
+</li>
+<li><p><strong>归因技术实现难题。</strong> 要区分工具调用是由用户意图驱动还是外部观察注入驱动，存在三重现实障碍：</p>
+<ul>
+<li><p>商用 LLM 多为黑箱，无法直接查看内部激活、注意力等状态，只能基于输入输出判断；</p>
+</li>
+<li><p>让被攻陷的 Agent 自行解释行为不可靠，模型会生成事后合理化的虚假理由掩盖真实动因；</p>
+</li>
+<li><p>朴素的并行验证会出现轨迹漂移：良性的规划差异、调用分批差异会随步骤累积，干扰因果判断，同时存在 “衰减两难”—— 强衰减破坏任务信息，弱衰减无法压制隐性控制通道。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>4* <strong>应对自适应攻击的防御力不足。</strong> 静态测试中表现优异的防御，在攻击者掌握防御机制、通过迭代优化专门构造绕过 Payload 时，攻击成功率会大幅上升，现有方案普遍缺乏对自适应攻击的鲁棒性。</p>
+<h1 id="AttriGuard"><a href="#AttriGuard" class="headerlink" title="AttriGuard"></a>AttriGuard</h1><p>AttriGuard提出了行为层面的归因范式，它的注意力更多放在了“为什么Agent要执行这个动作”而非“外部数据都有什么”。通过并行反事实测试判断工具调用的因果来源。其核心由三大模块构成。</p>
+<p><img src="/2026/09/24/Agent/QQ20260924-161115.png"></p>
+<p><em>AttriGuard 防御系统的运行原理示意图，它通过左侧存在间接提示注入（IPI）攻击、右侧为良性无攻击的两组对照场景，直观呈现了 “主执行分支 + 影子验证分支” 的双轨防御架构：主执行分支直接基于原始观察内容生成工具调用，影子验证分支则先对外部观察做分层控制衰减以剥离其指令性控制力，再通过教师强制重放机制同步原始执行历史后重新决策，最终经由模糊生存测试对比两条分支的输出结果 —— 在攻击场景中，被注入内容诱导产生的恶意工具调用会因观察衰减失去驱动力而在影子分支中消失，进而被系统拦截；在良性场景中，由用户意图驱动的合法工具调用在两条分支中保持一致，可正常执行，以此体现了 AttriGuard “通过反事实测试判断工具调用因果来源” 的核心防御逻辑</em></p>
+<h2 id="Shadow（影子）重放"><a href="#Shadow（影子）重放" class="headerlink" title="Shadow（影子）重放"></a>Shadow（影子）重放</h2><p>本模块解决朴素影子执行的轨迹漂移问题，避免良性执行差异被误判为注入攻击。构造验证用的影子上下文时，完整复用原始执行的所有历史动作，仅将历史观察替换为控制衰减后的版本。这保证了两次执行的差异仅来源于观察的衰减处理，而非执行轨迹的自然漂移。主执行分支始终使用完整保真度的原始观察，保证工具调用的参数质量；衰减仅作用于验证分支，避免了直接用衰减观察执行导致的效用损失。</p>
+<h2 id="分层控制衰减"><a href="#分层控制衰减" class="headerlink" title="分层控制衰减"></a>分层控制衰减</h2><p>解决衰减强度的两难权衡，在保留任务信息的同时最大化削弱注入的控制力。用三层算子叠加：结构扁平化（将 JSON、函数调用格式等结构化内容重写为自然语言描述，消除结构化特征带来的执行暗示效应）、视角重写（将第二人称指令、祈使句式改写为第三人称陈述句，削弱文本的指令语气和言外之力）、因果弱化（削弱 “因为… 因此…” 等因果逻辑与合理化表述，剥离说服性理由，仅保留事实性内容）。通过衰减层级参数提供权衡。</p>
+<h2 id="模糊生存准则"><a href="#模糊生存准则" class="headerlink" title="模糊生存准则"></a>模糊生存准则</h2><p>解决严格字符串匹配对 LLM 固有随机性过于敏感，同时要能识别恶意的参数篡改问题。也是分三步流程：1.函数名匹配（若影子调用中无相同函数名，判定为注入驱动，拦截该调用）；2.参数匹配（对参数做规范化处理，即统一键序、格式，若存在完全匹配的调用则直接放行）；3.任务条件裁决（函数名匹配但参数不完全一致时，调用辅助 LLM 基于原始用户任务，判断该调用是否仍符合完成用户任务的逻辑）。在上下文中加入指令，鼓励 Agent 将相互独立的工具调用在同一步输出，减少调用分批差异导致的误判。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><ul>
+<li><p>在 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/bonelee/p/19301153">AgentDojo</a> 基准上，AttriGuard 将全部 4 类静态攻击的攻击成功率（ASR）降至 0%，同时良性任务效用（BU）仅出现可忽略的下降（平均～3%）。</p>
+</li>
+<li><p>在攻击者完全掌握防御机制、拥有 200 次查询优化预算的强威胁模型下,AttriGuard的自适应 ASR 仅为6.56%（Gemini-2.5）和 9.84%（Llama3.3-70B），保持在个位数</p>
+</li>
+<li><p>计算开销↓</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/09/24/Agent/">http://120.46.180.209/2026/09/24/Agent/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%89%E5%85%A8/">大模型安全</a><a class="post-meta__tags" href="/tags/USENIX/">USENIX</a></div><div class="post-share"><div class="social-share" data-image="/2026/09/24/Agent/QQ20260924-161115.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/09/13/ctfshow-shuiwubiwu/" title="【CTFSHOW】 web入门-税务比武"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【CTFSHOW】 web入门-税务比武</div></div><div class="info-2"><div class="info-item-1">WEB-832 WEB-833 访问robots然后提示其中有一个名为check的php备份文件。 1234567891011121314151617181920212223242526272829&lt;?phperror_reporting(0);function getFilter($index=0)&#123;    $filter=[&quot;strip_tags&quot;,&quot;addslashes&quot;];    return $index?$filter[1]:$filter[0];&#125;//strip_tags过滤 HTML 标签 //addslashes 转义单双引号等特殊字符function getHandle()&#123;    $filter=getFilter();    $say=function($array) use (&amp;$filter)&#123;        extract($array);        $hello=$filter($name);        return $hello;   ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2023/08/12/ASCA/" title="【论文阅读】基于深度学习的键盘声学侧信道攻击"><img class="cover" src="/2023/08/12/ASCA/1133.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-12</div><div class="info-item-2">【论文阅读】基于深度学习的键盘声学侧信道攻击</div></div><div class="info-2"><div class="info-item-1">论文信息：Harrison, Joshua J. et al. “A Practical Deep Learning-Based Acoustic Side Channel Attack on Keyboards.” 2023 IEEE European Symposium on Security and Privacy Workshops (EuroS&amp;PW) (2023): 270-280. 背景侧信道攻击（SCA，Side Channel...</div></div></div></a><a class="pagination-related" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21&#39;】CURE：用于自动程序修复的代码感知神经机器翻译"><img class="cover" src="/2026/01/04/CURE/CURE.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-04</div><div class="info-item-2">【论文阅读】【ICSE 21&#39;】CURE：用于自动程序修复的代码感知神经机器翻译</div></div><div class="info-2"><div class="info-item-1">论文信息 题目：CURE: Code-Aware Neural Machine Translation for Automatic Program...</div></div></div></a><a class="pagination-related" href="/2025/10/15/CodeRepairAgent/" title="【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体"><img class="cover" src="/2025/10/15/CodeRepairAgent/RepairAgent.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-15</div><div class="info-item-2">【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体</div></div><div class="info-2"><div class="info-item-1">基本信息论文题目：RepairAgent: An Autonomous, LLM-Based Agent for Program Repair链接：ICSE...</div></div></div></a><a class="pagination-related" href="/2023/06/24/Cross-Modal/" title="【论文阅读】基于跨模型交互网络的视频片段检索"><img class="cover" src="/2023/06/24/Cross-Modal/202306151521.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-24</div><div class="info-item-2">【论文阅读】基于跨模型交互网络的视频片段检索</div></div><div class="info-2"><div class="info-item-1">文章信息：Zhang Z , Lin Z , Zhao Z ,et al.Cross-Modal Interaction Networks for Query-Based Moment Retrieval in Videos[J].ACM, 2019.DOI:10.1145&#x2F;3331184.3331235. 源码： https://github.com/ikuinen/CMIN 引言部分对标题【跨模型】的解释要从一个连续的复杂的视频中定位出一小段特定的片段要比从已定义的集和中找出一个视频要困难的多。在下图所示的例子中,一个句子包含了两个连续的动作，对应了视频中的两段内容。因此正确的视频内容检索需要理解视频以及查询内容，二者缺一不可。这点就需要跨模形（cross-modal）的支持。  本文对高质量视频检索的考虑首先查询内容通常包含了因果时间上的行为，因此学习细粒度查询表示就很重要。目前的方法使用循环神经网络（如GRU）来理解查询语句语义，但它们通常无法顾及句法结构。 本文所采用的是图卷积网络（GCN，Graph convolution...</div></div></div></a><a class="pagination-related" href="/2025/10/19/HAPR/" title="【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复"><img class="cover" src="/2025/10/19/HAPR/GiantRepair.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-19</div><div class="info-item-2">【论文阅读】【ToSEM 25&#39;】Giant Repair：结合大型语言模型和程序分析的混合自动程序修复</div></div><div class="info-2"><div class="info-item-1">论文信息题目：Hybrid Automated Program Repair by Combining Large Language Models and Program Analysis链接：Tosem 主要问题文章提出，现有的基于预定义修复模板、启发式规则和约束求解的自动程序方法难以充分利用实际应用中各种补丁的大搜索空间。其局限性在于：  基于LLM的APR方法直接利用生成补丁，没有进一步的优化。LLM通常难以生成一些有关于特定程序元素的修复方案,比如局部变量和特定域方法调用等。如何利用这些不完善的修复方案来提高整体修复能力也是一个待探索的领域。 迄今为止，APR方法评估是在漏洞已被定位的前提下进行的。这种场景并不现实。本文章的主要贡献在于：   提出GiantRepair，利用LLM输出的“并非完全正确”的补丁，从其中提取补丁骨架进行整体方法的优化； 在两种应用场景下进行优化评价； 开源：...</div></div></div></a><a class="pagination-related" href="/2025/10/14/MAGIS/" title="【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力"><img class="cover" src="/2025/10/14/MAGIS/MAGIS.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-14</div><div class="info-item-2">【论文阅读】【NeurIPS 24&#39;】MAGIS：多智能体支撑的大语言模型Github问题解决——通过精心设计的智能体协作来增强问题解决能力</div></div><div class="info-2"><div class="info-item-1">论文信息： 题目：MAGIS: LLM-Based Multi-Agent Framework for GitHub Issue ReSolution 链接：NeurIPS 24’  主要问题类似Github的代码托管平台，其项目通常不是一成不变的，开源软件作者会更新多个版本，并将源码按照版本号推至代码仓，本文的根本目的是解决开源代码产生的各类“issue”，同时研究了多智能体应用对该下游任务的优化性能。本文的主要贡献如下：  我们对llm解决GitHub问题进行了实证分析，探讨了定位代码文件&#x2F;行、代码变更的复杂性与解决成功率之间的相关性。 我们提出了一种新的基于llm的多智能体框架MAGIS，以减轻现有llm在GitHub问题解决上的局限性。我们设计的四类代理及其在规划和编码方面的协作都释放了llm在存储库级别编码任务上的潜力。 我们在SWE-bench数据集上比较了我们的框架和其他强大的大语言模型竞争对手（即GPT-3.5，...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%88%91%E7%9A%84%E7%A2%8E%E7%A2%8E%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一些我的碎碎念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text">论文信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">解决问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AttriGuard"><span class="toc-number">4.</span> <span class="toc-text">AttriGuard</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shadow%EF%BC%88%E5%BD%B1%E5%AD%90%EF%BC%89%E9%87%8D%E6%94%BE"><span class="toc-number">4.1.</span> <span class="toc-text">Shadow（影子）重放</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B1%82%E6%8E%A7%E5%88%B6%E8%A1%B0%E5%87%8F"><span class="toc-number">4.2.</span> <span class="toc-text">分层控制衰减</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E7%94%9F%E5%AD%98%E5%87%86%E5%88%99"><span class="toc-number">4.3.</span> <span class="toc-text">模糊生存准则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.</span> <span class="toc-text">实验</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/09/24/Agent/" title="【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入"><img src="/2026/09/24/Agent/QQ20260924-161115.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入"/></a><div class="content"><a class="title" href="/2026/09/24/Agent/" title="【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入">【论文阅读】【USENIX 26'】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</a><time datetime="2026-09-24T06:20:32.000Z" title="发表于 2026-09-24 14:20:32">2026-09-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/09/13/ctfshow-shuiwubiwu/" title="【CTFSHOW】 web入门-税务比武"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门-税务比武"/></a><div class="content"><a class="title" href="/2026/09/13/ctfshow-shuiwubiwu/" title="【CTFSHOW】 web入门-税务比武">【CTFSHOW】 web入门-税务比武</a><time datetime="2026-09-13T00:14:10.000Z" title="发表于 2026-09-13 08:14:10">2026-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"><img src="/2026/01/07/alpharepair/alpharepair.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复"/></a><div class="content"><a class="title" href="/2026/01/07/alpharepair/" title="【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复">【论文阅读】【ESEC\FSE 22'】Alpharepair：少训练多做事-通过零样本学习重新审视自动程序修复</a><time datetime="2026-01-06T18:20:32.000Z" title="发表于 2026-01-07 02:20:32">2026-01-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"><img src="/2026/01/04/CURE/CURE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译"/></a><div class="content"><a class="title" href="/2026/01/04/CURE/" title="【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译">【论文阅读】【ICSE 21'】CURE：用于自动程序修复的代码感知神经机器翻译</a><time datetime="2026-01-03T18:20:32.000Z" title="发表于 2026-01-04 02:20:32">2026-01-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"><img src="/2025/12/29/selfapr/selfapr.PNG" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR"/></a><div class="content"><a class="title" href="/2025/12/29/selfapr/" title="【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR">【论文阅读】【ASE 22'】SELFAPR：带有测试执行诊断的自监督APR</a><time datetime="2025-12-28T18:20:32.000Z" title="发表于 2025-12-29 02:20:32">2025-12-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

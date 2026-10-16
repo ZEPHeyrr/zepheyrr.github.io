@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="论文信息 标题：VirusCascade: Hijacking Collaborative Reflection inLLM-Powered Recommender Agents  [链接]([2609.38270] VirusCascade: Hijacking Collaborative Reflection in LLM-Powered Recommender Agents)   解决问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文阅读】【NDSS 27&#39;】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文">
+<meta property="og:url" content="http://120.46.180.209/2026/10/16/viruscascade/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="论文信息 标题：VirusCascade: Hijacking Collaborative Reflection inLLM-Powered Recommender Agents  [链接]([2609.38270] VirusCascade: Hijacking Collaborative Reflection in LLM-Powered Recommender Agents)   解决问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2026/10/16/viruscascade/QQ20261016-202330.png">
+<meta property="article:published_time" content="2026-10-16T12:17:43.490Z">
+<meta property="article:modified_time" content="2026-10-16T12:25:18.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="j务">
+<meta property="article:tag" content="视频伪造">
+<meta property="article:tag" content="NDSS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2026/10/16/viruscascade/QQ20261016-202330.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文",
+  "url": "http://120.46.180.209/2026/10/16/viruscascade/",
+  "image": "http://120.46.180.209/2026/10/16/viruscascade/QQ20261016-202330.png",
+  "datePublished": "2026-10-16T12:17:43.490Z",
+  "dateModified": "2026-10-16T12:25:18.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/10/16/viruscascade/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【论文阅读】【NDSS 27\'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/10/16/viruscascade/QQ20261016-202330.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-16T12:17:43.490Z" title="发表于 2026-10-16 20:17:43">2026-10-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-16T12:25:18.000Z" title="更新于 2026-10-16 20:25:18">2026-10-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h1><ul>
+<li><p>标题：VirusCascade: Hijacking Collaborative Reflection in<br>LLM-Powered Recommender Agents</p>
+</li>
+<li><p>[链接](<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2609.38270">[2609.38270] VirusCascade: Hijacking Collaborative Reflection in LLM-Powered Recommender Agents</a>)</p>
+</li>
+</ul>
+<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><ol>
+<li><strong>LLM 推荐系统的新攻击面</strong>：LLM 驱动的推荐代理系统（LLM-ARS）中，用户和物品都是带自然语言记忆的自主代理，通过<strong>协作反思（collaborative reflection）</strong>反复交互更新记忆 —— 现有攻击（数据投毒、文本对抗扰动、记忆篡改）全部针对静态评分模型或单轮注入，完全无法利用这种迭代记忆回写机制。</li>
+<li><strong>发现两个全新漏洞性质</strong>：<ul>
+<li><strong>反思持续性（Reflective Persistence）</strong>：一旦一条恶意主张被反思算子 “合理化” 并写入记忆，后续多轮反思会自动延续甚至 elaboration 该主张，无需攻击者再介入；</li>
+<li><strong>跨代理传播（Cross-Agent Propagation）</strong>：单个被注入用户的记忆变化，会通过物品侧共享反思扩散到未被注入的普通用户，形成级联放大。</li>
+</ul>
+</li>
+<li><strong>黑盒环境</strong>：攻击者无法访问模型参数、训练数据或反思算子，只能通过公开商品资料和用户正常交互界面操作。</li>
+</ol>
+<p><img src="/2026/10/16/viruscascade/QQ20261016-202226.png"></p>
+<p><code>对比了传统推荐系统与 LLM-ARS 的本质差异：传统 RS 将用户和物品建模为静态向量，通过离线梯度批量学习优化评分模型；而 LLM-ARS 中用户和物品均为带自然语言记忆的自主代理，通过开放式自主交互和协作反思（collaborative reflection）在线更新语义</code></p>
+<h1 id="VirusCascade"><a href="#VirusCascade" class="headerlink" title="VirusCascade"></a>VirusCascade</h1><p><img src="/2026/10/16/viruscascade/QQ20261016-202330.png"></p>
+<p><code>从左到右分为三个阶段：左侧**语义注入**模块展示攻击者先从热门锚点商品中提取用户偏好 motif，再通过对比生成重写目标商品 profile，使其更容易被反思算子合理化；中间**结构注入**模块展示基于双代价转移图（语义距离 + 行为自然度）规划从锚点商品到目标商品的多跳传播轨迹，通过正常平台行为（点击、购买）执行；右侧**反思驱动放大**模块展示受害者系统自身的协作反思机制自动完成反思准入、记忆回写和跨代理传播，并随时间持久化 —— 底部箭头标注了从 &quot;攻击者可控&quot; 过渡到 &quot;受害者系统自主驱动&quot; 的关键转变，即攻击注入后无需攻击者再干预。</code></p>
+<ol>
+<li><strong>语义注入（Semantic Injection）</strong>：<ul>
+<li>从热门锚点商品（anchor items）中提取用户偏好 motif（如 “经济耐用”）；</li>
+<li>用 motif-aware 对比生成重写目标商品 profile，自然嵌入这些偏好 motif，使目标商品在反思时更容易被用户 “合理化” 为符合自身偏好；</li>
+<li>同时保持事实一致性，避免被平台审核识别。</li>
+</ul>
+</li>
+<li><strong>结构注入（Structural Injection）</strong>：<ul>
+<li>构建双代价转移图（语义距离代价 + 行为自然度代价），规划从高人气锚点商品到目标商品的多跳轨迹；</li>
+<li>通过交互图中的高 degree 枢纽节点传播，使被注入证据自然融入用户后续的反思上下文。</li>
+</ul>
+</li>
+<li><strong>反思驱动放大（Reflection-Driven Amplification）</strong>：攻击者只需执行正常平台行为（点击、购买），之后受害者自身的协作反思机制会自动将恶意证据回写记忆并跨轮次、跨代理传播 —— 攻击完成后无需再干预。</li>
+</ol>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>关键发现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>攻击效果</strong></td>
+<td>在 4 个 Amazon 真实数据集、3 种受害者架构（AgentCF&#x2F;AgentSEQ&#x2F;AgentRAG）上，VirusCascade 平均 E@20&#x3D;<strong>0.384</strong>，最强基线 DrunkAgent 仅 0.189，绝对提升<strong>0.185</strong></td>
+</tr>
+<tr>
+<td><strong>隐蔽性</strong></td>
+<td>H@K 和 N@K 与无攻击基线几乎无差异；PPL 接近原始商品描述；人工评估中仅<strong>21.9</strong>%被识别为篡改（DrunkAgent 为 28.7%）</td>
+</tr>
+<tr>
+<td><strong>消融实验</strong></td>
+<td>移除语义注入或结构注入都会显著降低 E@20；移除结构注入时 E@20 下降<strong>7.5 倍</strong>，证明两组件互补</td>
+</tr>
+<tr>
+<td><strong>可扩展性</strong></td>
+<td>从 100 用户扩展到 500 用户、从 5 轮扩展到 20 轮，攻击效果不衰减</td>
+</tr>
+<tr>
+<td><strong>跨模型迁移</strong></td>
+<td>更换辅助模型（LLaMA-3&#x2F;GPT-4o&#x2F;Gemini-2.5）效果保持；甚至在去掉物品侧记忆的纯用户端架构上仍有效</td>
+</tr>
+<tr>
+<td><strong>对抗防御</strong></td>
+<td>面对 ONION、Fraudar、TrustRAG、A-MemGuard 四种防御，仍保持非平凡暴露率，TrustRAG 是最强防御但仅压缩到 E@20&#x3D;0.138</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/10/16/viruscascade/">http://120.46.180.209/2026/10/16/viruscascade/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/j%E5%8A%A1/">j务</a><a class="post-meta__tags" href="/tags/%E8%A7%86%E9%A2%91%E4%BC%AA%E9%80%A0/">视频伪造</a><a class="post-meta__tags" href="/tags/NDSS/">NDSS</a></div><div class="post-share"><div class="social-share" data-image="/2026/10/16/viruscascade/QQ20261016-202330.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成"><img class="cover" src="/2026/10/16/UNITE/QQ20261016-200713.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：通用合成视频检测器：从人脸或背景操控到完全由AI生成的内容  链接   解决问题 现有检测器只认人脸：主流 DeepFake 检测方法（face-swap、lip-sync 检测）均以人为中心，必须先检测到人脸才能推理 —— 一旦视频中无人脸（如纯背景篡改、T2V&#x2F;I2V 全 AI 生成内容），直接失效。 生成模型进化超出检测能力：Flux、Runway、Sora 等 T2V&#x2F;I2V 模型可生成无缝背景篡改和完全合成的视频（含非人类主体），传统 face-centric 检测器在这类新内容上表现骤降。 训练 - 测试域差：开源 DeepFake 数据集普遍只含人脸篡改，缺乏背景篡改和全合成样本，导致模型过拟合到面部区域，跨域泛化能力差。 缺乏统一检测器：需要一个模型同时覆盖三类内容 —— 真人 + 人脸篡改、真人 + 背景篡改、完全 AI 生成 —— 而非为每类任务单独训练专用检测器。   UNITE（Universal Network for Identifying Tampered and synthEtic videos）UNITE...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成"><img class="cover" src="/2026/10/16/UNITE/QQ20261016-200713.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：通用合成视频检测器：从人脸或背景操控到完全由AI生成的内容  链接   解决问题 现有检测器只认人脸：主流 DeepFake 检测方法（face-swap、lip-sync 检测）均以人为中心，必须先检测到人脸才能推理 —— 一旦视频中无人脸（如纯背景篡改、T2V&#x2F;I2V 全 AI 生成内容），直接失效。 生成模型进化超出检测能力：Flux、Runway、Sora 等 T2V&#x2F;I2V 模型可生成无缝背景篡改和完全合成的视频（含非人类主体），传统 face-centric 检测器在这类新内容上表现骤降。 训练 - 测试域差：开源 DeepFake 数据集普遍只含人脸篡改，缺乏背景篡改和全合成样本，导致模型过拟合到面部区域，跨域泛化能力差。 缺乏统一检测器：需要一个模型同时覆盖三类内容 —— 真人 + 人脸篡改、真人 + 背景篡改、完全 AI 生成 —— 而非为每类任务单独训练专用检测器。   UNITE（Universal Network for Identifying Tampered and synthEtic videos）UNITE...</div></div></div></a><a class="pagination-related" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析"><img class="cover" src="/2026/10/16/DarkGram/QQ20261016-194541.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析</div></div><div class="info-2"><div class="info-item-1">论文信息 论文标题：DarkGram: A Large-Scale Analysis of Cybercriminal Activity Channels on Telegram  链接   解决问题 Telegram 已成为网络犯罪新温床：传统地下论坛因执法打击萎缩后，犯罪分子转向 Telegram 广播频道，其内容审核宽松、可达性强，却缺乏大规模系统性研究。 内容危害不明：这些频道向 2380 万订阅者传播被盗凭证、盗版软件、黑客工具等恶意内容，但订阅者是否意识到风险、危害程度如何，此前无人量化。 执法响应滞后：人工举报渠道效率低，Telegram 对成熟大频道的删除率仅 19%，且犯罪者可迅速迁移新频道保留粉丝，现有手段难以主动发现新兴恶意频道。  DarkGram DarkGram 框架，包含三个核心模块：  数据采集与分类体系：通过 Telemetrio 目录识别 339 个恶意活动频道（CACs），将其分为五类 —— 凭证泄露、盗版软件、黑帽资源、盗版媒体、社交媒体操纵。 BERT 自动分类器：基于手动标注的 3098 条帖子训练 BERT...</div></div></div></a><a class="pagination-related" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26&#39;】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"><img class="cover" src="/2026/10/16/HSL/QQ20261016-195345.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：High Stakes, Low Certainty: Evaluating the Efficacy of High-Level Indicators of Compromise in Ransomware Attribution  链接   解决问题 勒索软件归因的制裁筛查困境：受害者支付赎金前必须确认攻击者不在制裁名单上，否则面临高额罚款甚至刑事追责，但归因过程高度依赖指标（IoC）的可靠性。 “痛苦金字塔” 模型未经实证检验：业界普遍认为高层指标（TTPs，即战术技术流程）比低层指标（文件哈希、IP 等）更难被攻击者更改、更具归因价值，但这一假设从未在勒索软件场景中被实证验证。 RaaS 生态加剧归因复杂性：勒索软件即服务（RaaS）模式下频繁的品牌重塑（rebranding）和 affiliates 共享工具，导致同一威胁 actor 的 “特征” 碎片化，不同 actor 之间反而高度重叠。 数据碎片化：各厂商和机构的威胁情报不共享，覆盖率差异大，可能导致遗漏制裁实体的风险盲区。  论文核心方法混合研究方法，包含两个互补组件：  专家访谈（定性）：对...</div></div></div></a><a class="pagination-related" href="/2026/09/24/Agent/" title="【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入"><img class="cover" src="/2026/09/24/Agent/QQ20260924-161115.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-24</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</div></div><div class="info-2"><div class="info-item-1">一些我的碎碎念大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。 论文信息 标题：AttriGuard: Defeating Indirect Prompt Injection in LLM Agents via Causal Attribution of Tool Invocations  链接：pdf   解决问题Agent可以读取文档、调用搜索和工具等，这些外部内容中可能隐藏有隐藏指令，如果这些指令被Agent当作任务要求，攻击者就可以对后续调用环节进行控制，这就是间接提示词注入（Indirect Prompt Injection, IPI）攻击，下称IPI。现有的防御IPI的手段局限在以下四个方面：  输入语义判别范式的泛化性瓶颈。 现有绝大多数防御（检测类、提示工程类、训练对齐类）都将 IPI...</div></div></div></a><a class="pagination-related" href="/2023/08/12/ASCA/" title="【论文阅读】基于深度学习的键盘声学侧信道攻击"><img class="cover" src="/2023/08/12/ASCA/1133.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-12</div><div class="info-item-2">【论文阅读】基于深度学习的键盘声学侧信道攻击</div></div><div class="info-2"><div class="info-item-1">论文信息：Harrison, Joshua J. et al. “A Practical Deep Learning-Based Acoustic Side Channel Attack on Keyboards.” 2023 IEEE European Symposium on Security and Privacy Workshops (EuroS&amp;PW) (2023): 270-280. 背景侧信道攻击（SCA，Side Channel...</div></div></div></a><a class="pagination-related" href="/2025/10/15/CodeRepairAgent/" title="【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体"><img class="cover" src="/2025/10/15/CodeRepairAgent/RepairAgent.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-15</div><div class="info-item-2">【论文阅读】【ICSE 25&#39;】RepairAgent：自主的基于大语言模型的程序修复智能体</div></div><div class="info-2"><div class="info-item-1">基本信息论文题目：RepairAgent: An Autonomous, LLM-Based Agent for Program Repair链接：ICSE...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">论文信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">解决问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VirusCascade"><span class="toc-number">3.</span> <span class="toc-text">VirusCascade</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/viruscascade/" title="【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文"><img src="/2026/10/16/viruscascade/QQ20261016-202330.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文"/></a><div class="content"><a class="title" href="/2026/10/16/viruscascade/" title="【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文">【论文阅读】【NDSS 27'】VirusCascade：劫持LLM驱动推荐智能体中的协作研究 - 博文</a><time datetime="2026-10-16T12:17:43.490Z" title="发表于 2026-10-16 20:17:43">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成"><img src="/2026/10/16/UNITE/QQ20261016-200713.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成"/></a><div class="content"><a class="title" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成">【论文阅读】【CVPR 25'】合成视频检测：从人脸或背景操控到完全AI生成</a><time datetime="2026-10-16T12:02:58.580Z" title="发表于 2026-10-16 20:02:58">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26'】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"><img src="/2026/10/16/HSL/QQ20261016-195345.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"/></a><div class="content"><a class="title" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26'】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性">【论文阅读】【USENIX 26'】DarkGram： 高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性</a><time datetime="2026-10-16T11:50:13.940Z" title="发表于 2026-10-16 19:50:13">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26'】DarkGram： TG上网络犯罪活动渠道分析"><img src="/2026/10/16/DarkGram/QQ20261016-194541.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】DarkGram： TG上网络犯罪活动渠道分析"/></a><div class="content"><a class="title" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26'】DarkGram： TG上网络犯罪活动渠道分析">【论文阅读】【USENIX 26'】DarkGram： TG上网络犯罪活动渠道分析</a><time datetime="2026-10-16T11:37:40.780Z" title="发表于 2026-10-16 19:37:40">2026-10-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/07/dskill/" title="【论文阅读】【USENIX 26'】“别给用户说”：检测与理解恶意Agent技能"><img src="/2026/10/07/dskill/QQ20261007-135335.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】“别给用户说”：检测与理解恶意Agent技能"/></a><div class="content"><a class="title" href="/2026/10/07/dskill/" title="【论文阅读】【USENIX 26'】“别给用户说”：检测与理解恶意Agent技能">【论文阅读】【USENIX 26'】“别给用户说”：检测与理解恶意Agent技能</a><time datetime="2026-10-07T06:20:32.000Z" title="发表于 2026-10-07 14:20:32">2026-10-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body></html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="论文信息 标题：SoK: Attack and Defense Landscape of Agentic AI Systems  链接   解决问题对象：AI agent 是“LLM + 传统软件组件”的混合系统——LLM 做规划与决策，配记忆、工具、外部环境、用户界面与工作流。 与传统系统&#x2F;单机 LLM 的本质区别：传统软件行为由源码里的程序逻辑预先确定，agent 行为由 LLM 动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文阅读】【USENIX 26&#39;】Sok： AI 系统的攻防全景回顾">
+<meta property="og:url" content="http://120.46.180.209/2026/10/26/sok/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="论文信息 标题：SoK: Attack and Defense Landscape of Agentic AI Systems  链接   解决问题对象：AI agent 是“LLM + 传统软件组件”的混合系统——LLM 做规划与决策，配记忆、工具、外部环境、用户界面与工作流。 与传统系统&#x2F;单机 LLM 的本质区别：传统软件行为由源码里的程序逻辑预先确定，agent 行为由 LLM 动">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2026/10/26/sok/QQ20261026-111055.png">
+<meta property="article:published_time" content="2026-10-26T03:10:32.000Z">
+<meta property="article:modified_time" content="2026-10-26T04:08:52.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="大模型安全">
+<meta property="article:tag" content="USENIX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2026/10/26/sok/QQ20261026-111055.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾",
+  "url": "http://120.46.180.209/2026/10/26/sok/",
+  "image": "http://120.46.180.209/2026/10/26/sok/QQ20261026-111055.png",
+  "datePublished": "2026-10-26T03:10:32.000Z",
+  "dateModified": "2026-10-26T04:08:52.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/10/26/sok/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【论文阅读】【USENIX 26\'】Sok： AI 系统的攻防全景回顾',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/10/26/sok/QQ20261026-111055.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-26T03:10:32.000Z" title="发表于 2026-10-26 11:10:32">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-26T04:08:52.000Z" title="更新于 2026-10-26 12:08:52">2026-10-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h1><ul>
+<li><p>标题：SoK: Attack and Defense Landscape of Agentic AI Systems</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/conference/usenixsecurity26/sec26_prepub_kim-juhee-agentic.pdf">链接</a></p>
+</li>
+</ul>
+<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p><strong>对象</strong>：AI agent 是“LLM + 传统软件组件”的混合系统——LLM 做规划与决策，配记忆、工具、外部环境、用户界面与工作流。</p>
+<p><strong>与传统系统&#x2F;单机 LLM 的本质区别</strong>：传统软件行为由源码里的程序逻辑预先确定，agent 行为由 LLM 动态生成；传统系统工作流预先编排，agent 工作流运行时生成。因此 agent 的“柔性”既是能力来源，也是风险来源——同一份柔性在不同维度上放大不同的攻击面。</p>
+<p><strong>现实动机</strong>：论文开篇即列举真实事件——提示注入被用来访问私有 GitHub 仓库、恶意文档附件与邮件转发导致数据外泄、服务器暴露用户聊天记录与凭证。这些事件说明 agent 的自动化能力让传统“单点”漏洞迅速升级为跨组件、跨系统的连锁事故。</p>
+<p><strong>研究空白</strong>：现有 LLM 安全综述停留在模型层（越狱、幻觉、后门），忽略 agent 因环境访问而扩大的攻击面与下游后果；已有 agent 研究多聚焦单一攻击向量、单一 agent 类型或单一组件（RAG 安全、工具安全）；设计导向的工作只给高层原则，没有把攻击与防御系统化；最接近的两篇综述虽考虑跨组件交互，但防御分类基本局限在“基于模型”的手段。</p>
+<p>作者因此主张：<strong>agent 安全不能靠给单个组件打补丁，必须从系统层面做纵深防御</strong>。</p>
+<h1 id="SoK：分析框架和文献回顾"><a href="#SoK：分析框架和文献回顾" class="headerlink" title="SoK：分析框架和文献回顾"></a>SoK：分析框架和文献回顾</h1><p><img src="/2026/10/26/sok/QQ20261026-111055.png" title="Fig1"></p>
+<p><em>agent 的结构剖面——LLM 与 agent 工作流共同构成决策内核，向下连接内部 RAG 与记忆（会话轨迹、长期存储），向外经工具&#x2F;系统与凭证触达计算机、Web、领域专用环境和第三方服务，向上经用户界面与用户交互，多智能体系统则是多个这样的内核并联</em></p>
+<p><img src="/2026/10/26/sok/QQ20261026-120604.png" title="Fig2"></p>
+<p><em>把 6 类攻击向量（紫色）与 7 类风险（红色）直接画在同一张数据流图上，一眼能看出“注入从哪个接口进来、最终在哪个组件爆掉”</em></p>
+<p><img src="/2026/10/26/sok/QQ20261026-120650.png" title="Fig3"></p>
+<p><em>图 3把 7 个设计维度与风险类别连成映射，并画出风险之间的级联箭头——接口风险如何喂养模型风险、模型风险又如何放大后果风险</em></p>
+<p><img src="/2026/10/26/sok/QQ20261026-120751.png" title="Fig4"></p>
+<p><em>按控制流阶段铺开防御手段，标出每种防御作用在输入、规划、工具调用、输出还是环境侧</em></p>
+<h2 id="七个分析维度"><a href="#七个分析维度" class="headerlink" title="七个分析维度"></a>七个分析维度</h2><p><strong>柔性单调地放大风险</strong>——接更多外部数据 → 间接注入入口变多；加持久记忆 → 记忆投毒有了靶子；接第三方工具 → 供应链风险；工作流交给 LLM → 推理被劫持的机会变多；动作从“说”到“做” → 信息泄露升级为环境破坏</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>最低柔性</th>
+<th>中等</th>
+<th>最高柔性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>输入信任 Input Trust</td>
+<td>不接外部数据</td>
+<td>预定义外部数据</td>
+<td>任意外部数据</td>
+</tr>
+<tr>
+<td>访问敏感性 Access Sensitivity</td>
+<td>无敏感数据</td>
+<td>预定义敏感数据</td>
+<td>任意敏感数据</td>
+</tr>
+<tr>
+<td>工作流 Workflow</td>
+<td>简单聊天机器人</td>
+<td>开发者固定编排</td>
+<td>LLM 动态编排</td>
+</tr>
+<tr>
+<td>动作 Action</td>
+<td>只生成回答</td>
+<td>回答 + 检索</td>
+<td>回答 + 检索 + 执行</td>
+</tr>
+<tr>
+<td>记忆 Memory</td>
+<td>无记忆</td>
+<td>会话内临时记忆</td>
+<td>跨会话持久记忆</td>
+</tr>
+<tr>
+<td>工具 Tool</td>
+<td>无工具</td>
+<td>已知可信工具</td>
+<td>任意&#x2F;动态发现工具</td>
+</tr>
+<tr>
+<td>用户界面 UI</td>
+<td>纯文本</td>
+<td>Web 图片预览</td>
+<td>可交互 Web 元素</td>
+</tr>
+</tbody></table>
+<h2 id="攻击面"><a href="#攻击面" class="headerlink" title="攻击面"></a>攻击面</h2><p><strong>对手</strong>：外部对手（只能污染 agent 会检索的网页&#x2F;文档）、用户级对手（直接投喂恶意输入）、内部对手（开发者或组件供应商，最难防）。</p>
+<p><strong>攻击向量</strong>：V1 间接提示注入、V2 恶意数据注入、V3 工具投毒、V4 直接提示注入、V5 模型投毒、V6 记忆投毒。</p>
+<p><strong>风险类别</strong>：</p>
+<ul>
+<li><strong>R1 异构不可信接口</strong>：接口多、信任级别杂，攻击入口远多于单机 LLM；</li>
+<li><strong>R2 错误指令遵循</strong>：模型听了攻击者的话，而不是用户&#x2F;开发者的话；</li>
+<li><strong>R3 无约束&#x2F;不安全数据流</strong>：传统系统靠类型系统、访问控制约束数据传播，agent 里数据可从任意输入自由流向任意输出（包括下一次工具调用）；</li>
+<li><strong>R4 幻觉与模型错误</strong>：在 agent 里幻觉会“落地”——例如攻击者抢注 LLM 常幻觉出的包名，把模型缺陷变成供应链攻击；</li>
+<li><strong>R5 私有数据泄露</strong>：对话、持久记忆、工具凭证、环境资源之间的交互被利用（外带 URL 自动抓取、SSRF&#x2F;XSS&#x2F;路径穿越&#x2F;SQL 注入等）；</li>
+<li><strong>R6 非预期&#x2F;未授权动作与数据损坏</strong>：不可逆状态变更（乱下单、任意代码执行）与直接篡改存储；</li>
+<li><strong>R7 资源耗尽与拒绝服务</strong>：刷 API、死循环、撑爆内存；</li>
+<li><strong>另有两类“其他风险”</strong>：系统提示&#x2F;工具描述&#x2F;配置等知识产权被窃取；基于工具执行时序、API 调用序列、流量模式的侧信道（作者称尚无人系统研究）。</li>
+</ul>
+<p><strong>系统级放大</strong>：R1 扩大入口 → 触发 R2&#x2F;R3&#x2F;R4 → 再放大为 R5&#x2F;R6&#x2F;R7，形成级联。这是“组件级防御不够”的直接论据。</p>
+<h2 id="防御框架"><a href="#防御框架" class="headerlink" title="防御框架"></a>防御框架</h2><table>
+<thead>
+<tr>
+<th>大类</th>
+<th>子类</th>
+<th>代表工作&#x2F;思路</th>
+<th>主要覆盖风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>运行时防护</td>
+<td>输入护栏、输出护栏、信息流控制与污点追踪、监控、人在回路</td>
+<td>NeMo Guardrails、Constitutional Classifiers、llama-firewall、PromptShield；Progent&#x2F;Conseca&#x2F;Agrail、GuardAgent&#x2F;ShieldAgent；CodeShield&#x2F;HeimdallM；URL&#x2F;网络白名单</td>
+<td>R1、R2、R4、R5、R6</td>
+</tr>
+<tr>
+<td>设计即安全</td>
+<td>权限分离、形式化验证</td>
+<td>AirGap、f-secure LLM、CaMel、FIDES 的“规划器-解析器”分离；PFI 的沙箱切换；IsolateGPT 的应用级隔离</td>
+<td>R2、R3</td>
+</tr>
+<tr>
+<td>身份与访问管理</td>
+<td>身份管理、访问控制、凭证管理</td>
+<td>SSO&#x2F;OIDC、去中心化身份、任务级短期身份；RBAC&#x2F;ABAC 式策略；凭证不暴露给 LLM</td>
+<td>R5–R7</td>
+</tr>
+<tr>
+<td>组件加固</td>
+<td>模型加固、工具加固</td>
+<td>SecAlign&#x2F;StruQ 的指令层级微调；ETDI 的签名工具定义、MCP 代理审计、MCP Safety Audit</td>
+<td>R1、R2、R4</td>
+</tr>
+</tbody></table>
+<p><strong>三条设计原则</strong>：纵深防御（输入→输出→信息流→监控→访问控制多层互补）、最小权限（权限分离、工具按需授权）、完全中介（每次敏感资源访问都被检查）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/10/26/sok/">http://120.46.180.209/2026/10/26/sok/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%89%E5%85%A8/">大模型安全</a><a class="post-meta__tags" href="/tags/USENIX/">USENIX</a></div><div class="post-share"><div class="social-share" data-image="/2026/10/26/sok/QQ20261026-111055.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/10/24/ctfshow-dasaiyuanti/" title="【CTFSHOW】 web入门大赛原题一（WEB680-686）"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【CTFSHOW】 web入门大赛原题一（WEB680-686）</div></div><div class="info-2"><div class="info-item-1">WEB-680题目网页很简单，仅一句“Post code to...</div></div></div></a><a class="pagination-related" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析"><img class="cover" src="/2026/10/26/a2a/QQ20261026-121418.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：A2ABreak: Systematic Security Analysis of the A2A Protocol  会议：42nd IEEE Annual Computer Security Applications Conference（ACSAC, CCF B）  链接：预印|工作   解决问题背景：A2A 由 Google 于 2025 年 4 月提出，2025 年 6 月移交 Linux Foundation，数月内获 50+ 厂商（Salesforce、SAP、ServiceNow、MongoDB、LangChain 等）支持，正成为多智能体生态的“水平通信层”——MCP 管 agent 与工具之间的垂直关系，A2A 管 agent 与 agent 之间的水平关系。 为什么危险：  不透明执行（opaque execution）是 A2A 的核心设计原则：委派方看不到远端 agent 的内部推理、工具调用和中间状态。这保护了知识产权，也意味着委派方无法验证对方拿自己的数据、凭证和产物做了什么。 安全要求“软”：大量关键控制写成 SHOULD...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/24/Agent/" title="【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入"><img class="cover" src="/2026/09/24/Agent/QQ20260924-161115.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-24</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</div></div><div class="info-2"><div class="info-item-1">一些我的碎碎念大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。 论文信息 标题：AttriGuard: Defeating Indirect Prompt Injection in LLM Agents via Causal Attribution of Tool Invocations  链接：pdf   解决问题Agent可以读取文档、调用搜索和工具等，这些外部内容中可能隐藏有隐藏指令，如果这些指令被Agent当作任务要求，攻击者就可以对后续调用环节进行控制，这就是间接提示词注入（Indirect Prompt Injection, IPI）攻击，下称IPI。现有的防御IPI的手段局限在以下四个方面：  输入语义判别范式的泛化性瓶颈。 现有绝大多数防御（检测类、提示工程类、训练对齐类）都将 IPI...</div></div></div></a><a class="pagination-related" href="/2026/10/24/bypassingAIwall/" title="【论文阅读】【USENIX 26&#39;】通过受控释放提示词实现生产环境中的提示防护绕过"><img class="cover" src="/2026/10/24/bypassingAIwall/QQ20261024-183736.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-24</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】通过受控释放提示词实现生产环境中的提示防护绕过</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：Bypassing Prompt Guards in Production with Controlled-Release Prompting  链接   解决问题编码型越狱并不新鲜。以往方法通常将危险请求改写成特殊符号、替换字符或自定义语言，希望主模型能够理解，而安全模型无法识别。这类攻击依赖能力差异：过滤器不知道怎样解码。一旦安全模型学会相同规则，隐藏效果就可能消失。  理论不可能 vs 生产现实：Ball 等人 (2024) 从理论上证明，在标准密码学假设下，任何 prompt 输入过滤器都无法通用区分安全与恶意 prompt—— 但这是用密码学时间锁谜题（TLP）构造的存在性证明，从未在真实部署的 LLM 系统中验证。 资源不对称漏洞：生产环境的输入过滤器为了低成本高速运行，被设计成轻量模型（如 Llama Prompt Guard 2 仅 22M 参数、512-token 上下文窗口），而被保护的主 LLM 动辄数百 B 参数 ——...</div></div></div></a><a class="pagination-related" href="/2026/10/07/dskill/" title="【论文阅读】【USENIX 26&#39;】“别给用户说”：检测与理解恶意Agent技能"><img class="cover" src="/2026/10/07/dskill/QQ20261007-135335.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-07</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】“别给用户说”：检测与理解恶意Agent技能</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：“Do Not Mention This to the User”: Detecting and Understanding Malicious Agent Skills in the Wild 链接：preprint    解决问题给Agent装上skills，就能让它们帮人做很多具体的事，可以读文档、写材料等。但隐藏在skill里的一些意图可以被隐藏起来，甚至让使用者都察觉不到。本论文首先提出了这个概念，并收集出一个有意义有标注的数据集。具体来说，论文聚焦于以下问题：  缺乏标注基准：Agent 技能生态（Claude Code、Codex CLI 等）已快速膨胀至 98,380 + 个技能，但此前没有任何经过行为确认的恶意技能标注数据集，防御者无法评估检测工具效果。 静态分析不可靠：现有工具仅靠正则匹配标记 26.1% 的技能为 “可疑”，但无法区分开发者失误与真正的恶意行为，精确率极低。 威胁全貌未知：不清楚恶意技能的攻击规模、技术分布、攻击者策略以及规避检测的手段。  采取方法 三阶段研究方式。    模块 核心做法    数据收集 爬取...</div></div></div></a><a class="pagination-related" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析"><img class="cover" src="/2026/10/16/DarkGram/QQ20261016-194541.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析</div></div><div class="info-2"><div class="info-item-1">论文信息 论文标题：DarkGram: A Large-Scale Analysis of Cybercriminal Activity Channels on Telegram  链接   解决问题 Telegram 已成为网络犯罪新温床：传统地下论坛因执法打击萎缩后，犯罪分子转向 Telegram 广播频道，其内容审核宽松、可达性强，却缺乏大规模系统性研究。 内容危害不明：这些频道向 2380 万订阅者传播被盗凭证、盗版软件、黑客工具等恶意内容，但订阅者是否意识到风险、危害程度如何，此前无人量化。 执法响应滞后：人工举报渠道效率低，Telegram 对成熟大频道的删除率仅 19%，且犯罪者可迅速迁移新频道保留粉丝，现有手段难以主动发现新兴恶意频道。  DarkGram DarkGram 框架，包含三个核心模块：  数据采集与分类体系：通过 Telemetrio 目录识别 339 个恶意活动频道（CACs），将其分为五类 —— 凭证泄露、盗版软件、黑帽资源、盗版媒体、社交媒体操纵。 BERT 自动分类器：基于手动标注的 3098 条帖子训练 BERT...</div></div></div></a><a class="pagination-related" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"><img class="cover" src="/2026/10/16/HSL/QQ20261016-195345.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：High Stakes, Low Certainty: Evaluating the Efficacy of High-Level Indicators of Compromise in Ransomware Attribution  链接   解决问题 勒索软件归因的制裁筛查困境：受害者支付赎金前必须确认攻击者不在制裁名单上，否则面临高额罚款甚至刑事追责，但归因过程高度依赖指标（IoC）的可靠性。 “痛苦金字塔” 模型未经实证检验：业界普遍认为高层指标（TTPs，即战术技术流程）比低层指标（文件哈希、IP 等）更难被攻击者更改、更具归因价值，但这一假设从未在勒索软件场景中被实证验证。 RaaS 生态加剧归因复杂性：勒索软件即服务（RaaS）模式下频繁的品牌重塑（rebranding）和 affiliates 共享工具，导致同一威胁 actor 的 “特征” 碎片化，不同 actor 之间反而高度重叠。 数据碎片化：各厂商和机构的威胁情报不共享，覆盖率差异大，可能导致遗漏制裁实体的风险盲区。  论文核心方法混合研究方法，包含两个互补组件：  专家访谈（定性）：对...</div></div></div></a><a class="pagination-related" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26&#39;】A2ABreak： 对 A2A 协议的系统性安全分析"><img class="cover" src="/2026/10/26/a2a/QQ20261026-121418.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">【论文阅读】【ACSAC 26&#39;】A2ABreak： 对 A2A 协议的系统性安全分析</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：A2ABreak: Systematic Security Analysis of the A2A Protocol  会议：42nd IEEE Annual Computer Security Applications Conference（ACSAC, CCF B）  链接：预印|工作   解决问题背景：A2A 由 Google 于 2025 年 4 月提出，2025 年 6 月移交 Linux Foundation，数月内获 50+ 厂商（Salesforce、SAP、ServiceNow、MongoDB、LangChain 等）支持，正成为多智能体生态的“水平通信层”——MCP 管 agent 与工具之间的垂直关系，A2A 管 agent 与 agent 之间的水平关系。 为什么危险：  不透明执行（opaque execution）是 A2A 的核心设计原则：委派方看不到远端 agent 的内部推理、工具调用和中间状态。这保护了知识产权，也意味着委派方无法验证对方拿自己的数据、凭证和产物做了什么。 安全要求“软”：大量关键控制写成 SHOULD...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">61</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">40</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">论文信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">解决问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SoK%EF%BC%9A%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6%E5%92%8C%E6%96%87%E7%8C%AE%E5%9B%9E%E9%A1%BE"><span class="toc-number">3.</span> <span class="toc-text">SoK：分析框架和文献回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E4%B8%AA%E5%88%86%E6%9E%90%E7%BB%B4%E5%BA%A6"><span class="toc-number">3.1.</span> <span class="toc-text">七个分析维度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">3.2.</span> <span class="toc-text">攻击面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%A1%86%E6%9E%B6"><span class="toc-number">3.3.</span> <span class="toc-text">防御框架</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/pr33mpt/" title="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”"><img src="/2026/10/26/pr33mpt/QQ20261026-122125.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”"/></a><div class="content"><a class="title" href="/2026/10/26/pr33mpt/" title="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”">【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”</a><time datetime="2026-10-26T04:11:32.000Z" title="发表于 2026-10-26 12:11:32">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析"><img src="/2026/10/26/a2a/QQ20261026-121418.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析"/></a><div class="content"><a class="title" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析">【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析</a><time datetime="2026-10-26T03:11:32.000Z" title="发表于 2026-10-26 11:11:32">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/sok/" title="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾"><img src="/2026/10/26/sok/QQ20261026-111055.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾"/></a><div class="content"><a class="title" href="/2026/10/26/sok/" title="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾">【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾</a><time datetime="2026-10-26T03:10:32.000Z" title="发表于 2026-10-26 11:10:32">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/24/ctfshow-dasaiyuanti/" title="【CTFSHOW】 web入门大赛原题一（WEB680-686）"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门大赛原题一（WEB680-686）"/></a><div class="content"><a class="title" href="/2026/10/24/ctfshow-dasaiyuanti/" title="【CTFSHOW】 web入门大赛原题一（WEB680-686）">【CTFSHOW】 web入门大赛原题一（WEB680-686）</a><time datetime="2026-10-24T10:40:44.000Z" title="发表于 2026-10-24 18:40:44">2026-10-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/24/bypassingAIwall/" title="【论文阅读】【USENIX 26'】通过受控释放提示词实现生产环境中的提示防护绕过"><img src="/2026/10/24/bypassingAIwall/QQ20261024-183736.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】通过受控释放提示词实现生产环境中的提示防护绕过"/></a><div class="content"><a class="title" href="/2026/10/24/bypassingAIwall/" title="【论文阅读】【USENIX 26'】通过受控释放提示词实现生产环境中的提示防护绕过">【论文阅读】【USENIX 26'】通过受控释放提示词实现生产环境中的提示防护绕过</a><time datetime="2026-10-24T06:20:32.000Z" title="发表于 2026-10-24 14:20:32">2026-10-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body></html>

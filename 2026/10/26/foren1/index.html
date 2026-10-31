@@ -1,0 +1,453 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【CTFSHOW】 电子取证——套的签到题 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="依托工具：volatility2.6 命令格式：  插件（plugin）是一条“查询”：遍历内核链表、扫内存池、解析注册表 hive…… 这些结构体都是虚拟地址里的，插件必须先把虚拟地址翻译成物理偏移，这就需要 符号表（内核 PDB，知道每个结构体字段在哪个偏移）。 Vol2：符号表就是 profile（Win7SP1x64），偏移写死。 Vol3：自动从微软符号服务器下载 PDB 并转成 ISF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CTFSHOW】 电子取证——套的签到题">
+<meta property="og:url" content="http://120.46.180.209/2026/10/26/foren1/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="依托工具：volatility2.6 命令格式：  插件（plugin）是一条“查询”：遍历内核链表、扫内存池、解析注册表 hive…… 这些结构体都是虚拟地址里的，插件必须先把虚拟地址翻译成物理偏移，这就需要 符号表（内核 PDB，知道每个结构体字段在哪个偏移）。 Vol2：符号表就是 profile（Win7SP1x64），偏移写死。 Vol3：自动从微软符号服务器下载 PDB 并转成 ISF">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/img/ctf.png">
+<meta property="article:published_time" content="2026-10-26T10:40:44.000Z">
+<meta property="article:modified_time" content="2026-10-31T08:36:08.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="j务">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="取证类题目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/img/ctf.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【CTFSHOW】 电子取证——套的签到题",
+  "url": "http://120.46.180.209/2026/10/26/foren1/",
+  "image": "http://120.46.180.209/img/ctf.png",
+  "datePublished": "2026-10-26T10:40:44.000Z",
+  "dateModified": "2026-10-31T08:36:08.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/10/26/foren1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CTFSHOW】 电子取证——套的签到题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/ctf.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【CTFSHOW】 电子取证——套的签到题</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【CTFSHOW】 电子取证——套的签到题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-26T10:40:44.000Z" title="发表于 2026-10-26 18:40:44">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-31T08:36:08.000Z" title="更新于 2026-10-31 16:36:08">2026-10-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="依托工具："><a href="#依托工具：" class="headerlink" title="依托工具："></a>依托工具：</h1><p><a target="_blank" rel="noopener" href="https://github.com/volatilityfoundation/volatility/releases">volatility2.6</a></p>
+<p>命令格式：</p>
+<ul>
+<li>插件（plugin）是一条“查询”：遍历内核链表、扫内存池、解析注册表 hive……</li>
+<li>这些结构体都是<strong>虚拟地址</strong>里的，插件必须先把虚拟地址翻译成物理偏移，这就需要 <strong>符号表</strong>（内核 PDB，知道每个结构体字段在哪个偏移）。<ul>
+<li><strong>Vol2</strong>：符号表就是 profile（<code>Win7SP1x64</code>），偏移写死。</li>
+<li><strong>Vol3</strong>：自动从微软符号服务器下载 PDB 并转成 ISF，所以不需要 <code>--profile</code>，但<strong>第一次要联网</strong>。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vol3</span></span><br><span class="line">vol <span class="operator">-f</span> &lt;镜像&gt; [全局参数] &lt;插件&gt; [插件参数]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Vol2</span></span><br><span class="line">vol.py <span class="operator">-f</span> &lt;镜像&gt; <span class="literal">--profile</span>=&lt;Profile&gt; &lt;插件&gt; [插件参数]</span><br></pre></td></tr></table></figure>
+
+<h1 id="JiaJia-CP-1"><a href="#JiaJia-CP-1" class="headerlink" title="JiaJia-CP-1"></a>JiaJia-CP-1</h1><p><img src="/2026/10/26/foren1/QQ20261031-134057.png"></p>
+<p>下载文件：镜像文件（<code>JiaJia_Co.raw</code>）是物理内存的快照</p>
+<ul>
+<li>查看这是什么系统：</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw imageinfo</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-150620.png"></p>
+<p>这个镜像是 <strong>Win7 SP1 x64</strong>，profile 使用 <code>Win7SP1x64</code>，采集时间 <code>12:33:14 UTC</code> 对应 <code>20:33:14 +0800</code>；镜像文件本身的修改时间 <code>2021/12/10 20:33:48</code> 正好对应这个采集时间。</p>
+<ul>
+<li>从SAM中查找用户名</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 printkey <span class="literal">-K</span> <span class="string">&quot;SAM\Domains\Account\Users\Names&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-150814.png"></p>
+<p>排除内置的 <code>Administrator</code> &#x2F; <code>Guest</code> 后，剩下的是 **<code>JiaJia</code>**，即 <code>C:\Users\JiaJia</code>。</p>
+<ul>
+<li>从UserAssist中查找“计算器最后运行时间”</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 userassist &gt; ua2.txt</span><br><span class="line"><span class="built_in">Select-String</span> <span class="literal">-Path</span> .\ua2.txt <span class="literal">-Pattern</span> <span class="string">&#x27;calc&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>查找出其中带有clac关键词的片段：</p>
+<p><img src="/2026/10/26/foren1/QQ20261031-151219.png"></p>
+<p>按照要求转换时区，就是：<code>2021-12-10 12:15:47 UTC + 8h = 2021-12-10 20:15:47 (UTC+8)</code></p>
+<ul>
+<li>拼接换成md5</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">s = <span class="string">&quot;JiaJia_2021-12-10_20:15:47&quot;</span></span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(s.encode()).hexdigest())</span><br><span class="line"><span class="comment"># 079249e3fc743bc2d0789f224e451ffd</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="JiaJia-CP-2"><a href="#JiaJia-CP-2" class="headerlink" title="JiaJia-CP-2"></a>JiaJia-CP-2</h1><p><img src="/2026/10/26/foren1/QQ20261031-153158.png"></p>
+<ul>
+<li>在上一题的UserAssist中可以看到有Telegram的使用信息，所以这里在进程中定位出Telegram的文件对象信息：</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 filescan &gt; filescan2.txt</span><br><span class="line"><span class="built_in">Select-String</span> <span class="literal">-Path</span> .\filescan2.txt <span class="literal">-Pattern</span> <span class="string">&#x27;Telegram&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-154003.png"></p>
+<p>获取到相关软件的安装位置。</p>
+<ul>
+<li>获取版本号：把 Telegram.exe 从内存里抠出来读版本资源</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 dumpfiles <span class="literal">-Q</span>  <span class="number">0</span>x000000013dce9f20 <span class="literal">-D</span> .\dump1</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-154348.png"></p>
+<p>导出的exe，右键属性查看其版本号为3.3.0.0</p>
+<ul>
+<li>把log.txt也导出,验证</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 dumpfiles <span class="literal">-Q</span> <span class="number">0</span>x000000013dd413f0 <span class="literal">-D</span> .\dump1</span><br></pre></td></tr></table></figure>
+
+<p><code>3003000</code> 就是 Telegram 的编码版本（3×10⁶ + 3×10³ + 0 &#x3D; <strong>3.3.0</strong>），和 exe 版本资源完全对得上。</p>
+<blockquote>
+<p>这就是 A1 &#x3D; **<code>3.3.0.0</code>**。注意不能填 <code>3.3</code>，官方是按文件版本的四段式算的。</p>
+</blockquote>
+<ul>
+<li>找邮箱信息。从进程信息判断佳佳用火狐登陆了邮箱，先把places.sqlite落盘：</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-Content</span> .\filescan2.txt | <span class="built_in">Select-String</span> <span class="string">&#x27;places\.sqlite&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>places.sqlite是火狐浏览器的历史 + 书签 + 输入历史”数据库，格式是标准 SQLite 3，文件名固定叫 <code>places.sqlite</code></p>
+<p><img src="/2026/10/26/foren1/QQ20261031-155451.png"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意到0x000000013fc9dc00 ... \Users\JiaJia\AppData\Roaming\Mozilla\Firefox\Profiles\00mbikn9.default-release\places.sqlite</span></span><br><span class="line"></span><br><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 dumpfiles <span class="literal">-Q</span> <span class="number">0</span>x000000013fc9dc00 <span class="literal">-D</span> .</span><br></pre></td></tr></table></figure>
+
+<p>用python读出moz_places中的用户信息</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line">c = sqlite3.connect(<span class="string">r&#x27;.\ff\file.None.0xfffffa8005f36010.vacb&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> url, title, ts <span class="keyword">in</span> c.execute(</span><br><span class="line">    <span class="string">&quot;select url,title,last_visit_date from moz_places &quot;</span></span><br><span class="line">    <span class="string">&quot;where url like &#x27;%mail%&#x27; or url like &#x27;%163%&#x27; order by last_visit_date desc&quot;</span>):</span><br><span class="line">    <span class="built_in">print</span>(url, title, ts)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-155907.png"></p>
+<p>其中的邮箱<code>a2492853776@163.com</code></p>
+<ul>
+<li>还可以用Cookie坐实</li>
+</ul>
+<p><code>cookies.sqlite</code> 里：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.163.com        P_INFO       &#x27;a2492853776@163.com|1639138833|0|mail163|...&#x27;</span><br><span class="line">.163.com        nts_mail_user &#x27;a2492853776@163.com:-1:1&#x27;</span><br><span class="line">.mail.163.com   MAIL_PINFO   &#x27;a2492853776@163.com|1639138833|0|mail163|...&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><code>nts_mail_user</code> 是网易邮箱的登录用户 Cookie，值就是邮箱本身。<code>1639138833</code> 换算过来是 <code>2021-12-10 20:20:33 (+08:00)</code>，正好是镜像采集前十几分钟。</p>
+<ul>
+<li>拼接：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">s = <span class="string">&quot;3.3.0.0_a2492853776@163.com&quot;</span></span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(s.encode()).hexdigest())</span><br><span class="line"><span class="comment"># f1420b5294237f453b7cc0951014e45a</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="附：places-sqlite-是什么"><a href="#附：places-sqlite-是什么" class="headerlink" title="附：places.sqlite 是什么"></a>附：places.sqlite 是什么</h1><p><strong>一句话：它是 Firefox 的“历史 + 书签 + 输入历史”数据库，格式是标准 SQLite 3，文件名固定叫 <code>places.sqlite</code>。</strong></p>
+<p>Firefox 把所有 URL 相关的浏览痕迹都写在这里，不在注册表里，也不在 IE 的 WebCache 里——这也是为什么 <code>iehistory</code> 查不到、而它能查到。</p>
+<h2 id="主要表结构（Firefox-95-这张库里的）"><a href="#主要表结构（Firefox-95-这张库里的）" class="headerlink" title="主要表结构（Firefox 95 这张库里的）"></a>主要表结构（Firefox 95 这张库里的）</h2><table>
+<thead>
+<tr>
+<th>表</th>
+<th>存什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>moz_places</code></td>
+<td>每个 URL 一条：<code>url</code>、<code>title</code>、<code>visit_count</code>、<code>hidden</code>、<code>typed</code>、<code>frecency</code>、<code>last_visit_date</code></td>
+</tr>
+<tr>
+<td><code>moz_historyvisits</code></td>
+<td>每次访问一条：<code>place_id</code>、<code>visit_date</code>、<code>visit_type</code>、<code>from_visit</code></td>
+</tr>
+<tr>
+<td><code>moz_bookmarks</code></td>
+<td>书签</td>
+</tr>
+<tr>
+<td><code>moz_inputhistory</code></td>
+<td>地址栏&#x2F;搜索框里<strong>实际敲进去的字符串</strong>（自动补全用）</td>
+</tr>
+<tr>
+<td><code>moz_annos</code> &#x2F; <code>moz_items_annos</code></td>
+<td>注解（下载来源等）</td>
+</tr>
+<tr>
+<td><code>moz_origins</code> &#x2F; <code>moz_meta</code></td>
+<td>站点聚合信息、库元数据</td>
+</tr>
+</tbody></table>
+<p>几个字段的含义要记住：</p>
+<ul>
+<li><code>last_visit_date</code> &#x2F; <code>visit_date</code>：<strong>Unix 纪元起的微秒数</strong>（PRTime），UTC。除以 1e6 再 <code>datetime(..., &#39;unixepoch&#39;)</code>。</li>
+<li><code>typed = 1</code>：这个 URL 是用户<strong>手动敲进地址栏</strong>的，不是点链接进去的。</li>
+<li><code>visit_type</code>：1&#x3D;LINK 点击、2&#x3D;TYPED 手输、3&#x3D;BOOKMARK 书签、4&#x3D;EMBED 嵌入、5&#x2F;6&#x3D;重定向、7&#x3D;DOWNLOAD、8&#x3D;FRAMED、9&#x3D;RELOAD。</li>
+<li><code>rev_host</code>：反转的域名（<code>gro.allizom.troppus.</code> &#x3D; <code>support.mozilla.org.</code>），只用于排序，别被它迷惑。</li>
+</ul>
+<h2 id="为什么它会在内存镜像里"><a href="#为什么它会在内存镜像里" class="headerlink" title="为什么它会在内存镜像里"></a>为什么它会在内存镜像里</h2><p>Firefox 运行时会打开 <code>places.sqlite</code>，SQLite 通过 mmap&#x2F;页缓存把它映射进内存，同时 NTFS 文件缓存也会保留这些页。<code>dumpfiles</code> 就是顺着 <code>FILE_OBJECT → DataSection</code> 把这些页重新拼成文件，所以即使磁盘不在手上，也能拿到一份（可能不完整）的数据库。</p>
+<h2 id="换成-Chrome-IE-该去哪找（对照）"><a href="#换成-Chrome-IE-该去哪找（对照）" class="headerlink" title="换成 Chrome &#x2F; IE 该去哪找（对照）"></a>换成 Chrome &#x2F; IE 该去哪找（对照）</h2><table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>历史数据库</th>
+<th>位置</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Firefox</td>
+<td><code>places.sqlite</code></td>
+<td><code>%APPDATA%\Mozilla\Firefox\Profiles\&lt;随机&gt;.default-release\</code></td>
+<td>本文这套</td>
+</tr>
+<tr>
+<td>Chrome</td>
+<td><code>History</code></td>
+<td><code>%LOCALAPPDATA%\Google\Chrome\User Data\Default\History</code></td>
+<td>SQLite，表 <code>urls</code>&#x2F;<code>visits</code>，时间是从 1601 起的微秒</td>
+</tr>
+<tr>
+<td>IE</td>
+<td><code>WebCacheV01.dat</code></td>
+<td><code>%LOCALAPPDATA%\Microsoft\Windows\WebCache\</code></td>
+<td>ESE 数据库，Vol2 的 <code>iehistory</code> 就是读它</td>
+</tr>
+</tbody></table>
+<h1 id="JiaJia-CP-3"><a href="#JiaJia-CP-3" class="headerlink" title="JiaJia-CP-3"></a>JiaJia-CP-3</h1><p><img src="/2026/10/26/foren1/QQ20261031-160631.png"></p>
+<ul>
+<li>UserAssist里有三条Chrome记录</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 userassist &gt; ua3.txt</span><br><span class="line"><span class="built_in">Select-String</span> <span class="literal">-Path</span> .\ua3.txt <span class="literal">-Pattern</span> <span class="string">&#x27;chrome&#x27;</span> <span class="literal">-Context</span> <span class="number">0</span>,<span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-161132.png"></p>
+<table>
+<thead>
+<tr>
+<th>条目</th>
+<th>含义</th>
+<th>UTC 时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Chrome</code></td>
+<td>资源管理器里的壳项</td>
+<td>12:21:36</td>
+</tr>
+<tr>
+<td><code>...\User Pinned\TaskBar\Google Chrome.lnk</code></td>
+<td><strong>固定在任务栏的快捷方式</strong>被执行</td>
+<td>12:21:36</td>
+</tr>
+<tr>
+<td><code>&#123;6D809377-…&#125;\Google\Chrome\Application\chrome.exe</code></td>
+<td><strong>Chrome 程序本体</strong>被执行</td>
+<td><strong>12:28:43</strong></td>
+</tr>
+</tbody></table>
+<p><code>&#123;6D809377-6AF0-444B-8957-A3773F02200E&#125;</code> 是 KNOWNFOLDERID 里的 <code>ProgramFilesX64</code>，所以这条就是 <code>C:\Program Files\Google\Chrome\Application\chrome.exe</code>。</p>
+<ul>
+<li>可以用Chrome自己的记录做验证</li>
+</ul>
+<p>从filescan里找出Chrome的history库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x000000013dc9df20  \Users\JiaJia\AppData\Local\Google\Chrome\User Data\Default\History</span><br></pre></td></tr></table></figure>
+
+<p>导出：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 dumpfiles <span class="literal">-Q</span> <span class="number">0</span>x000000013dc9df20 <span class="literal">-D</span> .\chrome</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3, datetime</span><br><span class="line"></span><br><span class="line">db = <span class="string">r&#x27;.\chrome\file.None.0xfffffa8006010430.dat&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">chrome_time</span>(<span class="params">v</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> v:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">return</span> datetime.datetime(<span class="number">1601</span>, <span class="number">1</span>, <span class="number">1</span>) + datetime.timedelta(microseconds=v)</span><br><span class="line"></span><br><span class="line">conn = sqlite3.connect(db)</span><br><span class="line">cur = conn.cursor()</span><br><span class="line"></span><br><span class="line">tables = [r[<span class="number">0</span>] <span class="keyword">for</span> r <span class="keyword">in</span> cur.execute(<span class="string">&quot;select name from sqlite_master where type=&#x27;table&#x27;&quot;</span>)]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;tables:&#x27;</span>, tables)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\n== downloads ==&#x27;</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> cur.execute(<span class="string">&quot;select id, current_path, target_path, start_time, end_time, received_bytes, state, tab_url from downloads&quot;</span>):</span><br><span class="line">        <span class="built_in">print</span>(r)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;err&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\n== download url chains ==&#x27;</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">for</span> r <span class="keyword">in</span> cur.execute(<span class="string">&quot;select id, chain_index, url from downloads_url_chains&quot;</span>):</span><br><span class="line">        <span class="built_in">print</span>(r)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;err&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\n== last visits ==&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> url, title, last <span class="keyword">in</span> cur.execute(<span class="string">&quot;select url, title, last_visit_time from urls order by last_visit_time desc limit 15&quot;</span>):</span><br><span class="line">    <span class="built_in">print</span>(chrome_time(last), <span class="string">&#x27;|&#x27;</span>, url, <span class="string">&#x27;|&#x27;</span>, title)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-161645.png"></p>
+<ul>
+<li>将运行chrome的时间换为北京时间</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2021-12-10 12:28:43 UTC  + 8h  =  2021-12-10 20:28:43 (+08:00)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在Chrome的下载记录里查找文件</li>
+</ul>
+<p>之前以及找了<code>part2.rar</code>，路径是<code>C:\\Users\\JiaJia\\Downloads\\part2.rar</code>。</p>
+<p>在filescan里定位到这个文件：</p>
+<p><img src="/2026/10/26/foren1/QQ20261031-162215.png"></p>
+<ul>
+<li>把内存里的内容dump下来</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 dumpfiles <span class="literal">-Q</span> <span class="number">0</span>x000000013dbf1a80 <span class="literal">-D</span> .\chrome</span><br></pre></td></tr></table></figure>
+
+<p>用hex看看</p>
+<p><img src="/2026/10/26/foren1/QQ20261031-163117.png"></p>
+<p>文件下载地址，下载后发现压缩包里是一个加密的txt</p>
+<ul>
+<li>查看环境变量</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volatility_2.<span class="number">6</span>_win64_standalone.exe <span class="operator">-f</span> .\JiaJia_Co.raw <span class="literal">--profile</span>=Win7SP1x64 envars &gt; envs.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2026/10/26/foren1/QQ20261031-163527.png"></p>
+<p>存在一个Rar的变量。</p>
+<ul>
+<li>拼接</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">s = <span class="string">&quot;2021-12-10_20:28:43_Th1s_i5_Ur_P5wd&quot;</span></span><br><span class="line"><span class="built_in">print</span>(hashlib.md5(s.encode()).hexdigest())</span><br><span class="line"><span class="comment"># 6430ef3578f7e1206506995cae3d2c24</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/10/26/foren1/">http://120.46.180.209/2026/10/26/foren1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/j%E5%8A%A1/">j务</a><a class="post-meta__tags" href="/tags/ctf/">ctf</a><a class="post-meta__tags" href="/tags/%E5%8F%96%E8%AF%81%E7%B1%BB%E9%A2%98%E7%9B%AE/">取证类题目</a></div><div class="post-share"><div class="social-share" data-image="/img/ctf.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/26/foren/" title="【CTFSHOW】 电子取证——套的签到题"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【CTFSHOW】 电子取证——套的签到题</div></div><div class="info-2"><div class="info-item-1">下载题目，是一个pcap包，题目提示为： 这是你沐师傅的站的流量，最近你沐师傅去跟着某讯搭了一个WP平台后发了一篇文章再测试了一下自己的网站就再也没去管过平台了。结果被某位名字貌似大概可能叫**g4_simon**的大黑阔给hack掉了网站，并进行了一些操作拿到了沐师傅放在平台里的信息。由于沐师傅说他摆烂了不想自己研究，于是将流量附件放了出来叫大家来帮忙找一找。 找到三段**你觉得像flag的内容**并用下划线组合，即ctfshow&#123;A1_A2_A3&#125;，找不到就算了，摆烂了。 ~~如果交不上就算了，摆烂了~~ (其实签到题是PC1和CP1) 以此签到题为例，整理一下流量分析题目的分析流程。分析工具：wireshark Step1-PCAP包全局画像 统计-捕获文件属性，判断是短期流量还是长期流量    统计-协议分级，本题里http包占主导地位    统计-会话，本题中的两个ip间开了大量短连接,存在扫描和工具化特征    统计-端点，确认没有其他内网主机参与，排除横向移动   Step2-整理HTTP...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/26/foren/" title="【CTFSHOW】 电子取证——套的签到题"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">【CTFSHOW】 电子取证——套的签到题</div></div><div class="info-2"><div class="info-item-1">下载题目，是一个pcap包，题目提示为： 这是你沐师傅的站的流量，最近你沐师傅去跟着某讯搭了一个WP平台后发了一篇文章再测试了一下自己的网站就再也没去管过平台了。结果被某位名字貌似大概可能叫**g4_simon**的大黑阔给hack掉了网站，并进行了一些操作拿到了沐师傅放在平台里的信息。由于沐师傅说他摆烂了不想自己研究，于是将流量附件放了出来叫大家来帮忙找一找。 找到三段**你觉得像flag的内容**并用下划线组合，即ctfshow&#123;A1_A2_A3&#125;，找不到就算了，摆烂了。 ~~如果交不上就算了，摆烂了~~ (其实签到题是PC1和CP1) 以此签到题为例，整理一下流量分析题目的分析流程。分析工具：wireshark Step1-PCAP包全局画像 统计-捕获文件属性，判断是短期流量还是长期流量    统计-协议分级，本题里http包占主导地位    统计-会话，本题中的两个ip间开了大量短连接,存在扫描和工具化特征    统计-端点，确认没有其他内网主机参与，排除横向移动   Step2-整理HTTP...</div></div></div></a><a class="pagination-related" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析"><img class="cover" src="/2026/10/16/DarkGram/QQ20261016-194541.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析</div></div><div class="info-2"><div class="info-item-1">论文信息 论文标题：DarkGram: A Large-Scale Analysis of Cybercriminal Activity Channels on Telegram  链接   解决问题 Telegram 已成为网络犯罪新温床：传统地下论坛因执法打击萎缩后，犯罪分子转向 Telegram 广播频道，其内容审核宽松、可达性强，却缺乏大规模系统性研究。 内容危害不明：这些频道向 2380 万订阅者传播被盗凭证、盗版软件、黑客工具等恶意内容，但订阅者是否意识到风险、危害程度如何，此前无人量化。 执法响应滞后：人工举报渠道效率低，Telegram 对成熟大频道的删除率仅 19%，且犯罪者可迅速迁移新频道保留粉丝，现有手段难以主动发现新兴恶意频道。  DarkGram DarkGram 框架，包含三个核心模块：  数据采集与分类体系：通过 Telemetrio 目录识别 339 个恶意活动频道（CACs），将其分为五类 —— 凭证泄露、盗版软件、黑帽资源、盗版媒体、社交媒体操纵。 BERT 自动分类器：基于手动标注的 3098 条帖子训练 BERT...</div></div></div></a><a class="pagination-related" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"><img class="cover" src="/2026/10/16/HSL/QQ20261016-195345.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：High Stakes, Low Certainty: Evaluating the Efficacy of High-Level Indicators of Compromise in Ransomware Attribution  链接   解决问题 勒索软件归因的制裁筛查困境：受害者支付赎金前必须确认攻击者不在制裁名单上，否则面临高额罚款甚至刑事追责，但归因过程高度依赖指标（IoC）的可靠性。 “痛苦金字塔” 模型未经实证检验：业界普遍认为高层指标（TTPs，即战术技术流程）比低层指标（文件哈希、IP 等）更难被攻击者更改、更具归因价值，但这一假设从未在勒索软件场景中被实证验证。 RaaS 生态加剧归因复杂性：勒索软件即服务（RaaS）模式下频繁的品牌重塑（rebranding）和 affiliates 共享工具，导致同一威胁 actor 的 “特征” 碎片化，不同 actor 之间反而高度重叠。 数据碎片化：各厂商和机构的威胁情报不共享，覆盖率差异大，可能导致遗漏制裁实体的风险盲区。  论文核心方法混合研究方法，包含两个互补组件：  专家访谈（定性）：对...</div></div></div></a><a class="pagination-related" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成"><img class="cover" src="/2026/10/16/UNITE/QQ20261016-200713.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：通用合成视频检测器：从人脸或背景操控到完全由AI生成的内容  链接   解决问题 现有检测器只认人脸：主流 DeepFake 检测方法（face-swap、lip-sync 检测）均以人为中心，必须先检测到人脸才能推理 —— 一旦视频中无人脸（如纯背景篡改、T2V&#x2F;I2V 全 AI 生成内容），直接失效。 生成模型进化超出检测能力：Flux、Runway、Sora 等 T2V&#x2F;I2V 模型可生成无缝背景篡改和完全合成的视频（含非人类主体），传统 face-centric 检测器在这类新内容上表现骤降。 训练 - 测试域差：开源 DeepFake 数据集普遍只含人脸篡改，缺乏背景篡改和全合成样本，导致模型过拟合到面部区域，跨域泛化能力差。 缺乏统一检测器：需要一个模型同时覆盖三类内容 —— 真人 + 人脸篡改、真人 + 背景篡改、完全 AI 生成 —— 而非为每类任务单独训练专用检测器。   UNITE（Universal Network for Identifying Tampered and synthEtic videos）UNITE...</div></div></div></a><a class="pagination-related" href="/2026/10/16/viruscascade/" title="【论文阅读】【NDSS 27&#39;】VirusCascade：劫持LLM驱动推荐智能体中的协作研究"><img class="cover" src="/2026/10/16/viruscascade/QQ20261016-202330.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【NDSS 27&#39;】VirusCascade：劫持LLM驱动推荐智能体中的协作研究</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：VirusCascade: Hijacking Collaborative Reflection inLLM-Powered Recommender Agents  [链接]([2609.38270] VirusCascade: Hijacking Collaborative Reflection in LLM-Powered Recommender Agents)   解决问题 LLM 推荐系统的新攻击面：LLM 驱动的推荐代理系统（LLM-ARS）中，用户和物品都是带自然语言记忆的自主代理，通过协作反思（collaborative reflection）反复交互更新记忆 —— 现有攻击（数据投毒、文本对抗扰动、记忆篡改）全部针对静态评分模型或单轮注入，完全无法利用这种迭代记忆回写机制。 发现两个全新漏洞性质： 反思持续性（Reflective Persistence）：一旦一条恶意主张被反思算子 “合理化” 并写入记忆，后续多轮反思会自动延续甚至 elaboration 该主张，无需攻击者再介入； 跨代理传播（Cross-Agent...</div></div></div></a><a class="pagination-related" href="/2023/07/24/Socnet/" title="【打靶】Socnet"><img class="cover" src="/2023/07/24/Socnet/cover.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-24</div><div class="info-item-2">【打靶】Socnet</div></div><div class="info-2"><div class="info-item-1">靶机下载地址：https://download.vulnhub.com/boredhackerblog/medium_socnet.ova 主机探测arp-scan -l  nmap -sn 192.168.40.0/16  kali：192.168.40.148 靶机：192.168.40.149 开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其接入网络。 进一步信息收集1.端口、服务、操作系统探测nmap -sV -sC -O 192.168.40.149  目标开放了22、5000端口，在5000端口运行了一个由python2编写的http服务“Werkzeug”。在按照提示输入少于4字符长度的信息时会提示输入不够长  2.目录扫描dirsearch -u 192.168.40.149：5000 对5000端口进行目录扫描，发现一个／admin目录，访问，内有一个可执行python代码的入口。 尝试利用1.利用python来反弹shell先在kali监听5555端口： nc -lvnp...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%9D%E6%89%98%E5%B7%A5%E5%85%B7%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">依托工具：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JiaJia-CP-1"><span class="toc-number">2.</span> <span class="toc-text">JiaJia-CP-1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JiaJia-CP-2"><span class="toc-number">3.</span> <span class="toc-text">JiaJia-CP-2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%EF%BC%9Aplaces-sqlite-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">4.</span> <span class="toc-text">附：places.sqlite 是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%88Firefox-95-%E8%BF%99%E5%BC%A0%E5%BA%93%E9%87%8C%E7%9A%84%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">主要表结构（Firefox 95 这张库里的）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E4%BC%9A%E5%9C%A8%E5%86%85%E5%AD%98%E9%95%9C%E5%83%8F%E9%87%8C"><span class="toc-number">4.2.</span> <span class="toc-text">为什么它会在内存镜像里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E6%88%90-Chrome-IE-%E8%AF%A5%E5%8E%BB%E5%93%AA%E6%89%BE%EF%BC%88%E5%AF%B9%E7%85%A7%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">换成 Chrome &#x2F; IE 该去哪找（对照）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JiaJia-CP-3"><span class="toc-number">5.</span> <span class="toc-text">JiaJia-CP-3</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/foren/" title="【CTFSHOW】 电子取证——套的签到题"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 电子取证——套的签到题"/></a><div class="content"><a class="title" href="/2026/10/26/foren/" title="【CTFSHOW】 电子取证——套的签到题">【CTFSHOW】 电子取证——套的签到题</a><time datetime="2026-10-26T10:40:44.000Z" title="发表于 2026-10-26 18:40:44">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/foren1/" title="【CTFSHOW】 电子取证——套的签到题"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 电子取证——套的签到题"/></a><div class="content"><a class="title" href="/2026/10/26/foren1/" title="【CTFSHOW】 电子取证——套的签到题">【CTFSHOW】 电子取证——套的签到题</a><time datetime="2026-10-26T10:40:44.000Z" title="发表于 2026-10-26 18:40:44">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/pr33mpt/" title="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”"><img src="/2026/10/26/pr33mpt/QQ20261026-122125.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”"/></a><div class="content"><a class="title" href="/2026/10/26/pr33mpt/" title="【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”">【论文阅读】【NDSS 26'】Prεεmpt：为发给大模型的敏感提示词“消毒”</a><time datetime="2026-10-26T04:11:32.000Z" title="发表于 2026-10-26 12:11:32">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析"><img src="/2026/10/26/a2a/QQ20261026-121418.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析"/></a><div class="content"><a class="title" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析">【论文阅读】【ACSAC 26'】A2ABreak： 对 A2A 协议的系统性安全分析</a><time datetime="2026-10-26T03:11:32.000Z" title="发表于 2026-10-26 11:11:32">2026-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/10/26/sok/" title="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾"><img src="/2026/10/26/sok/QQ20261026-111055.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾"/></a><div class="content"><a class="title" href="/2026/10/26/sok/" title="【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾">【论文阅读】【USENIX 26'】Sok： AI 系统的攻防全景回顾</a><time datetime="2026-10-26T03:10:32.000Z" title="发表于 2026-10-26 11:10:32">2026-10-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body></html>

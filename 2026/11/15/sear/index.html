@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易 | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="当 AR 眼镜替骗子做足了功课：它看见你的脸、听见你的语气、翻完你的朋友圈，再用大模型写出一段“刚刚好”的开场白——93.3% 的人点开了它发来的链接。 论文信息： 标题：SEAR: A Multimodal Dataset for Analyzing AR-LLM-Driven Social Engineering Behaviors（一个用于分析 AR-LLM 驱动社交工程行为的多模态数据集）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文阅读】【MM 25&#39;】SEAR：精准定制你的画像，骗人更容易">
+<meta property="og:url" content="http://120.46.180.209/2026/11/15/sear/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="当 AR 眼镜替骗子做足了功课：它看见你的脸、听见你的语气、翻完你的朋友圈，再用大模型写出一段“刚刚好”的开场白——93.3% 的人点开了它发来的链接。 论文信息： 标题：SEAR: A Multimodal Dataset for Analyzing AR-LLM-Driven Social Engineering Behaviors（一个用于分析 AR-LLM 驱动社交工程行为的多模态数据集）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/2026/11/15/sear/QQ20261115-161622.png">
+<meta property="article:published_time" content="2026-11-15T08:13:32.000Z">
+<meta property="article:modified_time" content="2026-11-15T08:20:26.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="读论文">
+<meta property="article:tag" content="大模型安全">
+<meta property="article:tag" content="j务">
+<meta property="article:tag" content="MM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/2026/11/15/sear/QQ20261115-161622.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易",
+  "url": "http://120.46.180.209/2026/11/15/sear/",
+  "image": "http://120.46.180.209/2026/11/15/sear/QQ20261115-161622.png",
+  "datePublished": "2026-11-15T08:13:32.000Z",
+  "dateModified": "2026-11-15T08:20:26.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/11/15/sear/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【论文阅读】【MM 25\'】SEAR：精准定制你的画像，骗人更容易',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(2026/11/15/sear/QQ20261115-161622.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-15T08:13:32.000Z" title="发表于 2026-11-15 16:13:32">2026-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-15T08:20:26.000Z" title="更新于 2026-11-15 16:20:26">2026-11-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><strong>当 AR 眼镜替骗子做足了功课</strong>：它看见你的脸、听见你的语气、翻完你的朋友圈，再用大模型写出一段“刚刚好”的开场白——93.3% 的人点开了它发来的链接。</p>
+<h1 id="论文信息："><a href="#论文信息：" class="headerlink" title="论文信息："></a>论文信息：</h1><ul>
+<li><p>标题：SEAR: A Multimodal Dataset for Analyzing AR-LLM-Driven Social Engineering Behaviors（一个用于分析 AR-LLM 驱动社交工程行为的多模态数据集）</p>
+</li>
+<li><p>发表：<strong>ACM MM 2025</strong>（第 33 届 ACM 国际多媒体会议），2025 年 10 月 27–31 日，爱尔兰都柏林；DOI：10.1145&#x2F;3746027.3758245。<strong>ACM MM</strong>（ACM International Conference on Multimedia）是 ACM 旗下面向多媒体领域的顶级会议，也是中国计算机学会（CCF）推荐的 <strong>A 类</strong>会议，与 CVPR、ICCV、NeurIPS 等并列为多媒体与视觉方向最重要的发表场所之一；议题覆盖多模态理解、生成、检索、人机交互与多媒体安全，近年来对“多模态大模型 + 安全&#x2F;隐私”类工作尤为关注。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2505.24458">论文链接 SEAR: A Multimodal Dataset for Analyzing AR-LLM-Driven Social Engineering Behaviors</a></p>
+</li>
+</ul>
+<h1 id="解决问题："><a href="#解决问题：" class="headerlink" title="解决问题："></a>解决问题：</h1><p><strong>背景</strong>：社交工程（SE）一直是最有效的攻击面——它攻击的是人，而不是系统。过去它主要靠电话、邮件、短信，攻击者凭经验“套话”。现在两件事同时成熟了：① AR 眼镜可以持续采集第一视角的画面、声音、环境；② 多模态 LLM 可以实时理解这些信号，并检索公开社交数据生成“人设”。</p>
+<p><strong>缺口</strong>：作者指出，现有工作要么只研究<strong>单模态</strong> SE（文本钓鱼、语音诈骗），要么只研究<strong>AR 隐私</strong>（比如通过 AR 画面推断室内信息），<strong>没有一个数据集同时包含 AR 传感数据、LLM 生成的对话、以及受试者的主观信任度量</strong>。已有的对话数据集（MultiWOZ、SD-Eval 等）缺少音视频与环境线索，也缺少“被攻击者”的行为反应标注。没有数据，就既无法验证这类攻击是否真的可行，也无法训练检测器。</p>
+<p><strong>本文做的事</strong>：构建 <strong>SEAR</strong> 数据集——首个面向“AR + 多模态 LLM + 社交 Agent”驱动 SE 的多模态资源，用受控实验回答三个问题：这类攻击有多有效？人为什么会上钩？拿这些数据能做什么防御研究？</p>
+<p><strong>伦理前提</strong>：IRB 批准；所有受试者知情同意；数据匿名化；实验在受控环境进行，不涉及真实受害者。</p>
+<h1 id="SEAR"><a href="#SEAR" class="headerlink" title="SEAR"></a>SEAR</h1><p><img src="/"></p>
+<p><u>一张图交代了“数据从哪来、又长成什么样”：左侧是 SEAR 框架的三段式流水线——AR 眼镜负责<strong>采集与融合</strong>（人脸关键点、语音转写、手势、物体与场景标签），多模态 LLM 负责<strong>理解与画像</strong>（把感官线索 + 爬取到的社交主页，合成一份带兴趣点与联系方式的“目标档案”），社交 Agent 负责<strong>执行与迭代</strong>（按开场—深入—建信任三阶段生成话术，并根据目标反应实时调整）；右侧对应产出数据集的五个部分——对话场景、个人信息、社会画像、交互对话、事后问卷。中间用箭头标出“感知→画像→话术→反馈”的闭环，说明这套数据不是静态语料，而是<strong>一次完整攻击的全程录像 + 受害者主观感受</strong>。</u></p>
+<p>SEAR 并不是“一个模型”，而是<strong>一套攻击流水线 + 一套数据采集协议</strong>。其框架（图 1）由三部分组成：</p>
+<ol>
+<li><strong>AR Glass（感知端）</strong>：RayNeo X2（Android，6GB RAM &#x2F; 128GB）。实时采集并融合多模态线索——<ul>
+<li><strong>面部</strong>：MediaPipe Holistic 提取 543 个关键点（33 姿态 + 468 面部 + 42 手部），裁剪人脸送服务端 LLM；本地用 BlendShape 生成表情参数（如 mouthSmileLeft）；</li>
+<li><strong>语音</strong>：Vosk 轻量语音转写，依据气导和骨导差异产生的能量差，区分“戴眼镜的人”和“对话者”；</li>
+<li><strong>姿态</strong>：手部关键点过 HandGestureClassifier，识别点赞、指向上等手势；</li>
+<li><strong>物体&#x2F;场景</strong>：YOLO11m 做 ROI 检测，把物体标签送给 LLM，进而推断“室内&#x2F;会议室”等背景。</li>
+</ul>
+</li>
+<li><strong>Multimodal LLM（画像端）</strong>：Gemma 3-12B，部署在 RTX 4090（24GB）服务器上。它做三件事：把 AR 线索转成“印象”（如“年轻、亚洲面孔、长发、大眼、气质温和”）；检索受试者公开的社交主页&#x2F;网站，抽取六类结构化字段（ID、化名、头像、基本信息、职业经历、社交平台）；再把这些拼成一份<strong>目标专属社会画像</strong>（图 4），包括可用于 AR 人脸绑定的头像、可用于搭话的兴趣点（“2024 年参加某校篮球赛获第三名”）、以及手机号&#x2F;邮箱&#x2F;微信等关键联系方式。</li>
+<li><strong>Social Agent（执行端）</strong>：基于 ReAct 的对话智能体，按三段式策略推进——<strong>开场（Opening）→ 深入话题（Suggested Deeper Conversation）→ 建立信任（Suggested Trust-Building Topic）</strong>，并根据对方的回应迭代调整（图 5）。</li>
+</ol>
+<p><strong>实验设计（关键）</strong>：60 位受试者、180 段带标注对话。每位受试者在三种设置下各聊一次，角色轮换（既当“目标”也当“攻击者”），以做消融对比：</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>含义</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Basic Conversation</td>
+<td>无任何技术辅助的裸聊</td>
+<td>基线</td>
+</tr>
+<tr>
+<td>AR + Multimodal LLM</td>
+<td>攻击者戴 AR 眼镜 + 多模态 LLM 实时辅助</td>
+<td>测“感知增强”的贡献</td>
+</tr>
+<tr>
+<td><strong>SEAR</strong></td>
+<td>AR + 多模态 LLM + 社交 Agent 全流程</td>
+<td>测“感知 + 策略”的叠加效应</td>
+</tr>
+</tbody></table>
+<p>场景模拟真实社交场合（会议、课堂、networking event）。</p>
+<p><strong>数据集五个组成部分</strong>（这也是图 1 的右半部分）： ① <strong>Conversation Scene</strong>：同步的 AR 音视频记录（面部、语音、姿态、物体、背景）； ② <strong>Personal Information</strong>：目标公开的社交&#x2F;网页数据； ③ <strong>Social Profile</strong>：LLM 生成的画像； ④ <strong>Interactive Conversation</strong>：完整的攻防对话记录（含 agent 生成的攻击话术与目标回应）； ⑤ <strong>Post-Interaction Survey</strong>：事后问卷，含消融对比、攻击有效性（点击&#x2F;接听意愿）与 11 维主观体验评分。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p><strong>样本</strong>：60 人，年龄 23–62 岁（均值 34，25 岁与 32 岁人数最多），男 28 人（46.7%）、女 32 人（53.3%）；共 180 段对话（每人 3 种设置）。</p>
+<p><strong>① 体验对比（图 8）</strong></p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>评价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Basic Conversation</td>
+<td>30% 评“Good”，但“一般&#x2F;较差”合计占比高，缺乏个性化</td>
+</tr>
+<tr>
+<td>AR + Multimodal LLM</td>
+<td>46.7% 评“Very Good”，33.3% “Fairly Good”，仍有 20% 觉得“一般”（画像碎片化）</td>
+</tr>
+<tr>
+<td><strong>SEAR</strong></td>
+<td><strong>76.7% 评“Very Good”</strong>，中立&#x2F;负面降到 5% 以下</td>
+</tr>
+</tbody></table>
+<p><strong>② 攻击有效性（图 9，核心数字）</strong></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>点击对方发来的照片&#x2F;链接</td>
+<td>**93.3%**（40% “definitely” + 53.3% “probably”）</td>
+</tr>
+<tr>
+<td>接受社交软件好友申请</td>
+<td>**93.0%**（43.3% + 50%）</td>
+</tr>
+<tr>
+<td>打开对方发来的短信</td>
+<td>**91.7%**（45% + 46.7%）</td>
+</tr>
+<tr>
+<td>接听对方来电</td>
+<td><strong>85.0%</strong></td>
+</tr>
+<tr>
+<td>交互前“高度信任（5 分）”</td>
+<td>26.7%，另有 35% 持怀疑态度</td>
+</tr>
+<tr>
+<td>交互后信任达 4–5 分</td>
+<td><strong>76.7%<strong>——</strong>一段对话之内完成信任翻转</strong></td>
+</tr>
+</tbody></table>
+<p><strong>③ 11 维主观体验（图 10，5 分制）</strong>：相关度 4.52、得体性 4.50、自然度 4.52、节奏 4.52、真诚感 4.48、情绪推进 4.45、AR 舒适度 4.67、无 AR 时意愿 4.13（明显低于有 AR 的 68.3% “Great”）、未来意愿 4.35、深度 4.47、接受度 4.48（95% 接受、零拒绝）。</p>
+<p><strong>关键结论</strong>：</p>
+<ul>
+<li>AR + 多模态 LLM 把“公开信息”变成了“可即时使用的社交武器”：画像越具体，开场越自然，信任建立越快；</li>
+<li>真正拉开差距的是<strong>社交 Agent 的策略层</strong>（不只是“看到更多”，而是“知道什么时候说什么”）；</li>
+<li>攻击效果<strong>跨渠道一致</strong>：照片、社交 App、短信、电话都有效，说明被攻破的不是某个渠道的警惕性，而是<strong>对人的整体信任判断</strong>；</li>
+<li>数据集可支撑三类研究：AR-LLM 社交工程攻击建模与检测、隐私感知的 AR 算法设计（如动态遮挡敏感环境元素）、具备情绪智能的社交 Agent 训练。</li>
+</ul>
+<p><strong>局限（从论文表述可推得）</strong>：受试者规模 60 人、场景为模拟社交场合，生态效度有限；“攻击者”由受试者轮换扮演，与真实恶意攻击者的动机与技巧存在差异；数据涉及人脸&#x2F;声纹&#x2F;社交账号，虽已匿名化，复用仍有伦理与合规门槛。</p>
+<p><img src="/2026/11/15/sear/QQ20261115-161954.png" alt="SEAR的有效性分析" title="图9"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/11/15/sear/">http://120.46.180.209/2026/11/15/sear/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BB%E8%AE%BA%E6%96%87/">读论文</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%89%E5%85%A8/">大模型安全</a><a class="post-meta__tags" href="/tags/j%E5%8A%A1/">j务</a><a class="post-meta__tags" href="/tags/MM/">MM</a></div><div class="post-share"><div class="social-share" data-image="/2026/11/15/sear/QQ20261115-161622.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/11/15/sign/" title="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的"><img class="cover" src="/2026/11/15/sign/QQ20261115-151450.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的</div></div><div class="info-2"><div class="info-item-1">这是一篇电信诈骗防范相关的论文（？）和本人研究方向差距有点大，过于硬核，看不太懂。 论文信息 标题：SigN: SIMBox Activity Detection Through Latency Anomalies at the Cellular Edge（利用蜂窝网络边缘的时延异常检测 SIMBox 活动）  会议：ASIA CCS（ACM Asia Conference on Computer and Communications Security）是 ACM SIGSAC 体系下面向亚太地区的旗舰安全会议，与 CCS 同源、每年举办一次，议题覆盖系统安全、网络安全、隐私、应用密码学与 AI 安全等；在 CCF 推荐目录中属网络与信息安全方向的 C 类会议，CORE 评级为 A，是亚太地区规模与影响力最大的计算机安全会议之一  链接：ACM   解决问题 什么是 SIMBox：一种“VoIP 转 GSM”的网关设备，俗称“SIM 卡池&#x2F;GoIP”。国际通话本应走运营商之间的结算通道（图 1 的 Flow 1）；fraudulent carrier 把话务切成...</div></div></div></a><a class="pagination-related" href="/2026/11/15/dasaiyuanti3/" title="【CTFSHOW】 web入门大赛原题一（WEB690-）"><img class="cover" src="/img/ctf.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">【CTFSHOW】 web入门大赛原题一（WEB690-）</div></div><div class="info-2"><div class="info-item-1">WEB-690（暂无）题面：12345678910&lt;?php highlight_file(__FILE__);error_reporting(0);$args = $_GET[&#x27;args&#x27;];for ( $i=0; $i&lt;count($args); $i++ )&#123;    if ( !preg_match(&#x27;/^\w+$/&#x27;, $args[$i]) ) //传入的参数里只能由数字字母和下划线        exit(&quot;sorry&quot;);&#125;exec(&#x27;./ &#x27; . implode(&quot; &quot;, $args));//PCRE 的 $ 允许匹配&quot;结尾换行&quot;，所以 &quot;a\n&quot; 能通过 /^\w+$/，而换行在 shell 里等价于 ;  解析这里留一个官方WP，但打法思路要用公网服务器，但我的服务器过期了，所以这题先跳过 在服务器80端口开一个服务，放一个一句话木马： 1&lt;?php...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/09/24/Agent/" title="【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入"><img class="cover" src="/2026/09/24/Agent/QQ20260924-161115.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-09-24</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】AttriGuard：通过工具调用的归因来对抗Agent中的间接提示词注入</div></div><div class="info-2"><div class="info-item-1">一些我的碎碎念大模型时代，曾经的网络安全实用技能都受到了不同程度的冲击，Agent+Skill的组合解决90%的传统安全问题。所以研究系统安全的侧重点可以放在大模型自身上来，也就是Security for AI。这是一篇上周刷微信时偶然看到的文章，内容有点老生常谈，无非就是提示词存在注入风险blabla的，但是足够典型，这里做个记录。 论文信息 标题：AttriGuard: Defeating Indirect Prompt Injection in LLM Agents via Causal Attribution of Tool Invocations  链接：pdf   解决问题Agent可以读取文档、调用搜索和工具等，这些外部内容中可能隐藏有隐藏指令，如果这些指令被Agent当作任务要求，攻击者就可以对后续调用环节进行控制，这就是间接提示词注入（Indirect Prompt Injection, IPI）攻击，下称IPI。现有的防御IPI的手段局限在以下四个方面：  输入语义判别范式的泛化性瓶颈。 现有绝大多数防御（检测类、提示工程类、训练对齐类）都将 IPI...</div></div></div></a><a class="pagination-related" href="/2026/10/16/DarkGram/" title="【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析"><img class="cover" src="/2026/10/16/DarkGram/QQ20261016-194541.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】DarkGram： TG上网络犯罪活动渠道分析</div></div><div class="info-2"><div class="info-item-1">论文信息 论文标题：DarkGram: A Large-Scale Analysis of Cybercriminal Activity Channels on Telegram  链接   解决问题 Telegram 已成为网络犯罪新温床：传统地下论坛因执法打击萎缩后，犯罪分子转向 Telegram 广播频道，其内容审核宽松、可达性强，却缺乏大规模系统性研究。 内容危害不明：这些频道向 2380 万订阅者传播被盗凭证、盗版软件、黑客工具等恶意内容，但订阅者是否意识到风险、危害程度如何，此前无人量化。 执法响应滞后：人工举报渠道效率低，Telegram 对成熟大频道的删除率仅 19%，且犯罪者可迅速迁移新频道保留粉丝，现有手段难以主动发现新兴恶意频道。  DarkGram DarkGram 框架，包含三个核心模块：  数据采集与分类体系：通过 Telemetrio 目录识别 339 个恶意活动频道（CACs），将其分为五类 —— 凭证泄露、盗版软件、黑帽资源、盗版媒体、社交媒体操纵。 BERT 自动分类器：基于手动标注的 3098 条帖子训练 BERT...</div></div></div></a><a class="pagination-related" href="/2026/10/16/HSL/" title="【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性"><img class="cover" src="/2026/10/16/HSL/QQ20261016-195345.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】高风险，低确定性：评估勒索软件溯源中高级妥协指标的有效性</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：High Stakes, Low Certainty: Evaluating the Efficacy of High-Level Indicators of Compromise in Ransomware Attribution  链接   解决问题 勒索软件归因的制裁筛查困境：受害者支付赎金前必须确认攻击者不在制裁名单上，否则面临高额罚款甚至刑事追责，但归因过程高度依赖指标（IoC）的可靠性。 “痛苦金字塔” 模型未经实证检验：业界普遍认为高层指标（TTPs，即战术技术流程）比低层指标（文件哈希、IP 等）更难被攻击者更改、更具归因价值，但这一假设从未在勒索软件场景中被实证验证。 RaaS 生态加剧归因复杂性：勒索软件即服务（RaaS）模式下频繁的品牌重塑（rebranding）和 affiliates 共享工具，导致同一威胁 actor 的 “特征” 碎片化，不同 actor 之间反而高度重叠。 数据碎片化：各厂商和机构的威胁情报不共享，覆盖率差异大，可能导致遗漏制裁实体的风险盲区。  论文核心方法混合研究方法，包含两个互补组件：  专家访谈（定性）：对...</div></div></div></a><a class="pagination-related" href="/2026/10/16/UNITE/" title="【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成"><img class="cover" src="/2026/10/16/UNITE/QQ20261016-200713.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-16</div><div class="info-item-2">【论文阅读】【CVPR 25&#39;】合成视频检测：从人脸或背景操控到完全AI生成</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：通用合成视频检测器：从人脸或背景操控到完全由AI生成的内容  链接   解决问题 现有检测器只认人脸：主流 DeepFake 检测方法（face-swap、lip-sync 检测）均以人为中心，必须先检测到人脸才能推理 —— 一旦视频中无人脸（如纯背景篡改、T2V&#x2F;I2V 全 AI 生成内容），直接失效。 生成模型进化超出检测能力：Flux、Runway、Sora 等 T2V&#x2F;I2V 模型可生成无缝背景篡改和完全合成的视频（含非人类主体），传统 face-centric 检测器在这类新内容上表现骤降。 训练 - 测试域差：开源 DeepFake 数据集普遍只含人脸篡改，缺乏背景篡改和全合成样本，导致模型过拟合到面部区域，跨域泛化能力差。 缺乏统一检测器：需要一个模型同时覆盖三类内容 —— 真人 + 人脸篡改、真人 + 背景篡改、完全 AI 生成 —— 而非为每类任务单独训练专用检测器。   UNITE（Universal Network for Identifying Tampered and synthEtic videos）UNITE...</div></div></div></a><a class="pagination-related" href="/2026/10/26/a2a/" title="【论文阅读】【ACSAC 26&#39;】A2ABreak： 对 A2A 协议的系统性安全分析"><img class="cover" src="/2026/10/26/a2a/QQ20261026-121418.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-26</div><div class="info-item-2">【论文阅读】【ACSAC 26&#39;】A2ABreak： 对 A2A 协议的系统性安全分析</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：A2ABreak: Systematic Security Analysis of the A2A Protocol  会议：42nd IEEE Annual Computer Security Applications Conference（ACSAC, CCF B）  链接：预印|工作   解决问题背景：A2A 由 Google 于 2025 年 4 月提出，2025 年 6 月移交 Linux Foundation，数月内获 50+ 厂商（Salesforce、SAP、ServiceNow、MongoDB、LangChain 等）支持，正成为多智能体生态的“水平通信层”——MCP 管 agent 与工具之间的垂直关系，A2A 管 agent 与 agent 之间的水平关系。 为什么危险：  不透明执行（opaque execution）是 A2A 的核心设计原则：委派方看不到远端 agent 的内部推理、工具调用和中间状态。这保护了知识产权，也意味着委派方无法验证对方拿自己的数据、凭证和产物做了什么。 安全要求“软”：大量关键控制写成 SHOULD...</div></div></div></a><a class="pagination-related" href="/2026/10/24/bypassingAIwall/" title="【论文阅读】【USENIX 26&#39;】通过受控释放提示词实现生产环境中的提示防护绕过"><img class="cover" src="/2026/10/24/bypassingAIwall/QQ20261024-183736.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-24</div><div class="info-item-2">【论文阅读】【USENIX 26&#39;】通过受控释放提示词实现生产环境中的提示防护绕过</div></div><div class="info-2"><div class="info-item-1">论文信息 标题：Bypassing Prompt Guards in Production with Controlled-Release Prompting  链接   解决问题编码型越狱并不新鲜。以往方法通常将危险请求改写成特殊符号、替换字符或自定义语言，希望主模型能够理解，而安全模型无法识别。这类攻击依赖能力差异：过滤器不知道怎样解码。一旦安全模型学会相同规则，隐藏效果就可能消失。  理论不可能 vs 生产现实：Ball 等人 (2024) 从理论上证明，在标准密码学假设下，任何 prompt 输入过滤器都无法通用区分安全与恶意 prompt—— 但这是用密码学时间锁谜题（TLP）构造的存在性证明，从未在真实部署的 LLM 系统中验证。 资源不对称漏洞：生产环境的输入过滤器为了低成本高速运行，被设计成轻量模型（如 Llama Prompt Guard 2 仅 22M 参数、512-token 上下文窗口），而被保护的主 LLM 动辄数百 B 参数 ——...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">论文信息：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">解决问题：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SEAR"><span class="toc-number">3.</span> <span class="toc-text">SEAR</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/dasaiyuanti3/" title="【CTFSHOW】 web入门大赛原题一（WEB690-）"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门大赛原题一（WEB690-）"/></a><div class="content"><a class="title" href="/2026/11/15/dasaiyuanti3/" title="【CTFSHOW】 web入门大赛原题一（WEB690-）">【CTFSHOW】 web入门大赛原题一（WEB690-）</a><time datetime="2026-11-15T10:40:44.000Z" title="发表于 2026-11-15 18:40:44">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/sear/" title="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易"><img src="/2026/11/15/sear/QQ20261115-161622.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易"/></a><div class="content"><a class="title" href="/2026/11/15/sear/" title="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易">【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易</a><time datetime="2026-11-15T08:13:32.000Z" title="发表于 2026-11-15 16:13:32">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/sign/" title="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的"><img src="/2026/11/15/sign/QQ20261115-151450.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的"/></a><div class="content"><a class="title" href="/2026/11/15/sign/" title="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的">【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的</a><time datetime="2026-11-15T03:13:32.000Z" title="发表于 2026-11-15 11:13:32">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/14/pei/" title="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”"><img src="/2026/11/14/pei/QQ20261114-214508.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”"/></a><div class="content"><a class="title" href="/2026/11/14/pei/" title="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”">【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”</a><time datetime="2026-11-14T04:11:32.000Z" title="发表于 2026-11-14 12:11:32">2026-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/11/foren2/" title="【CTFSHOW】 电子取证——JiaJia—PC1~3"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 电子取证——JiaJia—PC1~3"/></a><div class="content"><a class="title" href="/2026/11/11/foren2/" title="【CTFSHOW】 电子取证——JiaJia—PC1~3">【CTFSHOW】 电子取证——JiaJia—PC1~3</a><time datetime="2026-11-11T03:40:44.000Z" title="发表于 2026-11-11 11:40:44">2026-11-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body></html>

